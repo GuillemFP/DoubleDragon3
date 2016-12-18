@@ -1,6 +1,7 @@
 #include "JsonHandler.h"
 #include "Globals.h"
 #include "parson\parson.h"
+
 const char* JSON_GetString(const char* name)
 {
 	const char* ret = nullptr;
