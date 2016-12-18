@@ -10,6 +10,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{87aefb2f-1b39-4925-974d-a5403477adb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="parson">
+      <UniqueIdentifier>{e961f9dc-f1f3-4738-9983-051ff4494f52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -24,6 +27,12 @@
     <ClInclude Include="Module.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="JsonHandler.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -34,6 +43,12 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonHandler.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>parson</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

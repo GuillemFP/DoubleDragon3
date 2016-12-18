@@ -1,0 +1,28 @@
+{"Config": {
+	"App" : { 
+		"Title" : "Double Dragon 3: The Rosetta Stone",
+		"Resolution" : { 
+			"Width" : 384, 
+			"Height" : 240, 
+			"Scale" : 3 
+			} 
+	},
+	"Modules" : {
+		"Input" : {
+			"Name" : "ModuleInput",
+			"MouseButtons" : 5,
+			"KeyboardKeys" : 300
+		},
+		"Window" : {
+			"Name" : "ModuleWindow",
+			"Fullscreen" : false,
+			"Borderless" : false,
+			"Resizable" : false,
+			"Fullscreen_Window" : false 
+		},
+		"Render" : { 
+			"Name" : "ModuleRender",
+			"Vsync" : true 
+		}
+	}
+}}
