@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Module.h"
 
+class ModuleInput;
 class ModuleWindow;
 class ModuleRender;
 
@@ -19,6 +20,7 @@ public:
 	bool CleanUp();
 
 public:
+	ModuleInput* input;
 	ModuleWindow* window;
 	ModuleRender* renderer;
 

@@ -1,8 +1,13 @@
 #include "Application.h"
+#include "ModuleInput.h"
+#include "ModuleWindow.h"
+#include "ModuleRender.h"
 
 Application::Application()
 {
-	
+	modules.push_back(input = new ModuleInput());
+	modules.push_back(window = new ModuleWindow());
+	modules.push_back(renderer = new ModuleRender());
 	
 }
 
