@@ -27,9 +27,6 @@
     <ClInclude Include="Module.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="JsonHandler.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="parson\parson.h">
       <Filter>parson</Filter>
     </ClInclude>
@@ -43,6 +40,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
+      <Filter>Core Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTextures.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
   </ItemGroup>
@@ -69,6 +69,9 @@
       <Filter>Core Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
+      <Filter>Core Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp">
       <Filter>Core Modules</Filter>
     </ClCompile>
   </ItemGroup>

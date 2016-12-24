@@ -23,6 +23,9 @@
 		"Render" : { 
 			"Name" : "ModuleRender",
 			"Vsync" : true 
+		},
+		"Textures" : {
+			"Name" : "ModuleTextures"
 		}
 	}
 }}
