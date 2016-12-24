@@ -1,8 +1,8 @@
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
-#include "JsonHandler.h"
 
 ModuleRender::ModuleRender() : Module(JSON_GetString(MODULE_RENDER))
 {

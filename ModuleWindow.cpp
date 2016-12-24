@@ -1,6 +1,6 @@
+#include "Globals.h"
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
-#include "JsonHandler.h"
 
 ModuleWindow::ModuleWindow() : Module(JSON_GetString(MODULE_WINDOW))
 {

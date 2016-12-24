@@ -1,9 +1,8 @@
-#include <cstring>
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
-#include "JsonHandler.h"
 
 ModuleInput::ModuleInput() : Module(JSON_GetString(MODULE_INPUT)), mouse({0,0}), mouse_motion({0,0})
 {
