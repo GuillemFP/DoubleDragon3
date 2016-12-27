@@ -74,7 +74,7 @@ bool ModuleAudio::CleanUp()
 
 bool ModuleAudio::PlayMusic(const char* path)
 {
-	return PlayMusic(path, fdefault_fade);
+	return PlayMusic(path, fDEFAULT_FADE);
 }
 
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
@@ -157,7 +157,7 @@ bool ModuleAudio::ConstantConfig()
 {
 	bool ret = true;
 
-	ret = JSON_GetFloat(DEFAULT_MUSIC_FADE_TIME, fdefault_fade);
+	ret = JSON_GetFloat(DEFAULT_MUSIC_FADE_TIME, fDEFAULT_FADE);
 
 	return ret;
 }

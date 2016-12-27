@@ -33,7 +33,7 @@ private:
 	Mix_Music* music = nullptr;
 	std::vector<Mix_Chunk*> fx;
 
-	float fdefault_fade = 2.0f;
+	float fDEFAULT_FADE = 2.0f;
 };
 
 
