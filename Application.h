@@ -8,6 +8,8 @@
 class ModuleInput;
 class ModuleWindow;
 class ModuleRender;
+class ModuleTextures;
+class ModuleAudio;
 
 class Application
 {
@@ -23,6 +25,8 @@ public:
 	ModuleInput* input;
 	ModuleWindow* window;
 	ModuleRender* renderer;
+	ModuleTextures* textures;
+	ModuleAudio* audio;
 
 private:
 	std::list<Module*> modules;

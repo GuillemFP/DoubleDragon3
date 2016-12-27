@@ -4,7 +4,7 @@
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
 
-ModuleRender::ModuleRender() : Module(JSON_GetString(MODULE_RENDER))
+ModuleRender::ModuleRender() : Module(MODULE_RENDER)
 {
 }
 
@@ -14,8 +14,14 @@ ModuleRender::~ModuleRender()
 bool ModuleRender::Init()
 {
 	LOG("Creating Renderer context");
-	bool ret = ConstantConfig();
+	bool ret = true;
 	Uint32 flags = 0;
+
+	if (ConstantConfig() == false)
+	{
+		LOG("Problem retrieving value from configuration file");
+		ret = false;
+	}
 
 	camera.w = App->window->GetScreenWidth() * App->window->GetScreenSize();
 	camera.h = App->window->GetScreenHeight() * App->window->GetScreenSize();

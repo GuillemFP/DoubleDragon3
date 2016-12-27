@@ -2,7 +2,7 @@
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
 
-ModuleWindow::ModuleWindow() : Module(JSON_GetString(MODULE_WINDOW))
+ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
 {
 }
 
@@ -13,7 +13,14 @@ ModuleWindow::ModuleWindow() : Module(JSON_GetString(MODULE_WINDOW))
  bool ModuleWindow::Init()
  {
 	 LOG("Init SDL window & surface");
-	 bool ret = ConstantConfig();
+
+	 bool ret = true;
+
+	 if (ConstantConfig() == false)
+	 {
+		 LOG("Problem retrieving value from configuration file");
+		 ret = false;
+	 }
 
 	 if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	 {

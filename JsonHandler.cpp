@@ -60,6 +60,35 @@ bool JSON_GetInt(const char* name, int &value)
 	return ret;
 }
 
+float JSON_GetFloat(const char* name)
+{
+	float ret = NULL;
+	JSON_Value* root_value = json_parse_file(CONFIGJSON);
+	JSON_Object* root_object = json_value_get_object(root_value);
+	if (json_object_dotget_value(root_object, name))
+	{
+		if (json_object_dothas_value_of_type(root_object, name, JSONNumber))
+			ret = (float)json_object_dotget_number(root_object, name);
+		else
+			LOG("%s: Incorrect value for %s.", CONFIGJSON, name);
+	}
+	else
+		LOG("%s: %s not found.", CONFIGJSON, name);
+
+	return ret;
+}
+
+bool JSON_GetFloat(const char* name, float &value)
+{
+	bool ret = true;
+
+	value = JSON_GetFloat(name);
+	if (value == NULL)
+		ret = false;
+
+	return ret;
+}
+
 bool JSON_GetBool(const char* name)
 {
 	bool ret = NULL;

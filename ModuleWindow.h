@@ -3,6 +3,12 @@
 
 #include "Module.h"
 
+#define MODULE_WINDOW "ModuleWindow"
+#define FULLSCREEN "Config.Modules.Window.Fullscreen"
+#define BORDERLESS "Config.Modules.Window.Borderless"
+#define RESIZABLE "Config.Modules.Window.Resizable"
+#define FULLSCREEN_DESKTOP "Config.Modules.Window.Fullscreen_Window"
+
 struct SDL_Window;
 struct SDL_Surface;
 

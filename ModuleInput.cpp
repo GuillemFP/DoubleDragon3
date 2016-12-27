@@ -4,7 +4,7 @@
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
 
-ModuleInput::ModuleInput() : Module(JSON_GetString(MODULE_INPUT)), mouse({0,0}), mouse_motion({0,0})
+ModuleInput::ModuleInput() : Module(MODULE_INPUT), mouse({0,0}), mouse_motion({0,0})
 {
 
 	if (JSON_GetInt(MAX_KEYS,iMAX_KEYS))

@@ -4,6 +4,8 @@
 #include <list>
 #include "Module.h"
 
+#define MODULE_TEXTURES "ModuleTextures"
+
 struct SDL_Texture;
 
 class ModuleTextures : public Module

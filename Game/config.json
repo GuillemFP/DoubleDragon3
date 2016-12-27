@@ -9,23 +9,22 @@
 	},
 	"Modules" : {
 		"Input" : {
-			"Name" : "ModuleInput",
 			"MouseButtons" : 5,
 			"KeyboardKeys" : 300
 		},
 		"Window" : {
-			"Name" : "ModuleWindow",
 			"Fullscreen" : false,
 			"Borderless" : false,
 			"Resizable" : false,
 			"Fullscreen_Window" : false 
 		},
 		"Render" : { 
-			"Name" : "ModuleRender",
 			"Vsync" : true 
 		},
-		"Textures" : {
-			"Name" : "ModuleTextures"
+		"Audio" : {
+			"MusicDefaultFadeTime" : 2,
+			"EffectsVolume" : 10,
+			"MusicVolume" : 10
 		}
 	}
 }}

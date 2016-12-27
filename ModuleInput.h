@@ -4,6 +4,10 @@
 #include "Module.h"
 #include "Point.h"
 
+#define MODULE_INPUT "ModuleInput"
+#define NUM_MOUSE_BUTTONS "Config.Modules.Input.MouseButtons"
+#define MAX_KEYS "Config.Modules.Input.KeyboardKeys"
+
 enum EventWindow
 {
 	WE_QUIT = 0,

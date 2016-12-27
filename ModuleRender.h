@@ -4,6 +4,9 @@
 #include "Module.h"
 #include "SDL/include/SDL_rect.h"
 
+#define MODULE_RENDER "ModuleRender"
+#define VSYNC "Config.Modules.Render.Vsync"
+
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
