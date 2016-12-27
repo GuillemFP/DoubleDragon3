@@ -25,6 +25,9 @@
 			"MusicDefaultFadeTime" : 2,
 			"EffectsVolume" : 10,
 			"MusicVolume" : 10
+		},
+		"FadeToBlack" : {
+			"DefaultTime" : 1
 		}
 	}
 }}
