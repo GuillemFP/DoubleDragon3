@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
+#include "JsonHandler.h"
 
 ModuleRender::ModuleRender() : Module(MODULE_RENDER)
 {
@@ -156,8 +157,14 @@ bool ModuleRender::ConstantConfig()
 {
 	bool ret = true;
 
-	bVSYNC = JSON_GetBool(VSYNC);
-	ret = JSON_GetFloat(DEFAULT_SPEED, fDEFAULT_SPEED);
+	if (App->parser->LoadObject(RENDER_SECTION) == true)
+	{
+		bVSYNC = App->parser->GetBool("Vsync");
+		fDEFAULT_SPEED = App->parser->GetFloat("DefaultBlitSpeed");
+		ret = App->parser->UnloadObject();
+	}
+	else
+		ret = false;
 
 	iSCREENSIZE = App->window->GetScreenSize();
 	iSCREENWIDTH = App->window->GetScreenWidth();

@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include "MemLeaks.h"
+#include <cassert>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -40,18 +41,5 @@ enum update_status
 
 // Configuration from JSON file -----------
 #define CONFIGJSON "config.json"
-
-#define TITLE "Config.App.Title"
-#define SCREEN_WIDTH "Config.App.Resolution.Width"
-#define SCREEN_HEIGHT "Config.App.Resolution.Height"
-#define SCREEN_SIZE "Config.App.Resolution.Scale"
-
-const char* JSON_GetString(const char* name);
-bool JSON_GetString(const char* name, const char** value);
-int JSON_GetInt(const char* name);
-bool JSON_GetInt(const char* name, int &value);
-float JSON_GetFloat(const char* name);
-bool JSON_GetFloat(const char* name, float &value);
-bool JSON_GetBool(const char* name);
 
 #endif // !GLOBALS_H

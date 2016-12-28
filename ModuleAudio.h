@@ -5,9 +5,7 @@
 #include "Module.h"
 
 #define MODULE_AUDIO "ModuleAudio"
-#define DEFAULT_MUSIC_FADE_TIME "Config.Modules.Audio.MusicDefaultFadeTime"
-#define VOLUME_FX "Config.Modules.Audio.EffectsVolume"
-#define VOLUME_MUSIC "Config.Modules.Audio.MusicVolume"
+#define AUDIO_SECTION "Config.Modules.Audio"
 
 struct _Mix_Music;
 struct Mix_Chunk;
@@ -34,6 +32,8 @@ private:
 	std::vector<Mix_Chunk*> fx;
 
 	float fDEFAULT_FADE = 2.0f;
+	int iVOLUME_MUSIC = 1;
+	int iVOLUME_FX = 1;
 };
 
 

@@ -6,8 +6,7 @@
 #include "Point.h"
 
 #define MODULE_RENDER "ModuleRender"
-#define VSYNC "Config.Modules.Render.Vsync"
-#define DEFAULT_SPEED "Config.Modules.Render.DefaultBlitSpeed"
+#define RENDER_SECTION "Config.Modules.Render"
 
 struct SDL_Texture;
 struct SDL_Renderer;

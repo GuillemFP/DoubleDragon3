@@ -1,6 +1,8 @@
 #include "Globals.h"
+#include "Application.h"
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
+#include "JsonHandler.h"
 
 ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
 {
@@ -80,15 +82,27 @@ ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
  {
 	 bool ret = true;
 
-	 ret = ret && JSON_GetString(APP_TITLE, &strTITLE);
-	 ret = ret && JSON_GetInt(SCREEN_WIDTH, iSCREENWIDTH);
-	 ret = ret && JSON_GetInt(SCREEN_HEIGHT, iSCREENHEIGHT);
-	 ret = ret && JSON_GetInt(SCREEN_SIZE, iSCREENSIZE);
+	 if (App->parser->LoadObject(APP_SECTION) == true)
+	 {
+		 strTITLE = App->parser->GetString("Title");
+		 iSCREENWIDTH = App->parser->GetInt("Resolution.Width");
+		 iSCREENHEIGHT = App->parser->GetInt("Resolution.Height");
+		 iSCREENSIZE = App->parser->GetInt("Resolution.Scale");
+		 ret = App->parser->UnloadObject();
+	 }
+	 else
+		 ret = false;
 
-	 bFULLSCREEN = JSON_GetBool(FULLSCREEN);
-	 bBORDERLESS = JSON_GetBool(BORDERLESS);
-	 bRESIZABLE = JSON_GetBool(RESIZABLE);
-	 bFULLSCREEN_DESKTOP = JSON_GetBool(FULLSCREEN_DESKTOP);
+	 if (App->parser->LoadObject(WINDOW_SECTION) == true)
+	 {
+		 bFULLSCREEN = App->parser->GetBool("Fullscreen");
+		 bBORDERLESS = App->parser->GetBool("Borderless");
+		 bRESIZABLE = App->parser->GetBool("Resizable");
+		 bFULLSCREEN_DESKTOP = App->parser->GetBool("Fullscreen_Window");
+		 ret = ret && App->parser->UnloadObject();
+	 }
+	 else
+		 ret = false;
 
 	 return ret;
  }

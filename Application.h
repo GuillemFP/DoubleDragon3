@@ -5,11 +5,19 @@
 #include "Globals.h"
 #include "Module.h"
 
+#define APP_SECTION "Config.App"
+
+class JSONParser;
+
 class ModuleInput;
 class ModuleWindow;
 class ModuleRender;
 class ModuleTextures;
 class ModuleAudio;
+
+class ModuleFadeToBlack;
+
+class ModuleSceneTitle;
 
 class Application
 {
@@ -27,6 +35,12 @@ public:
 	ModuleRender* renderer;
 	ModuleTextures* textures;
 	ModuleAudio* audio;
+
+	ModuleFadeToBlack* fade;
+
+	ModuleSceneTitle* scene_title;
+
+	JSONParser* parser;
 
 private:
 	std::list<Module*> modules;

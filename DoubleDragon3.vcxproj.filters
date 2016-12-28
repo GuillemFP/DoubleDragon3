@@ -13,6 +13,12 @@
     <Filter Include="parson">
       <UniqueIdentifier>{e961f9dc-f1f3-4738-9983-051ff4494f52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Logic Modules">
+      <UniqueIdentifier>{be59660f-d3c6-4392-aff8-c77f8f2850e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Modules">
+      <UniqueIdentifier>{f55c29a0-0217-4cfd-8de4-2959c891df5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -48,10 +54,19 @@
     <ClInclude Include="ModuleAudio.h">
       <Filter>Core Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleFadeToBlack.h">
-      <Filter>Core Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFadeToBlack.h">
+      <Filter>Game Logic Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneTitle.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonHandler.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -87,7 +102,10 @@
       <Filter>Core Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFadeToBlack.cpp">
-      <Filter>Core Modules</Filter>
+      <Filter>Game Logic Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneTitle.cpp">
+      <Filter>Game Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

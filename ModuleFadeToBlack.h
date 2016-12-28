@@ -5,7 +5,7 @@
 #include "SDL/include/SDL_stdinc.h"
 
 #define MODULE_FADETOBLACK "ModuleFadeToBlack"
-#define DEFAULT_TIME "Config.Modules.FadeToBlack.DefaultTime"
+#define FADETOBLACK_SECTION "Config.Modules.FadeToBlack"
 
 class Timer;
 

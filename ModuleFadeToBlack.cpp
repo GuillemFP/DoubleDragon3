@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "Timer.h"
 #include "SDL/include/SDL.h"
+#include "JsonHandler.h"
 
 ModuleFadeToBlack::ModuleFadeToBlack() : Module(MODULE_FADETOBLACK)
 {
@@ -109,7 +110,13 @@ bool ModuleFadeToBlack::ConstantConfig()
 {
 	bool ret = true;
 
-	ret = JSON_GetFloat(DEFAULT_TIME, fDEFAULT_TIME);
+	if (App->parser->LoadObject(FADETOBLACK_SECTION) == true)
+	{
+		fDEFAULT_TIME = App->parser->GetFloat("DefaultTime");
+		ret = App->parser->UnloadObject();
+	}
+	else
+		ret = false;
 
 	return ret;
 }

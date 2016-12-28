@@ -3,26 +3,24 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "SDL/include/SDL.h"
+#include "JsonHandler.h"
 
-ModuleInput::ModuleInput() : Module(MODULE_INPUT), mouse({0,0}), mouse_motion({0,0})
+ModuleInput::ModuleInput(JSONParser* parser) : Module(MODULE_INPUT), mouse({0,0}), mouse_motion({0,0})
 {
+	assert(parser != nullptr);
 
-	if (JSON_GetInt(MAX_KEYS,iMAX_KEYS))
+	if (parser->LoadObject(INPUT_SECTION))
 	{
+		iMAX_KEYS = parser->GetInt("KeyboardKeys");
 		keyboard = new KeyState[iMAX_KEYS];
 		memset(keyboard, KEY_IDLE, iMAX_KEYS * sizeof(KeyState));
-	}
-	else
-		LOG("Number of keyboard keys is null.");
-	
-	if (JSON_GetInt(NUM_MOUSE_BUTTONS,iNUM_BUTTONS))
-	{
+
+		iNUM_BUTTONS = parser->GetInt("MouseButtons");
 		mouse_buttons = new KeyState[iNUM_BUTTONS];
 		memset(mouse_buttons, KEY_IDLE, iNUM_BUTTONS * sizeof(KeyState));
 	}
-	else
-		LOG("Number of mouse buttons is null.");
-	
+	parser->UnloadObject();
+
 }
 
 ModuleInput::~ModuleInput()

@@ -1,6 +1,8 @@
 #include "Globals.h"
+#include "Application.h"
 #include "ModuleAudio.h"
 #include "SDL/include/SDL.h"
+#include "JsonHandler.h"
 
 #include "SDL_mixer/include/SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
@@ -47,8 +49,8 @@ bool ModuleAudio::Init()
 	}
 	else
 	{
-		Mix_Volume(-1, JSON_GetInt(VOLUME_FX));
-		Mix_VolumeMusic(JSON_GetInt(VOLUME_MUSIC));
+		Mix_Volume(-1, iVOLUME_FX);
+		Mix_VolumeMusic(iVOLUME_MUSIC);
 	}
 
 	return ret;
@@ -157,7 +159,15 @@ bool ModuleAudio::ConstantConfig()
 {
 	bool ret = true;
 
-	ret = JSON_GetFloat(DEFAULT_MUSIC_FADE_TIME, fDEFAULT_FADE);
+	if (App->parser->LoadObject(AUDIO_SECTION) == true)
+	{
+		fDEFAULT_FADE = App->parser->GetFloat("MusicDefaultFadeTime");
+		iVOLUME_MUSIC = App->parser->GetInt("MusicVolume");
+		iVOLUME_FX = App->parser->GetInt("EffectsVolume");
+		ret = App->parser->UnloadObject();
+	}
+	else
+		ret = false;
 
 	return ret;
 }

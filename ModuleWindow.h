@@ -5,10 +5,7 @@
 #include "Point.h"
 
 #define MODULE_WINDOW "ModuleWindow"
-#define FULLSCREEN "Config.Modules.Window.Fullscreen"
-#define BORDERLESS "Config.Modules.Window.Borderless"
-#define RESIZABLE "Config.Modules.Window.Resizable"
-#define FULLSCREEN_DESKTOP "Config.Modules.Window.Fullscreen_Window"
+#define WINDOW_SECTION "Config.Modules.Window"
 
 struct SDL_Window;
 struct SDL_Surface;

@@ -5,8 +5,9 @@
 #include "Point.h"
 
 #define MODULE_INPUT "ModuleInput"
-#define NUM_MOUSE_BUTTONS "Config.Modules.Input.MouseButtons"
-#define MAX_KEYS "Config.Modules.Input.KeyboardKeys"
+#define INPUT_SECTION "Config.Modules.Input"
+
+class JSONParser;
 
 enum EventWindow
 {
@@ -27,7 +28,7 @@ enum KeyState
 class ModuleInput : public Module
 {
 public:
-	ModuleInput();
+	ModuleInput(JSONParser* parser);
 	~ModuleInput();
 
 	bool Init();
