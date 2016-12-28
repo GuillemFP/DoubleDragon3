@@ -2,6 +2,7 @@
 #define MODULEWINDOW_H
 
 #include "Module.h"
+#include "Point.h"
 
 #define MODULE_WINDOW "ModuleWindow"
 #define FULLSCREEN "Config.Modules.Window.Fullscreen"

@@ -22,6 +22,7 @@ public:
 	void FadeToBlack(Module* module_on, Module* module_off);
 	void FadeToBlack(Module* module_on, Module* module_off, float time);
 	bool isFading() const;
+	bool isFadingIn() const;
 
 	bool ConstantConfig();
 

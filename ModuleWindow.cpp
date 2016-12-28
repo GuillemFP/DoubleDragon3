@@ -80,7 +80,7 @@ ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
  {
 	 bool ret = true;
 
-	 ret = ret && JSON_GetString(TITLE, &strTITLE);
+	 ret = ret && JSON_GetString(APP_TITLE, &strTITLE);
 	 ret = ret && JSON_GetInt(SCREEN_WIDTH, iSCREENWIDTH);
 	 ret = ret && JSON_GetInt(SCREEN_HEIGHT, iSCREENHEIGHT);
 	 ret = ret && JSON_GetInt(SCREEN_SIZE, iSCREENSIZE);

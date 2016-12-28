@@ -46,6 +46,9 @@ update_status ModuleFadeToBlack::Update()
 		if (fading_in == false)
 			alpha_correction = 1.0f - alpha_correction;
 
+		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 0, (Uint8)(alpha_correction * 255.0f));
+		SDL_RenderFillRect(App->renderer->renderer, NULL);
+
 		if (module_off == nullptr && module_on != nullptr)
 		{
 			module_on->Enable();
@@ -95,6 +98,11 @@ void ModuleFadeToBlack::FadeToBlack(Module * module_on, Module * module_off, flo
 bool ModuleFadeToBlack::isFading() const
 {
 	return (fade_time->GetState() == RUNNING);
+}
+
+bool ModuleFadeToBlack::isFadingIn() const
+{
+	return fading_in;
 }
 
 bool ModuleFadeToBlack::ConstantConfig()
