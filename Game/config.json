@@ -2,10 +2,11 @@
 	"App" : { 
 		"Title" : "Double Dragon 3: The Rosetta Stone",
 		"Resolution" : { 
-			"Width" : 384, 
-			"Height" : 240, 
+			"Width" : 320, 
+			"Height" : 224, 
 			"Scale" : 3 
-			} 
+			},
+		"InitialFadeTime" : 3
 	},
 	"Modules" : {
 		"Input" : {
@@ -42,11 +43,24 @@
 						[0,0,96,32],[0,64,96,32],[0,64,96,32],[0,96,96,32],[0,128,96,32],[0,160,96,32],[0,192,96,32],[0,224,96,32],[0,256,96,32],[0,288,96,32],
 						[0,320,96,32],[0,352,96,32],[0,384,96,32],[0,416,96,32]
 					]
-				}
+				},
+				"TimeSeconds" : 6,
+				"FadeTime" : 2
 			},
 			"SecondScreen" : {
 				"TexturePath" : "assets/title_flyingedge.png",
-				"BackgroundColor" : [144, 180, 216, 255]
+				"BackgroundColor" : [144, 180, 216, 255],
+				"TimeSeconds" : 10,
+				"FadeTime" : 3
+			},
+			"TitleScreen" : {
+				"TexturePath" : "assets/title_dd3.png",
+				"BackgroundRect" : [0, 0, 960, 224],
+				"TitleRect" : [0, 224, 320, 162],
+				"TitleSpeed" : 2,
+				"SubtitleRect" : [0, 386, 320, 62],
+				"CameraSpeed" : 5,
+				"FadeTime" : 0.5
 			}
 		}
 	}
