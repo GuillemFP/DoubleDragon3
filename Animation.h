@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Globals.h"
-#include "JsonHandler.h"
 #include "SDL/include/SDL_rect.h"
 
 #define ANIMATION_SPEED "Speed"
@@ -28,36 +27,6 @@ public:
 		return frames[(int)current_frame];
 	}
 
-	bool LoadAnimation(JSONParser* parser, const char* name)
-	{
-		bool ret = true;
-		SDL_Rect rect = { 0,0,0,0 };
-
-		if (parser->LoadObject(name) == true)
-		{
-			iframes = parser->GetInt(ANIMATION_FRAMES);
-			speed = parser->GetFloat(ANIMATION_SPEED);
-
-			if (parser->LoadArrayInObject(ANIMATION_SPRITES))
-			{
-				for (int i = 0; i < iframes; i++)
-				{
-					rect.x = parser->GetArrayValueFromArray(i, 0);
-					rect.y = parser->GetArrayValueFromArray(i, 1);
-					rect.w = parser->GetArrayValueFromArray(i, 2);
-					rect.h = parser->GetArrayValueFromArray(i, 3);
-					frames.push_back(rect);
-				}
-			}
-
-			ret = parser->UnloadObject();
-		}
-		else
-			ret = false;
-
-		return ret;
-	}
-
 	bool Finished() const
 	{
 		return loops > 0;
@@ -76,7 +45,6 @@ public:
 private:
 	float current_frame = 0.0f;
 	int loops = 0;
-	int iframes = 0;
 };
 
 #endif // !ANIMATION_H
