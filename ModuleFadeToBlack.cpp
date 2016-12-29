@@ -101,11 +101,6 @@ bool ModuleFadeToBlack::isFading() const
 	return (fade_time->GetState() == RUNNING);
 }
 
-bool ModuleFadeToBlack::isFadingIn() const
-{
-	return fading_in;
-}
-
 bool ModuleFadeToBlack::ConstantConfig()
 {
 	bool ret = true;

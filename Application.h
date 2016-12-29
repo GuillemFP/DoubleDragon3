@@ -44,6 +44,7 @@ public:
 
 private:
 	std::list<Module*> modules;
+	float ffade_time = 1.0f;
 };
 
 extern Application* App;
