@@ -202,7 +202,7 @@ bool JSONParser::GetBool(const char * name)
 	return ret;
 }
 
-int JSONParser::GetRectFromArray(int index_array, int rect_coordinate)
+int JSONParser::GetArrayValueFromArray(int index_array, int rect_coordinate)
 {
 	int ret = NULL;
 	
@@ -215,18 +215,43 @@ int JSONParser::GetRectFromArray(int index_array, int rect_coordinate)
 		}
 		else
 		{
-			LOG("JSONParser: Error loading rectangle. Index %i out of range.", index_array);
+			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", index_array);
 			bparsing_success = false;
 		}
 	}
 	else
 	{
-		LOG("JSONParser: No array loaded to extract rectangle.");
+		LOG("JSONParser: No array loaded to extract value.");
 		bparsing_success = false;
 	}
 
 	return ret;
 	// TODO: insert return statement here
+}
+
+int JSONParser::GetValueFromArray(int index_array)
+{
+	int ret = NULL;
+
+	if (loaded_array != nullptr)
+	{
+		if (index_array < json_array_get_count(loaded_array))
+		{
+			ret = json_array_get_number(loaded_array, index_array);
+		}
+		else
+		{
+			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", index_array);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
 }
 
 bool JSONParser::GetError() const

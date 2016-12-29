@@ -42,10 +42,10 @@ public:
 			{
 				for (int i = 0; i < iframes; i++)
 				{
-					rect.x = parser->GetRectFromArray(i, 0);
-					rect.y = parser->GetRectFromArray(i, 1);
-					rect.w = parser->GetRectFromArray(i, 2);
-					rect.h = parser->GetRectFromArray(i, 3);
+					rect.x = parser->GetArrayValueFromArray(i, 0);
+					rect.y = parser->GetArrayValueFromArray(i, 1);
+					rect.w = parser->GetArrayValueFromArray(i, 2);
+					rect.h = parser->GetArrayValueFromArray(i, 3);
 					frames.push_back(rect);
 				}
 			}

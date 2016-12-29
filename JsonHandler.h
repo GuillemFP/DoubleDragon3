@@ -19,7 +19,8 @@ public:
 	float GetFloat(const char* name);
 	bool GetBool(const char* name);
 
-	int GetRectFromArray(int index_array, int rect_coordinate);
+	int GetArrayValueFromArray(int index_array, int rect_coordinate);
+	int GetValueFromArray(int index_array);
 
 	bool GetError() const;
 
