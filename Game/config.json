@@ -45,7 +45,8 @@
 					]
 				},
 				"TimeSeconds" : 6,
-				"FadeTime" : 2
+				"FadeTime" : 2,
+				"Music" : "assets/mus_rosetta-stone.ogg"
 			},
 			"SecondScreen" : {
 				"TexturePath" : "assets/title_flyingedge.png",
@@ -60,7 +61,7 @@
 				"TitleSpeed" : 2,
 				"SubtitleRect" : [0, 386, 320, 62],
 				"CameraSpeed" : 5,
-				"FadeTime" : 0.5
+				"TransitionTime" : 0.5
 			}
 		}
 	}

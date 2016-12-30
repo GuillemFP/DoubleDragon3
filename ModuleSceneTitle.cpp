@@ -39,6 +39,7 @@ bool ModuleSceneTitle::Start()
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			ffade_time = abs(App->parser->GetFloat("FadeTime"));
 			float seconds = abs(App->parser->GetFloat("TimeSeconds"));
+			App->audio->PlayMusic(App->parser->GetString("Music"));
 			ret = App->parser->UnloadObject();
 
 			seconds -= ffade_time;
@@ -47,7 +48,6 @@ bool ModuleSceneTitle::Start()
 		}
 		else
 			ret = false;
-		App->audio->PlayMusic("assets/mus_rosetta-stone.ogg");
 		break;
 	case LOGO2:
 		if (App->parser->LoadObject(MODULESCENE_SECOND))
@@ -78,7 +78,7 @@ bool ModuleSceneTitle::Start()
 			int speed = abs(App->parser->GetInt("TitleSpeed"));
 			fspeed_title = -(float)speed;
 			ispeed_camera = abs(App->parser->GetInt("CameraSpeed")) * App->window->GetScreenSize();
-			ffade_time = abs(App->parser->GetFloat("FadeTime"));
+			ffade_time = abs(App->parser->GetFloat("TransitionTime"));
 			ret = App->parser->UnloadObject();
 
 			ifinalpos_cam = App->window->GetScreenWidth() - background.w;
