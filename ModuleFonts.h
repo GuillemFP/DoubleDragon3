@@ -29,15 +29,17 @@ public:
 	bool CleanUp();
 
 	int Load(const char* order, int char_width, int font_height, iPoint font_origin);
+	bool Blit(int id_font, iPoint origin, int number);
+	bool Blit(int id_font, iPoint origin, int number, float speed);
+	bool Blit(int id_font, iPoint origin, const char* string);
 	bool Blit(int id_font, iPoint origin, const char* string, float speed);
-
-private:
-	
 
 private:
 	SDL_Texture* texture;
 	std::vector<Font*> fonts;
+
 	int num_fonts = 0;
+	float fDEFAULT_SPEED = 1.0f;
 };
 
 

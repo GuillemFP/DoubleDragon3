@@ -16,12 +16,12 @@ ModuleFonts::~ModuleFonts()
 bool ModuleFonts::Start()
 {
 	bool ret = true;
-	
 
 	LOG("Loading fonts");
 
 	if (App->parser->LoadObject(FONTS_SECTION))
 	{
+		fDEFAULT_SPEED = App->parser->GetFloat("DefaultBlitSpeed");
 		texture = App->textures->Load(App->parser->GetString("TexturePath"));
 		int num_fonts = App->parser->GetInt("NumFonts");
 		App->parser->LoadArrayInObject("Fonts");
@@ -34,8 +34,6 @@ bool ModuleFonts::Start()
 		App->parser->UnloadObject();
 	}
 
-	/*Load(" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, { 0,0 });*/
-
 	return ret;
 }
 
@@ -45,7 +43,7 @@ bool ModuleFonts::CleanUp()
 
 	for (std::vector<Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
 	{
-		RELEASE((*it)->table_char);
+		RELEASE_ARRAY((*it)->table_char);
 		RELEASE(*it)
 	}
 
@@ -73,12 +71,30 @@ int ModuleFonts::Load(const char * order, int char_width, int font_height, iPoin
 	return num_fonts++;
 }
 
+bool ModuleFonts::Blit(int id_font, iPoint origin, int number)
+{
+	return Blit(id_font, origin, number, fDEFAULT_SPEED);
+}
+
+bool ModuleFonts::Blit(int id_font, iPoint origin, int number, float speed)
+{
+	bool ret;
+	char* string = new char[5];
+	sprintf(string, "%d", number);
+	ret = Blit(id_font, origin, string, speed);
+	return ret;
+}
+
+bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string)
+{
+	return Blit(id_font, origin, string, fDEFAULT_SPEED);
+}
+
 bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string, float speed)
 {
 	bool ret = true;
-	char* match;
-	int char_pos;
 	Font* font;
+	char* match;
 	iPoint relative;
 
 	if (id_font < fonts.size())
@@ -89,21 +105,21 @@ bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string, float spe
 			match = strchr(font->table_char, string[i]);
 			if (match != nullptr)
 			{
-				char_pos = (int) (match - font->table_char);
-				relative = {(font->char_width)*i, 0};
-				App->renderer->Blit(texture, origin + relative, &(font->textures_char[char_pos]), speed);
+				relative = { (font->char_width)*i, 0 };
+				if (App->renderer->Blit(texture, origin + relative, &(font->textures_char[(int)(match - font->table_char)]), speed) == false)
+					return false;
 			}
 			else
 			{
 				LOG("Error localizing character %c in font id %i", string[i], id_font);
-				ret = false;
+				return false;
 			}
 		}
 	}
 	else
 	{
 		LOG("Unknown font id: %i", id_font);
-		ret = false;
+		return false;
 	}
 
 	return ret;
