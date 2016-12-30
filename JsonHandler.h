@@ -26,6 +26,8 @@ public:
 	bool GetBool(const char* name);
 
 	int GetValueFromArray(int index_array);
+	const char* GetStringFromArrayInArray(int array_element, int index_array);
+	int GetIntFromArrayInArray(int array_element, int index_array);
 
 private:
 	bool ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array);

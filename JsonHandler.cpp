@@ -277,7 +277,75 @@ int JSONParser::GetValueFromArray(int index_array)
 		}
 		else
 		{
-			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", index_array);
+			LOG("JSONParser: Error loading element in loaded array. Index %i out of range.", index_array);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
+const char* JSONParser::GetStringFromArrayInArray(int array_element, int index_array)
+{
+	const char* ret = nullptr;
+
+	if (loaded_array != nullptr)
+	{
+		if (array_element < json_array_get_count(loaded_array))
+		{
+			JSON_Array* in_array = json_array_get_array(loaded_array, array_element);
+			if (index_array < json_array_get_count(in_array))
+			{
+				ret = json_array_get_string(in_array, index_array);
+			}
+			else
+			{
+				LOG("JSONParser: Error loading element in array. Index %i out of range.", index_array);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", array_element);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
+int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
+{
+	int ret = NULL;
+
+	if (loaded_array != nullptr)
+	{
+		if (array_element < json_array_get_count(loaded_array))
+		{
+			JSON_Array* in_array = json_array_get_array(loaded_array, array_element);
+			if (index_array < json_array_get_count(in_array))
+			{
+				ret = json_array_get_number(in_array, index_array);
+			}
+			else
+			{
+				LOG("JSONParser: Error loading element in array. Index %i out of range.", index_array);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", array_element);
 			bparsing_success = false;
 		}
 	}

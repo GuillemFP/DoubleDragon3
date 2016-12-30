@@ -14,6 +14,7 @@ class ModuleWindow;
 class ModuleRender;
 class ModuleTextures;
 class ModuleAudio;
+class ModuleFonts;
 
 class ModuleFadeToBlack;
 
@@ -35,6 +36,7 @@ public:
 	ModuleRender* renderer;
 	ModuleTextures* textures;
 	ModuleAudio* audio;
+	ModuleFonts* fonts;
 
 	ModuleFadeToBlack* fade;
 

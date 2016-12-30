@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModuleFonts.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
 #include "JsonHandler.h"
@@ -17,6 +18,7 @@ Application::Application()
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
+	modules.push_back(fonts = new ModuleFonts());
 
 	modules.push_back(scene_title = new ModuleSceneTitle(parser, false));
 

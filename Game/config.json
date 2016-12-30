@@ -30,6 +30,18 @@
 		},
 		"FadeToBlack" : {
 			"DefaultTime" : 1
+		},
+		"Fonts" : {
+			"TexturePath" : "assets/fonts.png",
+			"NumFonts" : 6,
+			"Fonts" : [
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 0],
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 8],
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 16],
+				[" 0123456789timecns:", 8, 15, 0, 24],
+				["0123456789", 16, 24, 0, 40],
+				["0123456789", 16, 24, 0, 64]
+			]
 		}
 	},
 	"Scenes" : {
@@ -46,7 +58,7 @@
 				},
 				"TimeSeconds" : 6,
 				"FadeTime" : 2,
-				"Music" : "assets/mus_rosetta-stone.ogg"
+				"MusicPath" : "assets/mus_rosetta-stone.ogg"
 			},
 			"SecondScreen" : {
 				"TexturePath" : "assets/title_flyingedge.png",
