@@ -12,7 +12,7 @@
 
 ModuleSceneTitle::ModuleSceneTitle(JSONParser* parser, bool active) : Module(MODULESCENE_TITLE, active), current_state(LOGO1)
 {
-	if (parser->LoadObject(MODULESCENE_FIRST))
+	if (parser->LoadObject(SCENE_SECTION_FIRST))
 	{
 		parser->GetAnimation(animated_title, "SegaLogo_Animation");
 		parser->UnloadObject();
@@ -34,12 +34,12 @@ bool ModuleSceneTitle::Start()
 	switch (current_state)
 	{
 	case LOGO1:
-		if (App->parser->LoadObject(MODULESCENE_FIRST))
+		if (App->parser->LoadObject(SCENE_SECTION_FIRST))
 		{
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			ffade_time = abs(App->parser->GetFloat("FadeTime"));
 			float seconds = abs(App->parser->GetFloat("TimeSeconds"));
-			App->audio->PlayMusic(App->parser->GetString("Music"));
+			App->audio->PlayMusic(App->parser->GetString("MusicPath"));
 			ret = App->parser->UnloadObject();
 
 			seconds -= ffade_time;
@@ -50,7 +50,7 @@ bool ModuleSceneTitle::Start()
 			ret = false;
 		break;
 	case LOGO2:
-		if (App->parser->LoadObject(MODULESCENE_SECOND))
+		if (App->parser->LoadObject(SCENE_SECTION_SECOND))
 		{
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			App->parser->LoadArrayInObject("BackgroundColor");
@@ -70,7 +70,7 @@ bool ModuleSceneTitle::Start()
 			ret = false;
 		break;
 	case TITLE_SCROLL:
-		if (App->parser->LoadObject(MODULESCENE_THIRD))
+		if (App->parser->LoadObject(SCENE_SECTION_THIRD))
 		{
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			App->parser->GetRect(background, "BackgroundRect");
@@ -90,7 +90,7 @@ bool ModuleSceneTitle::Start()
 			ret = false;
 		break;
 	case TITLE:
-		if (App->parser->LoadObject(MODULESCENE_THIRD))
+		if (App->parser->LoadObject(SCENE_SECTION_THIRD))
 		{
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			App->parser->GetRect(background, "BackgroundRect");

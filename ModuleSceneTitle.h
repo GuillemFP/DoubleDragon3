@@ -7,11 +7,11 @@
 #include "Timer.h"
 
 #define MODULESCENE_TITLE "ModuleScene_Title"
-#define MODULESCENE_FIRST "Config.Scenes.Title.FirstScreen"
-#define MODULESCENE_SECOND "Config.Scenes.Title.SecondScreen"
-#define MODULESCENE_THIRD "Config.Scenes.Title.TitleScreen"
+#define SCENE_SECTION_FIRST "Config.Scenes.Title.FirstScreen"
+#define SCENE_SECTION_SECOND "Config.Scenes.Title.SecondScreen"
+#define SCENE_SECTION_THIRD "Config.Scenes.Title.TitleScreen"
 
-class SDL_Texture;
+struct SDL_Texture;
 class JSONParser;
 
 enum TitleScreen
