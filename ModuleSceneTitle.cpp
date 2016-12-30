@@ -39,12 +39,17 @@ bool ModuleSceneTitle::Start()
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			ffade_time = abs(App->parser->GetFloat("FadeTime"));
 			float seconds = abs(App->parser->GetFloat("TimeSeconds"));
-			App->audio->PlayMusic(App->parser->GetString("MusicPath"));
+			float music_fade = App->parser->GetFloat("MusicFade");
+			const char* music_string = App->parser->GetString("MusicPath");
 			ret = App->parser->UnloadObject();
 
-			seconds -= ffade_time;
-			seconds = (seconds > 0.0f) ? seconds : ffade_time;
-			timer.Start((Uint32)seconds * 1000);
+			if (ret == true)
+			{
+				seconds -= ffade_time;
+				seconds = (seconds > 0.0f) ? seconds : ffade_time;
+				timer.Start((Uint32)seconds * 1000);
+				App->audio->PlayMusic(music_string, music_fade);
+			}
 		}
 		else
 			ret = false;
@@ -62,9 +67,12 @@ bool ModuleSceneTitle::Start()
 			float seconds = abs(App->parser->GetFloat("TimeSeconds"));
 			ret = App->parser->UnloadObject();
 
-			seconds -= ffade_time;
-			seconds = (seconds > 0.0f) ? seconds : ffade_time;
-			timer.Start((Uint32)seconds * 1000);
+			if (ret == true)
+			{
+				seconds -= ffade_time;
+				seconds = (seconds > 0.0f) ? seconds : ffade_time;
+				timer.Start((Uint32)seconds * 1000);
+			}
 		}
 		else
 			ret = false;
@@ -81,10 +89,13 @@ bool ModuleSceneTitle::Start()
 			ffade_time = abs(App->parser->GetFloat("TransitionTime"));
 			ret = App->parser->UnloadObject();
 
-			ifinalpos_cam = App->window->GetScreenWidth() - background.w;
-			ipos_background = { 0,0 };
-			ipos_title = { (ifinalpos_cam * speed + (App->window->GetScreenWidth() - title.w) / 2), 0 };
-			ifinalpos_cam *= App->window->GetScreenSize();
+			if (ret == true)
+			{
+				ifinalpos_cam = App->window->GetScreenWidth() - background.w;
+				ipos_background = { 0,0 };
+				ipos_title = { (ifinalpos_cam * speed + (App->window->GetScreenWidth() - title.w) / 2), 0 };
+				ifinalpos_cam *= App->window->GetScreenSize();
+			}
 		}
 		else
 			ret = false;
@@ -97,10 +108,13 @@ bool ModuleSceneTitle::Start()
 			App->parser->GetRect(title, "TitleRect");
 			App->parser->GetRect(subtitle, "SubtitleRect");
 			ret = App->parser->UnloadObject();
-
-			ipos_background = { App->window->GetScreenWidth() - background.w,0 };
-			ipos_title = { (App->window->GetScreenWidth() - title.w) / 2,0 };
-			ipos_subtitle = { (App->window->GetScreenWidth() - title.w) / 2,title.h };
+			
+			if (ret == true)
+			{
+				ipos_background = { App->window->GetScreenWidth() - background.w,0 };
+				ipos_title = { (App->window->GetScreenWidth() - title.w) / 2,0 };
+				ipos_subtitle = { (App->window->GetScreenWidth() - title.w) / 2,title.h };
+			}
 		}
 		else
 			ret = false;

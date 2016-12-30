@@ -22,6 +22,7 @@ public:
 
 	bool PlayMusic(const char* path);
 	bool PlayMusic(const char* path, float fade_time);
+	void StopMusic();
 	unsigned int LoadFx(const char* path);
 	bool PlayFx(unsigned int fx, int repeat = 0);
 

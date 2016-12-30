@@ -32,6 +32,7 @@
 			"DefaultTime" : 1
 		},
 		"Fonts" : {
+			"DefaultBlitSpeed" : 0,
 			"TexturePath" : "assets/fonts.png",
 			"NumFonts" : 6,
 			"Fonts" : [
@@ -58,7 +59,8 @@
 				},
 				"TimeSeconds" : 6,
 				"FadeTime" : 2,
-				"MusicPath" : "assets/mus_rosetta-stone.ogg"
+				"MusicPath" : "assets/mus_rosetta-stone.ogg",
+				"MusicFade" : 0
 			},
 			"SecondScreen" : {
 				"TexturePath" : "assets/title_flyingedge.png",
