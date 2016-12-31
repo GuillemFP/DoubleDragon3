@@ -5,6 +5,7 @@
 #include "Animation.h"
 
 
+
 JSONParser::JSONParser(const char* file)
 {
 	root_object = json_value_get_object(json_parse_file(file));
@@ -99,6 +100,39 @@ bool JSONParser::GetRect(SDL_Rect& rect, const char* name)
 	else
 	{
 		LOG("JSONParser: No section loaded. Rectangle %s cannot load.", name);
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
+bool JSONParser::GetPoint(iPoint& point, const char * name)
+{
+	bool ret = false;
+
+	JSON_Array* loaded_array;
+
+	if (loaded_object != nullptr)
+	{
+		if (json_object_dothas_value_of_type(loaded_object, name, JSONArray))
+		{
+			loaded_array = json_object_get_array(loaded_object, name);
+			ret = ArrayToPoint(point, loaded_array);
+			if (ret == false)
+			{
+				LOG("JSONParser: Point array %s has incorrect number of elements.", name);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Point name %s not found.", name);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No section loaded. Point %s cannot load.", name);
 		bparsing_success = false;
 	}
 
@@ -265,7 +299,7 @@ bool JSONParser::GetBool(const char * name)
 	return ret;
 }
 
-int JSONParser::GetValueFromArray(int index_array)
+int JSONParser::GetIntFromArray(int index_array)
 {
 	int ret = NULL;
 
@@ -290,28 +324,19 @@ int JSONParser::GetValueFromArray(int index_array)
 	return ret;
 }
 
-const char* JSONParser::GetStringFromArrayInArray(int array_element, int index_array)
+const char * JSONParser::GetStringFromArray(int index_array)
 {
 	const char* ret = nullptr;
 
 	if (loaded_array != nullptr)
 	{
-		if (array_element < json_array_get_count(loaded_array))
+		if (index_array < json_array_get_count(loaded_array))
 		{
-			JSON_Array* in_array = json_array_get_array(loaded_array, array_element);
-			if (index_array < json_array_get_count(in_array))
-			{
-				ret = json_array_get_string(in_array, index_array);
-			}
-			else
-			{
-				LOG("JSONParser: Error loading element in array. Index %i out of range.", index_array);
-				bparsing_success = false;
-			}
+			ret = json_array_get_string(loaded_array, index_array);
 		}
 		else
 		{
-			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", array_element);
+			LOG("JSONParser: Error loading element in loaded array. Index %i out of range.", index_array);
 			bparsing_success = false;
 		}
 	}
@@ -358,7 +383,41 @@ int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
 	return ret;
 }
 
-bool JSONParser::ArrayToRect(SDL_Rect & rect, JSON_Array * rect_array)
+const char* JSONParser::GetStringFromArrayInArray(int array_element, int index_array)
+{
+	const char* ret = nullptr;
+
+	if (loaded_array != nullptr)
+	{
+		if (array_element < json_array_get_count(loaded_array))
+		{
+			JSON_Array* in_array = json_array_get_array(loaded_array, array_element);
+			if (index_array < json_array_get_count(in_array))
+			{
+				ret = json_array_get_string(in_array, index_array);
+			}
+			else
+			{
+				LOG("JSONParser: Error loading element in array. Index %i out of range.", index_array);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Error loading array in loaded array. Index %i out of range.", array_element);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
+bool JSONParser::ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array)
 {
 	bool ret = false;
 
@@ -368,6 +427,20 @@ bool JSONParser::ArrayToRect(SDL_Rect & rect, JSON_Array * rect_array)
 		rect.y = json_array_get_number(rect_array, 1);
 		rect.w = json_array_get_number(rect_array, 2);
 		rect.h = json_array_get_number(rect_array, 3);
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool JSONParser::ArrayToPoint(iPoint& point, JSON_Array* point_array)
+{
+	bool ret = false;
+
+	if (json_array_get_count(point_array) == 2)
+	{
+		point.x = json_array_get_number(point_array, 0);
+		point.y = json_array_get_number(point_array, 1);
 		ret = true;
 	}
 

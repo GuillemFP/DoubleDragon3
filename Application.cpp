@@ -7,6 +7,7 @@
 #include "ModuleFonts.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
+#include "ModuleScenePreStage.h"
 #include "JsonHandler.h"
 
 Application::Application()
@@ -21,6 +22,7 @@ Application::Application()
 	modules.push_back(fonts = new ModuleFonts());
 
 	modules.push_back(scene_title = new ModuleSceneTitle(parser, false));
+	modules.push_back(scene_prestage = new ModuleScenePreStage(parser, false));
 
 	modules.push_back(fade = new ModuleFadeToBlack());
 }

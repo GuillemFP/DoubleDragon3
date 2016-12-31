@@ -18,7 +18,12 @@ public:
 
 	void Start()
 	{
-		Start(0);
+		Start((Uint32)0);
+	}
+
+	void Start(float max_time)
+	{
+		Start((Uint32)max_time * 1000);
 	}
 
 	void Start(Uint32 max_time)

@@ -19,6 +19,7 @@ class ModuleFonts;
 class ModuleFadeToBlack;
 
 class ModuleSceneTitle;
+class ModuleScenePreStage;
 
 class Application
 {
@@ -41,6 +42,7 @@ public:
 	ModuleFadeToBlack* fade;
 
 	ModuleSceneTitle* scene_title;
+	ModuleScenePreStage* scene_prestage;
 
 	JSONParser* parser;
 

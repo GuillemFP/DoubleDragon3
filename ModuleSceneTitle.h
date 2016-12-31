@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "Animation.h"
 #include "Point.h"
-#include "Timer.h"
 
 #define MODULESCENE_TITLE "ModuleScene_Title"
 #define SCENE_SECTION_FIRST "Config.Scenes.Title.FirstScreen"
@@ -13,14 +12,15 @@
 
 struct SDL_Texture;
 class JSONParser;
+class Timer;
 
 enum TitleScreen
 {
-	UNKNOWN,
 	LOGO1,
 	LOGO2,
 	TITLE_SCROLL,
-	TITLE
+	TITLE,
+	TITLE_UNKNOWN
 };
 
 class ModuleSceneTitle : public Module
@@ -37,9 +37,9 @@ private:
 	SDL_Texture* texture = nullptr;
 
 	Animation animated_title;
-	SDL_Rect background = { 0,0,0,0 };
-	SDL_Rect title = { 0,0,0,0 };
-	SDL_Rect subtitle = { 0,0,0,0 };
+	SDL_Rect rect_back = { 0,0,0,0 };
+	SDL_Rect rect_title = { 0,0,0,0 };
+	SDL_Rect rect_subtitle = { 0,0,0,0 };
 
 	iPoint ipos_background = { 0,0 };
 	iPoint ipos_title = { 0,0 };
@@ -54,10 +54,10 @@ private:
 	Uint8 backcolor_b = 0;
 	Uint8 backcolor_a = 0;
 
-	TitleScreen current_state = UNKNOWN;
+	TitleScreen current_state = TITLE_UNKNOWN;
 
-	Timer timer;
-	float ffade_time;
+	Timer* timer = nullptr;
+	float ffade_time = 1.0f;
 };
 
 

@@ -36,9 +36,9 @@
 			"TexturePath" : "assets/fonts.png",
 			"NumFonts" : 6,
 			"Fonts" : [
-				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 0],
-				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 8],
-				[" 0123456789abcdefghijklmnopqrstuvwxyz?-", 8, 8, 0, 16],
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 0],
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 8],
+				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 16],
 				[" 0123456789timecns:", 8, 15, 0, 24],
 				["0123456789", 16, 24, 0, 40],
 				["0123456789", 16, 24, 0, 64]
@@ -75,7 +75,75 @@
 				"TitleSpeed" : 2,
 				"SubtitleRect" : [0, 386, 320, 62],
 				"CameraSpeed" : 5,
-				"TransitionTime" : 0.5
+				"TransitionTime" : 0.5,
+				"FadeTime" : 1
+			}
+		},
+		"PreStage" : {
+			"Point_Animation" : {
+				"Speed" : 0.3,
+				"Frames" : 16,
+				"Sprites" : [
+					[232,145,6,6],[239,145,6,6],[246,145,6,6],[253,145,6,6],[260,145,6,6],[267,145,6,6],[274,145,6,6],[281,145,6,6],
+					[281,145,6,6],[274,145,6,6],[267,145,6,6],[260,145,6,6],[253,145,6,6],[246,145,6,6],[239,145,6,6],[232,145,6,6]
+				]
+			},
+			"Eyes_Animation" : {
+				"Speed" : 0.1,
+				"Frames" : 16,
+				"Sprites" : [
+					[232,145,6,6],[239,145,6,6],[246,145,6,6],[253,145,6,6],[260,145,6,6],[267,145,6,6],[274,145,6,6],[281,145,6,6],
+					[281,145,6,6],[274,145,6,6],[267,145,6,6],[260,145,6,6],[253,145,6,6],[246,145,6,6],[239,145,6,6],[232,145,6,6]
+				]
+			},
+			"Mouth_Animation" : {
+				"Speed" : 0.1,
+				"Frames" : 16,
+				"Sprites" : [
+					[232,145,6,6],[239,145,6,6],[246,145,6,6],[253,145,6,6],[260,145,6,6],[267,145,6,6],[274,145,6,6],[281,145,6,6],
+					[281,145,6,6],[274,145,6,6],[267,145,6,6],[260,145,6,6],[253,145,6,6],[246,145,6,6],[239,145,6,6],[232,145,6,6]
+				]
+			},
+			"History1" : {
+				"TexturePath" : "assets/history.png",
+				"BackRect" : [0, 0, 160, 128],
+				"BackPos" : [80, 16],
+				"NumTextLines" : 4,
+				"TextLines" : [ 
+					[1, 32, 152, "billy and jimmy went on a journey"], [1, 41, 160, "to complete their martial arts."], 
+					[1, 9, 168, "on their return home, two years later,"], [1, 57, 176, "they met a fortune teller."]
+				],
+				"TimeSeconds" : 10,
+				"FadeTime" : 1
+			},
+			"History23" : {
+				"TexturePath" : "assets/history.png",
+				"BackRect" : [160, 0, 176, 112],
+				"BackPos" : [72, 24],
+				"NumTextLines" : 7,
+				"FirstPrint" : 3,
+				"TextLines" : [ 
+					[0, 136, 152, "hiruko"], [1, 48, 168, "find the three rosetta stones"], 
+					[1, 97, 176, "then go to egypt,"], 
+					[0, 136, 152, "hiruko"], [1, 41, 168, "there you will find the worlds"], 
+					[1, 49, 176, "strongest enemy. but beware,"], [1, 56, 184, "no one has come back alive."]
+				],
+				"TimeSeconds" : 5,
+				"FadeTime" : 1
+			},
+			"Stage3" : {
+				"TexturePath" : "assets/stage3_map.png",
+				"MapRect" : [0, 0, 288, 144],
+				"MapPos" : [16, 24],
+				"MissionRect" : [0, 145, 139, 15],
+				"MissionPos" : [90, 177],
+				"CountryRect" : [0, 161, 75, 15],
+				"CountryPos" : [122, 201],
+				"PointOnMap" : [241,33],
+				"TimeSeconds" : 10,
+				"FadeTime" : 2,
+				"MusicPath" : "assets/mus_in-japan.ogg",
+				"MusicFade" : 0
 			}
 		}
 	}
