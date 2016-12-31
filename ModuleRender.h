@@ -26,12 +26,15 @@ public:
 
 	bool BlitCentered(SDL_Texture* texture, SDL_Rect* section, float speed);
 	bool BlitCentered(SDL_Texture* texture, SDL_Rect* section);
-	bool Blit(SDL_Texture* texture, iPoint position, SDL_Rect* section);
-	bool Blit(SDL_Texture* texture, iPoint position, SDL_Rect* section, float speed);
+	bool BlitXCentered(SDL_Texture* texture, int y, SDL_Rect* section, float speed);
+	bool BlitXCentered(SDL_Texture* texture, int y, SDL_Rect* section);
+	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section);
+	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 
 private:
 	bool ConstantConfig();
+	void DebugCamera();
 
 public:
 	SDL_Renderer* renderer = nullptr;
@@ -43,6 +46,8 @@ private:
 	int iSCREENHEIGHT = 0;
 	float fDEFAULT_SPEED = 1.0f;
 	bool bVSYNC = true;
+
+	bool debug = false;
 };
 
 #endif // !MODULERENDER_H

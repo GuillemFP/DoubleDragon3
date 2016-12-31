@@ -11,6 +11,13 @@
 struct SDL_Texture;
 struct SDL_Rect;
 
+struct TextLine
+{
+	const char* line;
+	int x, y;
+	int id_font;
+};
+
 struct Font
 {
 	int id_font;
@@ -28,11 +35,16 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	int Load(const char* order, int char_width, int font_height, iPoint font_origin);
-	bool Blit(int id_font, iPoint origin, int number);
-	bool Blit(int id_font, iPoint origin, int number, float speed);
-	bool Blit(int id_font, iPoint origin, const char* string);
-	bool Blit(int id_font, iPoint origin, const char* string, float speed);
+	int Load(const char* order, int char_width, int font_height, const iPoint& font_origin);
+
+	bool BlitXCentered(int id_font, int y, const char* string);
+	bool BlitXCentered(int id_font, int y, const char* string, float speed);
+	bool Blit(int id_font, const iPoint& origin, int number);
+	bool Blit(int id_font, const iPoint& origin, int number, float speed);
+	bool Blit(int id_font, const iPoint& origin, const char* string);
+	bool Blit(int id_font, const iPoint& origin, const char* string, float speed);
+
+	void FillTextLine(TextLine* line, int num_line);
 
 private:
 	SDL_Texture* texture;

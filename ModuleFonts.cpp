@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
+#include "ModuleWindow.h"
 #include "ModuleFonts.h"
 #include "JsonHandler.h"
 
@@ -50,7 +51,7 @@ bool ModuleFonts::CleanUp()
 	return true;
 }
 
-int ModuleFonts::Load(const char * order, int char_width, int font_height, iPoint font_origin)
+int ModuleFonts::Load(const char * order, int char_width, int font_height, const iPoint& font_origin)
 {
 	Font* font = new Font;
 	SDL_Rect rect;
@@ -71,12 +72,27 @@ int ModuleFonts::Load(const char * order, int char_width, int font_height, iPoin
 	return num_fonts++;
 }
 
-bool ModuleFonts::Blit(int id_font, iPoint origin, int number)
+bool ModuleFonts::BlitXCentered(int id_font, int y, const char * string)
+{
+	return BlitXCentered(id_font, y, string, fDEFAULT_SPEED);
+}
+
+bool ModuleFonts::BlitXCentered(int id_font, int y, const char * string, float speed)
+{
+	iPoint origin;
+
+	origin.x = 0.5*App->window->GetScreenWidth() - 0.5*fonts[id_font]->char_width*strlen(string);
+	origin.y = y;
+
+	return Blit(id_font, origin, string, speed);
+}
+
+bool ModuleFonts::Blit(int id_font, const iPoint& origin, int number)
 {
 	return Blit(id_font, origin, number, fDEFAULT_SPEED);
 }
 
-bool ModuleFonts::Blit(int id_font, iPoint origin, int number, float speed)
+bool ModuleFonts::Blit(int id_font, const iPoint& origin, int number, float speed)
 {
 	bool ret;
 	char* string = new char[5];
@@ -85,12 +101,12 @@ bool ModuleFonts::Blit(int id_font, iPoint origin, int number, float speed)
 	return ret;
 }
 
-bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string)
+bool ModuleFonts::Blit(int id_font, const iPoint& origin, const char* string)
 {
 	return Blit(id_font, origin, string, fDEFAULT_SPEED);
 }
 
-bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string, float speed)
+bool ModuleFonts::Blit(int id_font, const iPoint& origin, const char* string, float speed)
 {
 	bool ret = true;
 	Font* font;
@@ -123,4 +139,12 @@ bool ModuleFonts::Blit(int id_font, iPoint origin, const char* string, float spe
 	}
 
 	return ret;
+}
+
+void ModuleFonts::FillTextLine(TextLine* line, int num_line)
+{
+	line->id_font = App->parser->GetIntFromArrayInArray(num_line, 0);
+	line->x = App->parser->GetIntFromArrayInArray(num_line, 1);
+	line->y = App->parser->GetIntFromArrayInArray(num_line, 2);
+	line->line = App->parser->GetStringFromArrayInArray(num_line, 3);
 }

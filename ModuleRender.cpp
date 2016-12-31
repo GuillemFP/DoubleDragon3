@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleFonts.h"
 #include "SDL/include/SDL.h"
 #include "JsonHandler.h"
 
@@ -51,26 +52,20 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::Update()
 {
-	// debug camera
-	int speed = 5;
-	
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->renderer->camera.y += speed;
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+		debug = !debug;
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->renderer->camera.y -= speed;
-
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->renderer->camera.x += speed;
-
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->renderer->camera.x -= speed;
+	if (debug == true)
+		DebugCamera();
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleRender::PostUpdate()
 {
+	if (debug == true)
+		App->fonts->Blit(0, { 0,0 }, "debug camera on", 0.0f);
+
 	SDL_RenderPresent(renderer);
 	return UPDATE_CONTINUE;
 }
@@ -112,12 +107,36 @@ bool ModuleRender::BlitCentered(SDL_Texture* texture, SDL_Rect* section, float s
 	return Blit(texture, draw_origin, section, speed);
 }
 
-bool ModuleRender::Blit(SDL_Texture* texture, iPoint position, SDL_Rect* section)
+bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * section)
+{
+	return BlitXCentered(texture, y, section, fDEFAULT_SPEED);
+}
+
+bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * section, float speed)
+{
+	iPoint draw_origin;
+
+	if (section != nullptr)
+	{
+		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*section->w;
+		draw_origin.y = y;
+	}
+	else
+	{
+		SDL_QueryTexture(texture, NULL, NULL, &draw_origin.x, &draw_origin.y);
+		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*draw_origin.x;
+		draw_origin.y = y;
+	}
+
+	return Blit(texture, draw_origin, section, speed);
+}
+
+bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section)
 {
 	return Blit(texture, position, section, fDEFAULT_SPEED);
 }
 
-bool ModuleRender::Blit(SDL_Texture* texture, iPoint position, SDL_Rect* section, float speed)
+bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed)
 {
 	bool ret = true;
 	SDL_Rect rect;
@@ -187,4 +206,22 @@ bool ModuleRender::ConstantConfig()
 	iSCREENHEIGHT = App->window->GetScreenHeight();
 
 	return ret;
+}
+
+void ModuleRender::DebugCamera()
+{
+	// debug camera
+	int speed = 5;
+	
+	if (App->input->GetKey(SDL_SCANCODE_KP_8) == KEY_REPEAT)
+		App->renderer->camera.y += speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_2) == KEY_REPEAT)
+		App->renderer->camera.y -= speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_4) == KEY_REPEAT)
+		App->renderer->camera.x += speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_6) == KEY_REPEAT)
+		App->renderer->camera.x -= speed;
 }
