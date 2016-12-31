@@ -50,7 +50,10 @@ private:
 	iPoint ipos_map = { 0,0 };
 	iPoint ipos_mission = { 0,0 };
 	iPoint ipos_country = { 0,0 };
+
 	iPoint ipos_point = { 0,0 };
+	iPoint ipos_face1 = { 0,0 };
+	iPoint ipos_face2 = { 0,0 };
 
 	PreStageScreen current_state = PRESTAGE_UNKNOWN;
 

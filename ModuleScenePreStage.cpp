@@ -16,6 +16,8 @@ ModuleScenePreStage::ModuleScenePreStage(JSONParser* parser, bool active) : Modu
 	if (parser->LoadObject(SCENE_SECTION_PRESTAGE))
 	{
 		parser->GetAnimation(animated_point, "Point_Animation");
+		parser->GetAnimation(face1, "Eyes_Animation");
+		parser->GetAnimation(face2, "Mouth_Animation");
 		parser->UnloadObject();
 	}
 	timer = new Timer();
@@ -69,6 +71,8 @@ bool ModuleScenePreStage::Start()
 			texture = App->textures->Load(App->parser->GetString("TexturePath"));
 			App->parser->GetRect(rect_map, "BackRect");
 			App->parser->GetPoint(ipos_map, "BackPos");
+			App->parser->GetPoint(ipos_face1, "EyesOnFace");
+			App->parser->GetPoint(ipos_face2, "MouthOnFace");
 			ffade_time = abs(App->parser->GetFloat("FadeTime"));
 			float seconds = abs(App->parser->GetFloat("TimeSeconds"));
 			int ilines = App->parser->GetInt("NumTextLines");
@@ -86,6 +90,10 @@ bool ModuleScenePreStage::Start()
 				seconds -= ffade_time;
 				seconds = (seconds > 0.0f) ? seconds : ffade_time;
 				timer->Start((Uint32)seconds * 1000);
+				ipos_face1.y += ipos_map.y;
+				ipos_face1.x += (App->window->GetScreenWidth() - rect_map.w) / 2;
+				ipos_face2.y += ipos_map.y;
+				ipos_face2.x += (App->window->GetScreenWidth() - rect_map.w) / 2;
 			}
 		}
 		break;
@@ -117,7 +125,6 @@ bool ModuleScenePreStage::Start()
 				ipos_point.x += (App->window->GetScreenWidth() - rect_map.w) / 2;
 			}
 		}
-		
 		break;
 	case PRESTAGE_UNKNOWN:
 		break;
@@ -139,7 +146,7 @@ bool ModuleScenePreStage::CleanUp()
 	case HISTORY1:
 		timer->Stop();
 		for (std::vector<TextLine*>::iterator it = lines.begin(); it != lines.end(); ++it)
-			delete(*it);
+			RELEASE(*it);
 		lines.clear();
 		current_state = HISTORY2;
 		break;
@@ -175,6 +182,8 @@ update_status ModuleScenePreStage::Update()
 		break;
 	case HISTORY2:
 		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->Blit(texture, ipos_face1, &(face1.GetCurrentFrame()));
+		App->renderer->Blit(texture, ipos_face2, &(face2.GetCurrentFrame()));
 		for (int i = 0; i < ilines_print; i++)
 			if (lines[i] != nullptr)
 				App->fonts->BlitXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
@@ -189,6 +198,8 @@ update_status ModuleScenePreStage::Update()
 		break;
 	case HISTORY3:
 		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->Blit(texture, ipos_face1, &(face1.GetCurrentFrame()));
+		App->renderer->Blit(texture, ipos_face2, &(face2.GetCurrentFrame()));
 		for (int i = ilines_print; i < lines.size(); i++)
 			if (lines[i] != nullptr)
 				App->fonts->BlitXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
