@@ -126,8 +126,6 @@ bool ModuleScenePreStage::Start()
 			}
 		}
 		break;
-	case PRESTAGE_UNKNOWN:
-		break;
 	default:
 		break;
 	}
@@ -159,8 +157,8 @@ bool ModuleScenePreStage::CleanUp()
 		current_state = STAGE3;
 		break;
 	case STAGE3:
-		break;
-	case PRESTAGE_UNKNOWN:
+		timer->Stop();
+		current_state = UNKNOWN;
 		break;
 	default:
 		break;
@@ -211,8 +209,8 @@ update_status ModuleScenePreStage::Update()
 		App->renderer->BlitXCentered(texture, ipos_mission.y, &rect_mission);
 		App->renderer->BlitXCentered(texture, ipos_country.y, &rect_country);
 		App->renderer->Blit(texture, ipos_point, &(animated_point.GetCurrentFrame()));
-		break;
-	case PRESTAGE_UNKNOWN:
+		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || timer->MaxTimeReached() == true) && App->fade->isFading() == false)
+			App->fade->FadeToBlack((Module*) App->scene_stage3, this, ffade_time);
 		break;
 	default:
 		break;

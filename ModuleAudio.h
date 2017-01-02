@@ -26,6 +26,8 @@ public:
 	unsigned int LoadFx(const char* path);
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	bool isPlayingMusic() const;
+
 	bool ConstantConfig();
 
 private:

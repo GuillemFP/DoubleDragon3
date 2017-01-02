@@ -14,17 +14,18 @@ struct SDL_Texture;
 class JSONParser;
 class Timer;
 
-enum TitleScreen
-{
-	LOGO1,
-	LOGO2,
-	TITLE_SCROLL,
-	TITLE,
-	TITLE_UNKNOWN
-};
-
 class ModuleSceneTitle : public Module
 {
+private:
+	enum TitleScreen
+	{
+		LOGO1,
+		LOGO2,
+		TITLE_SCROLL,
+		TITLE,
+		UNKNOWN
+	};
+
 public:
 	ModuleSceneTitle(JSONParser* parser, bool active = true);
 	~ModuleSceneTitle();
@@ -54,7 +55,7 @@ private:
 	Uint8 backcolor_b = 0;
 	Uint8 backcolor_a = 0;
 
-	TitleScreen current_state = TITLE_UNKNOWN;
+	TitleScreen current_state = UNKNOWN;
 
 	Timer* timer = nullptr;
 	float ffade_time = 1.0f;

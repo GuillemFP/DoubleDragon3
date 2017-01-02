@@ -17,17 +17,18 @@ struct TextLine;
 class JSONParser;
 class Timer;
 
-enum PreStageScreen
-{
-	HISTORY1,
-	HISTORY2,
-	HISTORY3,
-	STAGE3,
-	PRESTAGE_UNKNOWN
-};
-
 class ModuleScenePreStage : public Module
 {
+private:
+	enum PreStageScreen
+	{
+		HISTORY1,
+		HISTORY2,
+		HISTORY3,
+		STAGE3,
+		UNKNOWN
+	};
+
 public:
 	ModuleScenePreStage(JSONParser* parser, bool active = true);
 	~ModuleScenePreStage();
@@ -55,7 +56,7 @@ private:
 	iPoint ipos_face1 = { 0,0 };
 	iPoint ipos_face2 = { 0,0 };
 
-	PreStageScreen current_state = PRESTAGE_UNKNOWN;
+	PreStageScreen current_state = UNKNOWN;
 
 	std::vector<TextLine*> lines;
 	int ilines_print;

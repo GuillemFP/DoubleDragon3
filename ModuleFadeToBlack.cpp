@@ -47,7 +47,7 @@ update_status ModuleFadeToBlack::Update()
 		if (fading_in == false)
 			alpha_correction = 1.0f - alpha_correction;
 
-		SDL_SetRenderDrawColor(App->renderer->renderer, 0, 0, 0, (Uint8)(alpha_correction * 255.0f));
+		SDL_SetRenderDrawColor(App->renderer->renderer, fadecolor_r, fadecolor_g, fadecolor_b, (Uint8)(alpha_correction * 255.0f));
 		SDL_RenderFillRect(App->renderer->renderer, NULL);
 
 		if (module_off == nullptr && module_on != nullptr)
@@ -91,6 +91,33 @@ void ModuleFadeToBlack::FadeToBlack(Module * module_on, Module * module_off, flo
 {
 	fading_in = (module_off != nullptr) ? true : false;
 	fade_time->Start((Uint32)(time * 0.5f * 1000.0f));
+
+	fadecolor_r = 0;
+	fadecolor_g = 0;
+	fadecolor_b = 0;
+
+	this->module_on = module_on;
+	this->module_off = module_off;
+}
+
+void ModuleFadeToBlack::FadeToWhite(Module * module_on, float time)
+{
+	FadeToWhite(module_on, nullptr, time);
+}
+
+void ModuleFadeToBlack::FadeToWhite(Module * module_on, Module * module_off)
+{
+	FadeToWhite(module_on, module_off, fDEFAULT_TIME);
+}
+
+void ModuleFadeToBlack::FadeToWhite(Module * module_on, Module * module_off, float time)
+{
+	fading_in = (module_off != nullptr) ? true : false;
+	fade_time->Start((Uint32)(time * 0.5f * 1000.0f));
+
+	fadecolor_r = 255;
+	fadecolor_g = 255;
+	fadecolor_b = 255;
 
 	this->module_on = module_on;
 	this->module_off = module_off;

@@ -164,6 +164,11 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 	return ret;
 }
 
+bool ModuleAudio::isPlayingMusic() const
+{
+	return Mix_PlayingMusic();
+}
+
 bool ModuleAudio::ConstantConfig()
 {
 	bool ret = true;

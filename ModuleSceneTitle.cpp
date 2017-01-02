@@ -148,7 +148,7 @@ bool ModuleSceneTitle::CleanUp()
 		current_state = TITLE;
 		break;
 	case TITLE:
-		current_state = TITLE_UNKNOWN;
+		current_state = UNKNOWN;
 		break;
 	}
 
@@ -178,7 +178,7 @@ update_status ModuleSceneTitle::Update()
 		App->renderer->Blit(texture, ipos_background, &rect_back);
 		App->renderer->Blit(texture, ipos_title, &rect_title, fspeed_title);
 		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || App->renderer->camera.x <= ifinalpos_cam) && App->fade->isFading() == false)
-			App->fade->FadeToBlack(this, this, ffade_time);
+			App->fade->FadeToWhite(this, this, ffade_time);
 		break;
 	case TITLE:
 		App->renderer->Blit(texture, ipos_background, &rect_back);

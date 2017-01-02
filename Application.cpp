@@ -8,6 +8,7 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
 #include "ModuleScenePreStage.h"
+#include "ModuleSceneStage3.h"
 #include "JsonHandler.h"
 
 Application::Application()
@@ -23,6 +24,7 @@ Application::Application()
 
 	modules.push_back(scene_title = new ModuleSceneTitle(parser, false));
 	modules.push_back(scene_prestage = new ModuleScenePreStage(parser, false));
+	modules.push_back(scene_stage3 = new ModuleSceneStage3(false));
 
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
@@ -56,7 +58,7 @@ bool Application::Init()
 			ret = (*it)->Start();
 	}
 
-	fade->FadeToBlack(scene_title, ffade_time);
+	fade->FadeToBlack(scene_stage3, ffade_time);
 
 	return ret;
 }

@@ -20,6 +20,7 @@ class ModuleFadeToBlack;
 
 class ModuleSceneTitle;
 class ModuleScenePreStage;
+class ModuleSceneStage3;
 
 class Application
 {
@@ -43,6 +44,7 @@ public:
 
 	ModuleSceneTitle* scene_title;
 	ModuleScenePreStage* scene_prestage;
+	ModuleSceneStage3* scene_stage3;
 
 	JSONParser* parser;
 
