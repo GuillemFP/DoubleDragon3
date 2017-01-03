@@ -94,14 +94,14 @@ bool ModuleRender::BlitCentered(SDL_Texture* texture, SDL_Rect* section, float s
 
 	if (section != nullptr)
 	{
-		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*section->w;
-		draw_origin.y = 0.5*iSCREENHEIGHT - 0.5*section->h;
+		draw_origin.x = (iSCREENWIDTH - section->w) / 2;
+		draw_origin.y = (iSCREENHEIGHT - section->h) / 2;
 	}
 	else
 	{
 		SDL_QueryTexture(texture, NULL, NULL, &draw_origin.x, &draw_origin.y);
-		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*draw_origin.x;
-		draw_origin.y = 0.5*iSCREENHEIGHT - 0.5*draw_origin.y;
+		draw_origin.x = (iSCREENWIDTH - draw_origin.x) / 2;
+		draw_origin.y = (iSCREENHEIGHT - draw_origin.y) / 2;
 	}
 
 	return Blit(texture, draw_origin, section, speed);
@@ -118,25 +118,25 @@ bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * sectio
 
 	if (section != nullptr)
 	{
-		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*section->w;
+		draw_origin.x = (iSCREENWIDTH - section->w) / 2;
 		draw_origin.y = y;
 	}
 	else
 	{
 		SDL_QueryTexture(texture, NULL, NULL, &draw_origin.x, &draw_origin.y);
-		draw_origin.x = 0.5*iSCREENWIDTH - 0.5*draw_origin.x;
+		draw_origin.x = (iSCREENWIDTH - draw_origin.x) / 2;
 		draw_origin.y = y;
 	}
 
 	return Blit(texture, draw_origin, section, speed);
 }
 
-bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section)
+bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, bool inverse)
 {
-	return Blit(texture, position, section, fDEFAULT_SPEED);
+	return Blit(texture, position, section, fDEFAULT_SPEED, inverse);
 }
 
-bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed)
+bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed, bool inverse)
 {
 	bool ret = true;
 	SDL_Rect rect;
@@ -154,11 +154,23 @@ bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* 
 	rect.w *= iSCREENSIZE;
 	rect.h *= iSCREENSIZE;
 
-	if (SDL_RenderCopy(renderer,texture,section,&rect) != 0)
+	if (inverse == false)
 	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
+		if (SDL_RenderCopy(renderer, texture, section, &rect) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
 	}
+	else
+	{
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0.0, NULL, SDL_FLIP_HORIZONTAL) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
+	
 
 	return ret;
 }
@@ -188,6 +200,24 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	return ret;
 }
 
+void ModuleRender::CameraInsideScene(int player_x, int x_min, int x_max)
+{
+	if (player_x*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
+	{
+		if (camera.x < x_min)
+			camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - player_x)*iSCREENSIZE;
+		else
+			camera.x = x_min;
+	}
+	else if (player_x*iSCREENSIZE + camera.x > (int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
+	{
+		if (camera.x + camera.w < x_max * iSCREENSIZE)
+			camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - player_x)*iSCREENSIZE;
+		else
+			camera.x = x_max * iSCREENSIZE;
+	}
+}
+
 bool ModuleRender::ConstantConfig()
 {
 	bool ret = true;
@@ -196,10 +226,14 @@ bool ModuleRender::ConstantConfig()
 	{
 		bVSYNC = App->parser->GetBool("Vsync");
 		fDEFAULT_SPEED = App->parser->GetFloat("DefaultBlitSpeed");
+		fCAMERA_MARGIN = App->parser->GetFloat("CameraMargin");
 		ret = App->parser->UnloadObject();
 	}
 	else
 		ret = false;
+
+	if (fCAMERA_MARGIN < 0.5f)
+		fCAMERA_MARGIN = 0.5f;
 
 	iSCREENSIZE = App->window->GetScreenSize();
 	iSCREENWIDTH = App->window->GetScreenWidth();
