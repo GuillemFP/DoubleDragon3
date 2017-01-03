@@ -18,6 +18,18 @@ ModuleInput::ModuleInput(JSONParser* parser) : Module(MODULE_INPUT), mouse({0,0}
 		iNUM_BUTTONS = parser->GetInt("MouseButtons");
 		mouse_buttons = new KeyState[iNUM_BUTTONS];
 		memset(mouse_buttons, KEY_IDLE, iNUM_BUTTONS * sizeof(KeyState));
+
+		iNUMBERPLAYERS = parser->GetInt("NumberPlayers");
+		iKEYS_PLAYER = parser->GetInt("NumKeysPlayer");
+		keys_player = new SDL_Scancode[iNUMBERPLAYERS * iKEYS_PLAYER];
+		player_outputs = new bool[iNUMBERPLAYERS * iKEYS_PLAYER];
+		parser->LoadArrayInObject("KeysPlayer");
+		for (int i = 0; i < iNUMBERPLAYERS; i++)
+			for (int j = 0; j < iKEYS_PLAYER; j++)
+			{
+				keys_player[i*iKEYS_PLAYER + j] = SDL_GetScancodeFromName(parser->GetStringFromArrayInArray(i, j));
+				player_outputs[i*iKEYS_PLAYER + j] = false;
+			}
 	}
 	parser->UnloadObject();
 
@@ -26,7 +38,9 @@ ModuleInput::ModuleInput(JSONParser* parser) : Module(MODULE_INPUT), mouse({0,0}
 ModuleInput::~ModuleInput()
 {
 	RELEASE_ARRAY(keyboard);
-	RELEASE_ARRAY(keyboard);
+	RELEASE_ARRAY(mouse_buttons);
+	RELEASE_ARRAY(keys_player);
+	RELEASE_ARRAY(player_outputs);
 }
 
 bool ModuleInput::Init()
@@ -44,11 +58,16 @@ bool ModuleInput::Init()
 	return ret;
 }
 
+bool ModuleInput::Start()
+{
+	iSCREENSIZE = App->window->GetScreenSize();
+
+	return true;
+}
+
 update_status ModuleInput::PreUpdate()
 {
 	static SDL_Event event_general;
-
-	int iscreen_size = App->window->GetScreenSize();
 
 	mouse_motion = { 0, 0 };
 	memset(bwindowEvents, false, WE_COUNT * sizeof(bool));
@@ -71,6 +90,11 @@ update_status ModuleInput::PreUpdate()
 			else
 				keyboard[i] = KEY_IDLE;
 		}
+	}
+
+	for (int i = 0; i < iNUMBERPLAYERS * iKEYS_PLAYER; i++)
+	{
+		player_outputs[i] = (bool) keys[keys_player[i]];
 	}
 
 	for (int i = 0; i < iNUM_BUTTONS; ++i)
@@ -115,10 +139,10 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			mouse_motion.x = event_general.motion.xrel / iscreen_size;
-			mouse_motion.y = event_general.motion.yrel / iscreen_size;
-			mouse.x = event_general.motion.x / iscreen_size;
-			mouse.y = event_general.motion.y / iscreen_size;
+			mouse_motion.x = event_general.motion.xrel / iSCREENSIZE;
+			mouse_motion.y = event_general.motion.yrel / iSCREENSIZE;
+			mouse.x = event_general.motion.x / iSCREENSIZE;
+			mouse.y = event_general.motion.y / iSCREENSIZE;
 			break;
 		}
 	}
@@ -159,4 +183,9 @@ const iPoint& ModuleInput::GetMouseMotion() const
 const iPoint& ModuleInput::GetMousePosition() const
 {
 	return mouse;
+}
+
+bool ModuleInput::GetPlayerOutput(int num_player, PlayerOutput input) const
+{
+	return player_outputs[(num_player - 1)*iKEYS_PLAYER + input];
 }
