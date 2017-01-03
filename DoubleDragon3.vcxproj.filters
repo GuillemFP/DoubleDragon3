@@ -19,6 +19,9 @@
     <Filter Include="Game Modules">
       <UniqueIdentifier>{f55c29a0-0217-4cfd-8de4-2959c891df5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{1c7e9a95-18bd-4c5f-b5e1-02c8eb9cf84f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -78,6 +81,24 @@
     <ClInclude Include="ModuleSceneStage3.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStates.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEntities.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -124,6 +145,21 @@
     </ClCompile>
     <ClCompile Include="ModuleSceneStage3.cpp">
       <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStates.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEntities.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

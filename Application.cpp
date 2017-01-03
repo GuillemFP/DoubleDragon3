@@ -9,6 +9,7 @@
 #include "ModuleSceneTitle.h"
 #include "ModuleScenePreStage.h"
 #include "ModuleSceneStage3.h"
+#include "ModuleEntities.h"
 #include "JsonHandler.h"
 
 Application::Application()
@@ -25,6 +26,7 @@ Application::Application()
 	modules.push_back(scene_title = new ModuleSceneTitle(parser, false));
 	modules.push_back(scene_prestage = new ModuleScenePreStage(parser, false));
 	modules.push_back(scene_stage3 = new ModuleSceneStage3(false));
+	modules.push_back(entities = new ModuleEntities());
 
 	modules.push_back(fade = new ModuleFadeToBlack());
 }

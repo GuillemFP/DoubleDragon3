@@ -11,7 +11,13 @@
 	"Modules" : {
 		"Input" : {
 			"MouseButtons" : 5,
-			"KeyboardKeys" : 300
+			"KeyboardKeys" : 300,
+			"NumberPlayers" : 2,
+			"NumKeysPlayer" : 8,
+			"KeysPlayer" : [
+				["Up", "Down", "Left", "Right", "Return", "A", "S", "D"],
+				["Y", "H", "G", "J", "K", "I", "O", "P"]
+			]
 		},
 		"Window" : {
 			"Fullscreen" : false,
@@ -21,7 +27,8 @@
 		},
 		"Render" : { 
 			"Vsync" : true,
-			"DefaultBlitSpeed" : 1
+			"DefaultBlitSpeed" : 1,
+			"CameraMargin" : 0.66
 		},
 		"Audio" : {
 			"MusicDefaultFadeTime" : 2,
@@ -148,6 +155,45 @@
 				"FadeTime" : 2,
 				"MusicPath" : "assets/mus_in-japan.ogg",
 				"MusicFade" : 0
+			}
+		},
+		"Stage3" : {
+			"BackgroundTexture" : "assets/back_japan.png",
+			"PlayerTexture" : "assets/char_billyjimmy.png",
+			"MusicPath" : "assets/mus_in-japan.ogg",
+			"MusicFade" : 0,
+			"Entity_Scenario1" : "Config.Entities.Japan_Outside",
+			"Entity_FrontDetail1" : "Config.Entities.Bamboo1"
+		}
+	},
+	"Entities" : {
+		"Japan_Outside" : {
+			"Rectangle" : [8 ,8, 1280, 224],
+			"Position" : [0, 0],
+			"Z" : 0.0
+		},
+		"Bamboo1" : {
+			"Rectangle" : [640 ,416, 48, 48],
+			"Position" : [192, 176],
+			"Z" : 1.0
+		},
+		"Player1" : {
+			"Speed" : 1,
+			"Depth" : 5,
+			"Static_Frame" : [8,0,26,63],
+			"Move_Animation" : {
+				"Speed" : 0.08,
+				"Frames" : 4,
+				"Sprites" : [
+					[8,0,26,63],[48,0,26,63],[80,0,26,63],[113,0,26,63]
+				]
+			},
+			"MoveUp_Animation" : {
+				"Speed" : 0.08,
+				"Frames" : 4,
+				"Sprites" : [
+					[152,0,21,63],[184,0,21,63],[216,0,21,63],[248,0,21,63]
+				]
 			}
 		}
 	}

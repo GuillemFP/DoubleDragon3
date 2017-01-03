@@ -16,11 +16,12 @@ class ModuleTextures;
 class ModuleAudio;
 class ModuleFonts;
 
-class ModuleFadeToBlack;
-
 class ModuleSceneTitle;
 class ModuleScenePreStage;
 class ModuleSceneStage3;
+class ModuleEntities;
+
+class ModuleFadeToBlack;
 
 class Application
 {
@@ -40,11 +41,12 @@ public:
 	ModuleAudio* audio;
 	ModuleFonts* fonts;
 
-	ModuleFadeToBlack* fade;
-
 	ModuleSceneTitle* scene_title;
 	ModuleScenePreStage* scene_prestage;
 	ModuleSceneStage3* scene_stage3;
+	ModuleEntities* entities;
+
+	ModuleFadeToBlack* fade;
 
 	JSONParser* parser;
 
