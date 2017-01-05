@@ -23,10 +23,11 @@ Application::Application()
 	modules.push_back(audio = new ModuleAudio());
 	modules.push_back(fonts = new ModuleFonts());
 
+	modules.push_back(entities = new ModuleEntities());
+
 	modules.push_back(scene_title = new ModuleSceneTitle(parser, false));
 	modules.push_back(scene_prestage = new ModuleScenePreStage(parser, false));
 	modules.push_back(scene_stage3 = new ModuleSceneStage3(false));
-	modules.push_back(entities = new ModuleEntities());
 
 	modules.push_back(fade = new ModuleFadeToBlack());
 }

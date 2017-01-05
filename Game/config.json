@@ -160,27 +160,79 @@
 		"Stage3" : {
 			"BackgroundTexture" : "assets/back_japan.png",
 			"PlayerTexture" : "assets/char_billyjimmy.png",
+			"SceneSignals" : "assets/signals.png",
 			"MusicPath" : "assets/mus_in-japan.ogg",
 			"MusicFade" : 0,
-			"Entity_Scenario1" : "Config.Entities.Japan_Outside",
-			"Entity_FrontDetail1" : "Config.Entities.Bamboo1"
+			"Entity_Scenario_Outside" : "Config.Entities.Japan_Outside",
+			"Entity_Scenario_Details_Num" : 5,
+			"Entity_Scenario_Details_1" : ["Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
+				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"]
 		}
 	},
 	"Entities" : {
 		"Japan_Outside" : {
 			"Rectangle" : [8 ,8, 1280, 224],
 			"Position" : [0, 0],
-			"Z" : 0.0
+			"Bamboo1" : {
+				"Rectangle" : [640 ,416, 48, 48],
+				"RelativePosition" : [192, 176]
+			},
+			"Bamboo2" : {
+				"Rectangle" : [696 ,448, 16, 16],
+				"RelativePosition" : [272, 208]
+			},
+			"Bamboo3" : {
+				"Rectangle" : [720 ,416, 64, 48],
+				"RelativePosition" : [304, 176]
+			},
+			"Bamboo4" : {
+				"Rectangle" : [792 ,432, 16, 32],
+				"RelativePosition" : [400, 192]
+			},
+			"Door" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.04,
+					"Loop" : false,
+					"Frames" : 3,
+					"Sprites" : [
+						[1032 ,265, 120, 96],[1032,368,120,96],[1160,344,120,120]
+					]
+				},
+				"Rectangle" : [1032 ,265, 120, 96],
+				"RelativePosition" : [1132, 48]
+			}
 		},
-		"Bamboo1" : {
-			"Rectangle" : [640 ,416, 48, 48],
-			"Position" : [192, 176],
-			"Z" : 1.0
+		"StoreSign" : {
+			"Animated" : true,
+			"Animation" : {
+				"Speed" : 0.09,
+				"Frames" : 2,
+				"Sprites" : [
+					[0 ,0, 32, 25],[33,0,32,25]
+				]
+			},
+			"Rectangle" : [0 ,0, 32, 25],
+			"RelativePosition" : [8, 107]
 		},
 		"Player1" : {
 			"Speed" : 1,
 			"Depth" : 5,
 			"Static_Frame" : [8,0,26,63],
+			"PlayerSign" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.1,
+					"Frames" : 2,
+					"Sprites" : [
+						[353,7,16,32],[369,7,16,32]
+					]
+				},
+				"Timer" : true,
+				"MaxTime" : 5.0,
+				"Rectangle" : [353,7,16,32],
+				"RelativePosition" : [4, -39]
+			},
 			"Move_Animation" : {
 				"Speed" : 0.08,
 				"Frames" : 4,

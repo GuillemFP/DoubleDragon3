@@ -155,6 +155,10 @@ bool JSONParser::GetAnimation(Animation& anim, const char* name)
 		{
 			if (json_object_has_value_of_type(animation, ANIMATION_SPEED, JSONNumber))
 				anim.speed = (float)json_object_get_number(animation, ANIMATION_SPEED);
+			if (json_object_has_value_of_type(animation, ANIMATION_LOOP, JSONBoolean))
+				anim.bloop = json_object_get_boolean(animation, ANIMATION_LOOP);
+			else
+				anim.bloop = true;
 			if (json_object_has_value_of_type(animation, ANIMATION_FRAMES, JSONNumber))
 				iframes = (int)json_object_get_number(animation, ANIMATION_FRAMES);
 			if (json_object_has_value_of_type(animation, ANIMATION_SPRITES, JSONArray))
@@ -275,6 +279,19 @@ float JSONParser::GetFloat(const char * name)
 }
 
 bool JSONParser::GetBool(const char * name)
+{
+	bool ret = false;
+
+	if (loaded_object != nullptr)
+	{
+		if (json_object_dothas_value_of_type(loaded_object, name, JSONBoolean))
+			ret = json_object_dotget_boolean(loaded_object, name);
+	}
+
+	return ret;
+}
+
+bool JSONParser::GetBoolMandatory(const char * name)
 {
 	bool ret = NULL;
 

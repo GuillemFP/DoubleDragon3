@@ -18,7 +18,7 @@ public:
 
 	void Start()
 	{
-		Start((Uint32)0);
+		Start(max_time);
 	}
 
 	void Start(float max_time)
@@ -68,27 +68,27 @@ public:
 		}
 	}
 
-	Uint32 GetTimeInMs()
+	Uint32 GetTimeInMs() const
 	{
 		return accumulated_time + CurrentTime();
 	}
 
-	float GetTimeInSeconds()
+	float GetTimeInSeconds() const
 	{
 		return ((float) GetTimeInMs()/1000.0f);
 	}
 
-	TimerState GetState()
+	TimerState GetState() const
 	{
 		return state;
 	}
 
-	Uint32 GetMaxTimeInMs()
+	Uint32 GetMaxTimeInMs() const
 	{
 		return max_time;
 	}
 
-	bool MaxTimeReached()
+	bool MaxTimeReached() const
 	{
 		if (max_time > 0)
 		{
@@ -98,8 +98,13 @@ public:
 			return false;
 	}
 
+	void SetMaxTime(Uint32 max_time)
+	{
+		this->max_time = max_time;
+	}
+
 private:
-	Uint32 CurrentTime()
+	Uint32 CurrentTime() const
 	{
 		if (state == PAUSED)
 			return 0;

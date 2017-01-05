@@ -200,22 +200,18 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	return ret;
 }
 
-void ModuleRender::CameraInsideScene(int player_x, int x_min, int x_max)
+void ModuleRender::CameraInsideScene(int center_player, int room_x, int room_width)
 {
-	if (player_x*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
-	{
-		if (camera.x < x_min)
-			camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - player_x)*iSCREENSIZE;
-		else
-			camera.x = x_min;
-	}
-	else if (player_x*iSCREENSIZE + camera.x > (int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
-	{
-		if (camera.x + camera.w < x_max * iSCREENSIZE)
-			camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - player_x)*iSCREENSIZE;
-		else
-			camera.x = x_max * iSCREENSIZE;
-	}
+	if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
+			camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+	else if (center_player*iSCREENSIZE + camera.x > (int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
+			camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+
+	if (camera.x < (room_x - room_width) * iSCREENSIZE + camera.w)
+		camera.x = (room_x - room_width) * iSCREENSIZE + camera.w;
+	else if (camera.x > room_x)
+		camera.x = room_x;
+
 }
 
 bool ModuleRender::ConstantConfig()
@@ -224,7 +220,7 @@ bool ModuleRender::ConstantConfig()
 
 	if (App->parser->LoadObject(RENDER_SECTION) == true)
 	{
-		bVSYNC = App->parser->GetBool("Vsync");
+		bVSYNC = App->parser->GetBoolMandatory("Vsync");
 		fDEFAULT_SPEED = App->parser->GetFloat("DefaultBlitSpeed");
 		fCAMERA_MARGIN = App->parser->GetFloat("CameraMargin");
 		ret = App->parser->UnloadObject();

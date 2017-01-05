@@ -8,6 +8,7 @@
 #define SCENE_SECTION_STAGE3 "Config.Scenes.Stage3"
 
 #define ENTITY_PLAYER1 "Config.Entities.Player1"
+#define ENTITY_STORESIGN "Config.Entities.StoreSign"
 
 struct SDL_Texture;
 class Player;
@@ -26,6 +27,7 @@ public:
 private:
 	SDL_Texture* background = nullptr;
 	SDL_Texture* players = nullptr;
+	SDL_Texture* signals = nullptr;
 
 	SDL_Rect rect_back = { 0,0,0,0 };
 	

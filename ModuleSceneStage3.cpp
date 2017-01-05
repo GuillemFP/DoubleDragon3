@@ -29,11 +29,18 @@ bool ModuleSceneStage3::Start()
 	{
 		background = App->textures->Load(App->parser->GetString("BackgroundTexture"));
 		players = App->textures->Load(App->parser->GetString("PlayerTexture"));
+		signals = App->textures->Load(App->parser->GetString("SceneSignals"));
 		float music_fade = App->parser->GetFloat("MusicFade");
 		const char* music_string = App->parser->GetString("MusicPath");
 
-		const char* scenario = App->parser->GetString("Entity_Scenario1");
-		const char* scenario_front1 = App->parser->GetString("Entity_FrontDetail1");
+		const char* scenario = App->parser->GetString("Entity_Scenario_Outside");
+		int scenario_detail_num = App->parser->GetInt("Entity_Scenario_Details_Num");
+		App->parser->LoadArrayInObject("Entity_Scenario_Details_1");
+		const char** details = new const char*[scenario_detail_num];
+		for (int i = 0; i < scenario_detail_num; i++)
+		{
+			details[i] = App->parser->GetStringFromArray(i);
+		}
 
 		ret = App->parser->UnloadObject();
 
@@ -43,16 +50,24 @@ bool ModuleSceneStage3::Start()
 				App->audio->PlayMusic(music_string, music_fade);
 
 			outside = (Room*)App->entities->CreateEntity(Entity::ROOM, background, scenario);
-			current_room = outside;
 
-			App->entities->CreateEntity(Entity::OBJECT, background, scenario_front1, outside);
+			for (int i = 0; i < scenario_detail_num; i++)
+			{
+				App->entities->CreateEntity(Entity::OBJECT, background, details[i], outside);
+			}
 		}
 	}
 
-	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, players, ENTITY_PLAYER1, current_room);
+	current_room = outside;
+
+	App->entities->CreateEntity(Entity::OBJECT, signals, ENTITY_STORESIGN);
+
+	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, players, ENTITY_PLAYER1);
 	player_one->x = 50;
 	player_one->y = 154;
-	player_one->z = player_one->y;
+	player_one->z = player_one->y + player_one->height;
+
+	App->entities->CreateEntity(Entity::OBJECT, players, ENTITY_PLAYER1_SIGN, player_one);
 
 	return ret;
 }
@@ -61,17 +76,18 @@ bool ModuleSceneStage3::CleanUp()
 {
 	LOG("Unloading Stage3 scene");
 
+	current_room->Disable();
+
 	App->textures->Unload(background);
 	App->textures->Unload(players);
+	App->textures->Unload(signals);
 
 	return true;
 }
 
 update_status ModuleSceneStage3::Update()
 {
-	//current_room->Update();
-
-	App->renderer->CameraInsideScene(player_one->x + player_one->width / 2, current_room->x, current_room->x + current_room->width);
+	App->renderer->CameraInsideScene(player_one->x + player_one->width / 2, current_room->x, current_room->width);
 
 	return UPDATE_CONTINUE;
 }

@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="JsonHandler.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -155,11 +156,9 @@
     <ClCompile Include="ModuleSceneStage3.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerStates.cpp" />
-    <ClCompile Include="Room.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

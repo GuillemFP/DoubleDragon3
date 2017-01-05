@@ -27,6 +27,7 @@ public:
 	int GetInt(const char* name);
 	float GetFloat(const char* name);
 	bool GetBool(const char* name);
+	bool GetBoolMandatory(const char* name);
 
 	int GetIntFromArray(int index_array);
 	const char* GetStringFromArray(int index_array);

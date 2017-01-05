@@ -8,6 +8,7 @@
 #define MODULE_ENTITIES "ModuleEntities"
 #define ENTITY_SECTION "Config.Entities.Globals"
 #define ENTITY_PLAYER1 "Config.Entities.Player1"
+#define ENTITY_PLAYER1_SIGN "Config.Entities.Player1.PlayerSign"
 
 struct SDL_Texture;
 
@@ -27,10 +28,6 @@ public:
 	bool CleanUp();
 
 	Entity* CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, Entity* parent = nullptr);
-
-public:
-	SDL_Texture* background = nullptr;
-	SDL_Texture* players = nullptr;
 
 private:
 	std::list<Entity*> entities;

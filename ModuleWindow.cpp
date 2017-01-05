@@ -95,10 +95,10 @@ ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
 
 	 if (App->parser->LoadObject(WINDOW_SECTION) == true)
 	 {
-		 bFULLSCREEN = App->parser->GetBool("Fullscreen");
-		 bBORDERLESS = App->parser->GetBool("Borderless");
-		 bRESIZABLE = App->parser->GetBool("Resizable");
-		 bFULLSCREEN_DESKTOP = App->parser->GetBool("Fullscreen_Window");
+		 bFULLSCREEN = App->parser->GetBoolMandatory("Fullscreen");
+		 bBORDERLESS = App->parser->GetBoolMandatory("Borderless");
+		 bRESIZABLE = App->parser->GetBoolMandatory("Resizable");
+		 bFULLSCREEN_DESKTOP = App->parser->GetBoolMandatory("Fullscreen_Window");
 		 ret = ret && App->parser->UnloadObject();
 	 }
 	 else

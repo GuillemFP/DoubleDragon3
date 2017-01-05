@@ -1,29 +1,29 @@
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleRender.h"
 #include "ModuleEntities.h"
 #include "PlayerStates.h"
 #include "Player.h"
 #include "JsonHandler.h"
 
-Player::Player(int number_player, SDL_Texture* texture, const char* name, Entity* parent) : Entity(Entity::Type::PLAYER, texture, parent), number_player(number_player)
+Player::Player(int number_player, SDL_Texture* texture, const char* name, Entity* parent) : Entity(Entity::Type::PLAYER, texture, parent, true), number_player(number_player)
 {
 	if (App->parser->LoadObject(name))
 	{
 		ispeed = App->parser->GetInt("Speed");
+		depth = App->parser->GetInt("Depth");
 
 		moving = new Player_MoveState(this, "Move_Animation", "MoveUp_Animation");
 		idle = new Player_StandState(this, "Static_Frame");
 
-		depth = App->parser->GetInt("Depth");
-
 		if (App->parser->UnloadObject() == true)
 		{
 			current_state = idle;
+			entity_rect = idle->initial_rect;
 			width = idle->initial_rect.w;
 			height = idle->initial_rect.h;
 		}
 	}
-	texture = App->entities->players;
 }
 
 Player::~Player()
@@ -32,10 +32,21 @@ Player::~Player()
 	RELEASE(idle);
 }
 
-update_status Player::PreUpdate()
+update_status Player::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
+	HandleInput();
+
+	current_state->Update();
+
+	last_zmov = zmovement;
+
+	return ret;
+}
+
+void Player::HandleInput()
+{
 	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_UP))
 		zmovement = ZDirection::UP;
 	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_DOWN))
@@ -63,17 +74,4 @@ update_status Player::PreUpdate()
 		jump = false;
 
 	current_state = current_state->HandleInput();
-
-	return ret;
-}
-
-update_status Player::Update()
-{
-	update_status ret = UPDATE_CONTINUE;
-
-	current_state->Update();
-
-	last_zmov = zmovement;
-
-	return ret;
 }

@@ -71,22 +71,33 @@ update_status ModuleEntities::PreUpdate()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end() && ret == UPDATE_CONTINUE; ++it)
-		if ((*it)->active == true)
-			ret = (*it)->PreUpdate();
+	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end();)
+	{
+		if ((*it)->to_delete == true)
+		{
+			RELEASE(*it);
+			it = entities.erase(it);
+		}
+		else
+			++it;
+	}
 
-	return ret;
+	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEntities::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
+	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end() && ret == UPDATE_CONTINUE; ++it)
+		if ((*it)->active == true)
+			ret = (*it)->Update();
+
 	entities.sort(CompareDepth());
 
 	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end() && ret == UPDATE_CONTINUE; ++it)
 		if ((*it)->active == true)
-			ret = (*it)->Update();
+			(*it)->Draw();
 
 	return ret;
 }

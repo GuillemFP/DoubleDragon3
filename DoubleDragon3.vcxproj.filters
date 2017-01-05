@@ -155,10 +155,7 @@
     <ClCompile Include="ModuleEntities.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Room.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="Entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>

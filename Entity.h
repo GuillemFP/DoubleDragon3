@@ -1,6 +1,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <list>
+#include "SDL/include/SDL_rect.h"
+#include "Timer.h"
+
 struct SDL_Texture;
 enum update_status;
 
@@ -17,10 +21,15 @@ public:
 	};
 
 public:
-	Entity(Entity::Type type, SDL_Texture* texture, Entity* parent = nullptr) : type(type), texture(texture), parent(parent), active(true) {}
-	virtual ~Entity() {}
-	virtual update_status PreUpdate() { return UPDATE_CONTINUE; }
-	virtual update_status Update() { return UPDATE_CONTINUE; }
+	Entity(Entity::Type type, SDL_Texture* texture, Entity* parent = nullptr, bool active = true);
+	virtual ~Entity() { RELEASE(timer); }
+
+	virtual update_status Update();
+	virtual bool Draw();
+
+	virtual bool Enable();
+	virtual bool Disable();
+	virtual bool Delete();
 
 public:
 	int x = 0, y = 0, z = 0;
@@ -28,9 +37,16 @@ public:
 	Type type = UNKNOWN;
 	bool active = true;
 	bool to_delete = false;
-	Entity* parent;
 
-	SDL_Texture* texture;
+	Entity* parent = nullptr;
+	std::list<Entity*> contains;
+
+	SDL_Texture* texture = nullptr;
+	SDL_Rect entity_rect = { 0,0,0,0 };
+	bool inverted_texture = false;
+
+	Timer* timer = nullptr;
+	bool has_timer = false;
 };
 
 #endif // !ENTITY_H

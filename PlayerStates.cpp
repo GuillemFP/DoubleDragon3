@@ -5,14 +5,9 @@
 #include "Player.h"
 #include "PlayerStates.h"
 
-Player_StandState::Player_StandState(Player* player, const char* parser_name) : PlayerState(player)
+Player_StandState::Player_StandState(Player* player, const char* staticframe) : PlayerState(player)
 {
-	App->parser->GetRect(initial_rect, parser_name);
-	current_rect = initial_rect;
-}
-
-Player_StandState::~Player_StandState()
-{
+	App->parser->GetRect(initial_rect, staticframe);
 }
 
 PlayerState* Player_StandState::HandleInput()
@@ -33,22 +28,11 @@ PlayerState* Player_StandState::HandleInput()
 	return ret;
 }
 
-update_status Player_StandState::Update()
-{
-	App->renderer->Blit(player->texture, { player->x, player->y }, &current_rect, player->inverted);
-
-	return UPDATE_CONTINUE;
-}
-
-Player_MoveState::Player_MoveState(Player* parent, const char* move_animation, const char* moveup_animation) : PlayerState(parent)
+Player_MoveState::Player_MoveState(Player* player, const char* move_animation, const char* moveup_animation) : PlayerState(player)
 {
 	App->parser->GetAnimation(moving, move_animation);
 	App->parser->GetAnimation(moving_up, moveup_animation);
 	current_animation = &moving;
-}
-
-Player_MoveState::~Player_MoveState()
-{
 }
 
 PlayerState* Player_MoveState::HandleInput()
@@ -69,12 +53,10 @@ PlayerState* Player_MoveState::HandleInput()
 	{
 		if (player->last_zmov == Player::ZDirection::UP)
 		{
-			player->idle->current_rect = player->idle->initial_rect;
+			player->entity_rect = player->idle->initial_rect;
 			moving.Reset();
 			moving_up.Reset();
 		}
-		else
-			player->idle->current_rect = current_rect;
 	}
 
 	return ret;
@@ -83,17 +65,15 @@ PlayerState* Player_MoveState::HandleInput()
 update_status Player_MoveState::Update()
 {
 	player->x += player->xmovement*player->ispeed;
-	player->y -= player->zmovement*player->ispeed;
+	player->y += player->zmovement*player->ispeed;
 	player->z += player->zmovement*player->ispeed;
 
 	if (player->xmovement == Player::XDirection::LEFT)
-		player->inverted = true;
+		player->inverted_texture = true;
 	else if (player->xmovement == Player::XDirection::RIGHT)
-		player->inverted = false;
+		player->inverted_texture = false;
 
-	current_rect = current_animation->GetCurrentFrame();
-
-	App->renderer->Blit(player->texture, { player->x, player->y }, &current_rect, player->inverted);
+	player->entity_rect = current_animation->GetCurrentFrame();
 
 	return UPDATE_CONTINUE;
 }

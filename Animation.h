@@ -8,6 +8,7 @@
 #define ANIMATION_SPEED "Speed"
 #define ANIMATION_FRAMES "Frames"
 #define ANIMATION_SPRITES "Sprites"
+#define ANIMATION_LOOP "Loop"
 
 class Animation
 {
