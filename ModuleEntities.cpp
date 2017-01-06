@@ -35,25 +35,25 @@ bool ModuleEntities::CleanUp()
 	return true;
 }
 
-Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, Entity* parent)
+Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent)
 {
 	static_assert(Entity::Type::UNKNOWN == 4, "code needs update");
 	Entity* ret = nullptr;
 	switch (type)
 	{
 	case Entity::ROOM:
-		ret = new Room(texture, name);
+		ret = new Room(texture, name, stage);
 		break;
 	case Entity::PLAYER:
 		if (num_players == 0)
-			ret = new Player(++num_players, texture, name, parent);
+			ret = new Player(++num_players, texture, name, stage, parent);
 		else
 			LOG("Unable to create more players");
 		break;
 	case Entity::ENEMY:
 		break;
 	case Entity::OBJECT:
-		ret = new Object(texture, name, parent);
+		ret = new Object(texture, name, stage, parent);
 		break;
 	case Entity::UNKNOWN:
 		break;
@@ -81,6 +81,10 @@ update_status ModuleEntities::PreUpdate()
 		else
 			++it;
 	}
+
+	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end() && ret == UPDATE_CONTINUE; ++it)
+		if ((*it)->active == true)
+			ret = (*it)->PreUpdate();
 
 	return UPDATE_CONTINUE;
 }

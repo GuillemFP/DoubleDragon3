@@ -22,13 +22,11 @@ ModuleInput::ModuleInput(JSONParser* parser) : Module(MODULE_INPUT), mouse({0,0}
 		iNUMBERPLAYERS = parser->GetInt("NumberPlayers");
 		iKEYS_PLAYER = parser->GetInt("NumKeysPlayer");
 		keys_player = new SDL_Scancode[iNUMBERPLAYERS * iKEYS_PLAYER];
-		player_outputs = new bool[iNUMBERPLAYERS * iKEYS_PLAYER];
 		parser->LoadArrayInObject("KeysPlayer");
 		for (int i = 0; i < iNUMBERPLAYERS; i++)
 			for (int j = 0; j < iKEYS_PLAYER; j++)
 			{
 				keys_player[i*iKEYS_PLAYER + j] = SDL_GetScancodeFromName(parser->GetStringFromArrayInArray(i, j));
-				player_outputs[i*iKEYS_PLAYER + j] = false;
 			}
 	}
 	parser->UnloadObject();
@@ -40,7 +38,6 @@ ModuleInput::~ModuleInput()
 	RELEASE_ARRAY(keyboard);
 	RELEASE_ARRAY(mouse_buttons);
 	RELEASE_ARRAY(keys_player);
-	RELEASE_ARRAY(player_outputs);
 }
 
 bool ModuleInput::Init()
@@ -90,11 +87,6 @@ update_status ModuleInput::PreUpdate()
 			else
 				keyboard[i] = KEY_IDLE;
 		}
-	}
-
-	for (int i = 0; i < iNUMBERPLAYERS * iKEYS_PLAYER; i++)
-	{
-		player_outputs[i] = (bool) keys[keys_player[i]];
 	}
 
 	for (int i = 0; i < iNUM_BUTTONS; ++i)
@@ -187,5 +179,16 @@ const iPoint& ModuleInput::GetMousePosition() const
 
 bool ModuleInput::GetPlayerOutput(int num_player, PlayerOutput input) const
 {
-	return player_outputs[(num_player - 1)*iKEYS_PLAYER + input];
+	if (keyboard[keys_player[(num_player - 1)*iKEYS_PLAYER + input]] == KEY_DOWN || keyboard[keys_player[(num_player - 1)*iKEYS_PLAYER + input]] == KEY_REPEAT)
+		return true;
+	else
+		return false;
+}
+
+bool ModuleInput::GetPlayerOutput_KeyDown(int num_player, PlayerOutput input) const
+{
+	if (keyboard[keys_player[(num_player - 1)*iKEYS_PLAYER + input]] == KEY_DOWN)
+		return true;
+	else
+		return false;
 }

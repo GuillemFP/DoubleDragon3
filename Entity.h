@@ -4,6 +4,8 @@
 #include <list>
 #include "SDL/include/SDL_rect.h"
 #include "Timer.h"
+#include "Globals.h"
+#include "ModuleStages.h"
 
 struct SDL_Texture;
 enum update_status;
@@ -21,8 +23,10 @@ public:
 	};
 
 public:
-	Entity(Entity::Type type, SDL_Texture* texture, Entity* parent = nullptr, bool active = true);
+	Entity(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent = nullptr, bool active = true);
 	virtual ~Entity() { RELEASE(timer); }
+
+	virtual update_status PreUpdate() { return UPDATE_CONTINUE; }
 
 	virtual update_status Update();
 	virtual bool Draw();
@@ -31,14 +35,15 @@ public:
 	virtual bool Disable();
 	virtual bool Delete();
 
+	virtual void ChangeParent(Entity* new_parent);
+
 public:
-	int x = 0, y = 0, z = 0;
-	int width = 0, height = 0, depth = 0;
+	Point3d position = { 0,0,0 };
+	Point3d dimensions = { 0,0,0 };
 	Type type = UNKNOWN;
 	bool active = true;
 	bool to_delete = false;
 
-	Entity* parent = nullptr;
 	std::list<Entity*> contains;
 
 	SDL_Texture* texture = nullptr;
@@ -47,6 +52,9 @@ public:
 
 	Timer* timer = nullptr;
 	bool has_timer = false;
+
+	Entity* parent = nullptr;
+	ModuleStages* stage = nullptr;
 };
 
 #endif // !ENTITY_H

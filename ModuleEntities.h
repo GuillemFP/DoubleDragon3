@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Entity.h"
+#include "ModuleStages.h"
 #include <list>
 
 #define MODULE_ENTITIES "ModuleEntities"
@@ -16,7 +17,7 @@ class ModuleEntities : public Module
 {
 public:
 	struct CompareDepth {
-		bool operator()(Entity* lhs, Entity* rhs) { return lhs->z < rhs->z; }
+		bool operator()(Entity* lhs, Entity* rhs) { return lhs->position.z < rhs->position.z; }
 	};
 
 	ModuleEntities();
@@ -27,7 +28,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	Entity* CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, Entity* parent = nullptr);
+	Entity* CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr);
 
 private:
 	std::list<Entity*> entities;

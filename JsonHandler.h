@@ -22,6 +22,7 @@ public:
 	bool GetRect(SDL_Rect& rect, const char* name);
 	bool GetPoint(iPoint& point, const char* name);
 	bool GetAnimation(Animation& anim, const char* name);
+	bool GetIntArray(const char* name, int* int_array);
 
 	const char* GetString(const char* name);
 	int GetInt(const char* name);

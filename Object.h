@@ -9,11 +9,11 @@
 class Object : public Entity
 {
 public:
-	Object(SDL_Texture* texture, const char* name, Entity* parent = nullptr) : Entity(Entity::Type::ROOM, texture, parent)
+	Object(SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr) : Entity(Entity::Type::ROOM, texture, stage, parent)
 	{
 		if (App->parser->LoadObject(name))
 		{
-			iPoint position = { 0,0 };
+			iPoint position_object = { 0,0 };
 			
 			has_animation = App->parser->GetBool("Animated");
 			if (has_animation == true)
@@ -25,17 +25,17 @@ public:
 			}
 
 			App->parser->GetRect(entity_rect, "Rectangle");
-			App->parser->GetPoint(position, "RelativePosition");
+			App->parser->GetPoint(position_object, "RelativePosition");
 
 			if (App->parser->UnloadObject())
 			{
-				x = position.x;
-				y = position.y;
-				z = position.y + entity_rect.h;
+				position.x = position_object.x;
+				position.y = position_object.y;
+				position.z = position_object.y + entity_rect.h;
 				if (parent != nullptr)
-					z += parent->z;
-				width = entity_rect.w;
-				height = entity_rect.h;
+					position.z += parent->position.z;
+				dimensions.x = entity_rect.w;
+				dimensions.y = entity_rect.h;
 			}
 		}
 	}

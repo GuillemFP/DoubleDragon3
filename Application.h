@@ -21,6 +21,7 @@ class ModuleScenePreStage;
 class ModuleSceneStage3;
 class ModuleEntities;
 
+class ModuleCollision;
 class ModuleFadeToBlack;
 
 class Application
@@ -46,6 +47,7 @@ public:
 	ModuleSceneStage3* scene_stage3;
 	ModuleEntities* entities;
 
+	ModuleCollision* collision;
 	ModuleFadeToBlack* fade;
 
 	JSONParser* parser;

@@ -2,7 +2,7 @@
 #include "ModuleRender.h"
 #include "Entity.h"
 
-Entity::Entity(Entity::Type type, SDL_Texture* texture, Entity* parent, bool active) : type(type), texture(texture), parent(parent), active(active)
+Entity::Entity(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent, bool active) : type(type), texture(texture), stage(stage), parent(parent), active(active)
 {
 	if (parent != nullptr)
 		parent->contains.push_back(this);
@@ -26,9 +26,9 @@ bool Entity::Draw()
 	if (active && texture != nullptr)
 	{
 		if (parent == nullptr)
-			App->renderer->Blit(texture, { x,y }, &entity_rect, inverted_texture);
+			App->renderer->Blit(texture, { position.x,position.y }, &entity_rect, inverted_texture);
 		else
-			App->renderer->Blit(texture, { x + parent->x, y + parent->y }, &entity_rect, inverted_texture);
+			App->renderer->Blit(texture, { position.x + parent->position.x, position.y + parent->position.y }, &entity_rect, inverted_texture);
 	}
 
 	return active;
@@ -80,4 +80,17 @@ bool Entity::Delete()
 	}
 
 	return to_delete;
+}
+
+void Entity::ChangeParent(Entity* new_parent)
+{
+	if (parent != nullptr)
+	{
+		parent->contains.remove(this);
+		if (new_parent != nullptr)
+		{
+			parent = new_parent;
+			parent->contains.push_back(this);
+		}
+	}
 }

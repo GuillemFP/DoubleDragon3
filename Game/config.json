@@ -165,8 +165,20 @@
 			"MusicFade" : 0,
 			"Entity_Scenario_Outside" : "Config.Entities.Japan_Outside",
 			"Entity_Scenario_Details_Num" : 5,
-			"Entity_Scenario_Details_1" : ["Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
-				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"]
+			"Entity_Scenario_Details_1" : [
+				"Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
+				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"
+			],
+			"Dimensions" : [1280, 224],
+			"Borders_zmin" : [
+				[0, 207], [96, 207], [128, 160], [463, 160], [463, 207], [1280, 207]
+			],
+			"Borders_xmin" : [
+				[0, 128], [160, 128], [207, 96], [207, 0], [224, 0]
+			],
+			"Borders_xmax" : [
+				[0, 463], [207, 463], [207, 1279], [224, 1279]
+			]
 		}
 	},
 	"Entities" : {
@@ -218,7 +230,6 @@
 		"Player1" : {
 			"Speed" : 1,
 			"Depth" : 5,
-			"Static_Frame" : [8,0,26,63],
 			"PlayerSign" : {
 				"Animated" : true,
 				"Animation" : {
@@ -233,6 +244,7 @@
 				"Rectangle" : [353,7,16,32],
 				"RelativePosition" : [4, -39]
 			},
+			"Static_Frame" : [8,0,26,63],
 			"Move_Animation" : {
 				"Speed" : 0.08,
 				"Frames" : 4,
@@ -246,6 +258,11 @@
 				"Sprites" : [
 					[152,0,21,63],[184,0,21,63],[216,0,21,63],[248,0,21,63]
 				]
+			}, 
+			"JumpFrame" : [248, 95, 31, 48],
+			"JumpSpeedY" : 2,
+			"JumpSpeedX" : 2,
+			"Gravity" : 0.15
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 #define MODULESCENESTAGE3_H
 
 #include "Module.h"
+#include "ModuleStages.h"
 #include "Point.h"
 
 #define MODULESCENE_STAGE3 "ModuleScene_Stage3"
@@ -13,8 +14,9 @@
 struct SDL_Texture;
 class Player;
 class Room;
+class Creature;
 
-class ModuleSceneStage3 : public Module
+class ModuleSceneStage3 : public ModuleStages
 {
 public:
 	ModuleSceneStage3(bool active);
@@ -23,6 +25,11 @@ public:
 	bool Start();
 	update_status Update();
 	bool CleanUp();
+
+	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions) const;
+	bool InsideScene_RightBorder(const Point3d& positions, const Point3d& dimensions) const;
+	bool InsideScene_LowBorder(const Point3d& positions, const Point3d& dimensions) const;
+	bool InsideScene_HighBorder(const Point3d& positions, const Point3d& dimensions) const;
 
 private:
 	SDL_Texture* background = nullptr;
@@ -38,6 +45,11 @@ private:
 	Room* outside = nullptr;
 	Room* inside = nullptr;
 	Room* current_room = nullptr;
+
+	int* borders_xmin = nullptr;
+	int* borders_xmax = nullptr;
+	int* borders_zmin = nullptr;
+	int borders_zmax = 0;
 };
 
 

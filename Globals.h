@@ -18,6 +18,13 @@ enum update_status
 	UPDATE_ERROR
 };
 
+struct Point3d
+{
+	int x = 0, y = 0, z = 0;
+
+	Point3d(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {}
+};
+
 // Deletes a buffer
 #define RELEASE( x ) \
     {									  \

@@ -56,6 +56,7 @@ public:
 	const iPoint& GetMousePosition() const;
 
 	bool GetPlayerOutput(int num_player, PlayerOutput input) const;
+	bool GetPlayerOutput_KeyDown(int num_player, PlayerOutput input) const;
 
 private:
 	bool bwindowEvents[WE_COUNT];
@@ -65,7 +66,6 @@ private:
 	iPoint mouse;
 
 	SDL_Scancode* keys_player;
-	bool* player_outputs;
 
 	int iMAX_KEYS;
 	int iNUM_BUTTONS;

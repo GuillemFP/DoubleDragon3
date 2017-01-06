@@ -2,42 +2,37 @@
 #define PLAYER_H
 
 #include "Entity.h"
+#include "Creature.h"
 #include "Animation.h"
 
 class PlayerState;
 class Player_MoveState;
 class Player_StandState;
-class ModuleStages;
+class Player_JumpState;
 
-class Player : public Entity
+class Player : public Creature
 {
 public:
-	enum XDirection { LEFT = -1, XIDLE = 0, RIGHT = 1 };
-	enum ZDirection { UP = -1, YIDLE = 0, DOWN = 1 };
-	enum Attack { PUNCH, KICK, NOATTACK };
-
-public:
-	Player(int number_player, SDL_Texture* texture, const char* name, Entity* parent = nullptr);
+	Player(int number_player, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr);
 	~Player();
+	update_status PreUpdate();
 	update_status Update();
+
+	//bool InsideBordersX();
+	//bool InsideBordersZ();
 
 private:
 	void HandleInput();
 
 public:
-	int ispeed;
 	bool running = false;
 	int number_player = 1;
-
-	XDirection xmovement = XIDLE;
-	ZDirection zmovement = YIDLE;
-	Attack attack_cmd = NOATTACK;
-	bool jump = false;
 
 	ZDirection last_zmov = YIDLE;
 
 	Player_MoveState* moving;
 	Player_StandState* idle;
+	Player_JumpState* jumping;
 	PlayerState* current_state;
 };
 

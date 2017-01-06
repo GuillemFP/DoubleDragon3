@@ -5,6 +5,7 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModuleFonts.h"
+#include "ModuleCollision.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
 #include "ModuleScenePreStage.h"
@@ -29,6 +30,7 @@ Application::Application()
 	modules.push_back(scene_prestage = new ModuleScenePreStage(parser, false));
 	modules.push_back(scene_stage3 = new ModuleSceneStage3(false));
 
+	modules.push_back(collision = new ModuleCollision());
 	modules.push_back(fade = new ModuleFadeToBlack());
 }
 
