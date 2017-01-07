@@ -29,9 +29,11 @@ public:
 	bool CleanUp();
 
 	Entity* CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr);
+	unsigned int GetSound(int num_table) { return sounds[num_table]; }
 
 private:
 	std::list<Entity*> entities;
+	unsigned int* sounds = nullptr;
 
 	int num_players = 0;
 };

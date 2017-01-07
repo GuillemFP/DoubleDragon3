@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleTextures.h"
+#include "ModuleAudio.h"
 #include "ModuleEntities.h"
 #include "Player.h"
 #include "Room.h"
@@ -20,6 +21,17 @@ bool ModuleEntities::Start()
 
 	LOG("Loading Entities module");
 
+	if (App->parser->LoadObject(ENTITY_SECTION))
+	{
+		int num_sounds = App->parser->GetInt("NumberOfSounds");
+		sounds = new unsigned int[num_sounds];
+		App->parser->LoadArrayInObject("Sounds");
+		for (int i = 0; i < num_sounds; i++)
+			sounds[i] = App->audio->LoadFx(App->parser->GetStringFromArray(i));
+
+		App->parser->UnloadObject();
+	}
+
 	return ret;
 }
 
@@ -31,6 +43,8 @@ bool ModuleEntities::CleanUp()
 		RELEASE(*it);
 
 	entities.clear();
+
+	RELEASE_ARRAY(sounds);
 
 	return true;
 }
