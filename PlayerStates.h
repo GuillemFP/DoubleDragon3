@@ -29,6 +29,7 @@ public:
 
 public:
 	SDL_Rect initial_rect = { 0,0,0,0 };
+	SDL_Rect current_rect = { 0,0,0,0 };
 	PlayerState* previous_state = this;
 };
 
@@ -44,7 +45,7 @@ public:
 	Animation moving;
 	Animation moving_up;
 	Animation* current_animation = nullptr;
-
+	SDL_Rect current_frame;
 };
 
 class Player_JumpState : public PlayerState
@@ -54,7 +55,9 @@ public:
 	~Player_JumpState() {}
 	PlayerState* HandleInput();
 	update_status Update();
-	void SetJumpParameters(Creature::XDirection jump_direction);
+
+private:
+	void SetJumpParameters();
 
 private:
 	SDL_Rect jump_rect = { 0,0,0,0 };
@@ -68,6 +71,7 @@ private:
 	int time = 0;
 	fPoint current_position = { 0.0,0.0 };
 
+	bool direct_jump = false;
 	bool jumping_to_platform = false;
 	bool jumping_off_platform = false;
 	bool maximum_reached = true;
