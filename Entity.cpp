@@ -25,10 +25,20 @@ bool Entity::Draw()
 {
 	if (active && texture != nullptr)
 	{
-		if (parent == nullptr)
-			App->renderer->Blit(texture, { position.x,position.y }, &entity_rect, inverted_texture);
+		if (inverted_texture == false)
+		{
+			if (parent == nullptr)
+				App->renderer->Blit(texture, { position.x,position.y }, &entity_rect);
+			else
+				App->renderer->Blit(texture, { position.x + parent->position.x, position.y + parent->position.y }, &entity_rect);
+		}
 		else
-			App->renderer->Blit(texture, { position.x + parent->position.x, position.y + parent->position.y }, &entity_rect, inverted_texture);
+		{
+			if (parent == nullptr)
+				App->renderer->Blit(texture, { position.x + dimensions.x - entity_rect.w,position.y }, &entity_rect, true);
+			else
+				App->renderer->Blit(texture, { position.x + parent->position.x + dimensions.x - entity_rect.w, position.y + parent->position.y }, &entity_rect, true);
+		}
 	}
 
 	return active;

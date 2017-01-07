@@ -26,10 +26,12 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions) const;
-	bool InsideScene_RightBorder(const Point3d& positions, const Point3d& dimensions) const;
-	bool InsideScene_LowBorder(const Point3d& positions, const Point3d& dimensions) const;
-	bool InsideScene_HighBorder(const Point3d& positions, const Point3d& dimensions) const;
+	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
+	bool InsideScene_RightBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
+	bool InsideScene_LowBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
+	bool InsideScene_HighBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
+
+	bool InPlataform(int x, int z) const;
 
 private:
 	SDL_Texture* background = nullptr;
@@ -40,6 +42,9 @@ private:
 	
 	iPoint ipos_back = { 0,0 };
 
+	iPoint plataform_min = { 0,0 };
+	iPoint plataform_max = { 0,0 };
+
 	Player* player_one = nullptr;
 	
 	Room* outside = nullptr;
@@ -49,6 +54,7 @@ private:
 	int* borders_xmin = nullptr;
 	int* borders_xmax = nullptr;
 	int* borders_zmin = nullptr;
+	int* borders_zmin_in_plataform = nullptr;
 	int borders_zmax = 0;
 };
 

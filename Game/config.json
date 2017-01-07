@@ -170,18 +170,20 @@
 				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"
 			],
 			"Dimensions" : [1280, 224],
-			"Borders_zmin" : [
-				[0, 207], [96, 207], [128, 160], [463, 160], [463, 207], [1280, 207]
-			],
-			"Borders_xmin" : [
-				[0, 128], [160, 128], [207, 96], [207, 0], [224, 0]
-			],
-			"Borders_xmax" : [
-				[0, 463], [207, 463], [207, 1279], [224, 1279]
-			]
+			"Borders_zmin" : [ [0, 212], [96, 212], [128, 165], [470, 165], [471, 212], [1280, 212] ],
+			"Borders_xmin" : [ [0, 128], [165, 128], [211, 96], [212, 0], [224, 0] ],
+			"Borders_xmax" : [ [0, 470], [211, 470], [212, 1280], [224, 1280] ],
+			"Plataform_Min" : [470, 165],
+			"Plataform_Max" : [1280, 212],
+			"PlataformHeight" : 20,
+			"Player1_InitialPos" : [50, 220]
 		}
 	},
 	"Entities" : {
+		"Globals" : {
+			"NumberOfSounds" : 2,
+			"Sounds" : [ "assets/player_attack.wav", "assets/player_jump.wav" ]
+		},
 		"Japan_Outside" : {
 			"Rectangle" : [8 ,8, 1280, 224],
 			"Position" : [0, 0],
@@ -230,6 +232,8 @@
 		"Player1" : {
 			"Speed" : 1,
 			"Depth" : 5,
+			"Sound_Jump" : 1,
+			"Sound_Attack" : 0,
 			"PlayerSign" : {
 				"Animated" : true,
 				"Animation" : {
@@ -260,9 +264,23 @@
 				]
 			}, 
 			"JumpFrame" : [248, 95, 31, 48],
-			"JumpSpeedY" : 2,
-			"JumpSpeedX" : 2,
-			"Gravity" : 0.15
+			"AerialKickFrame" : [288, 101, 46, 42],
+			"JumpSpeed" : [1.4, 3],
+			"Gravity" : 0.08,
+			"Punch_Animation" : {
+				"Speed" : 0.15,
+				"Frames" : 4,
+				"Sprites" : [
+					[8,80,26,63],[40,80,39,63],[8,80,26,63],[8,0,26,63]
+				]
+			},
+			"Kick_Animation" : {
+				"Speed" : 0.15,
+				"Frames" : 4,
+				"Sprites" : [
+					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
+				]
+			}
 			}
 		}
 	}

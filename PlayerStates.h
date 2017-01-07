@@ -25,6 +25,7 @@ public:
 	Player_StandState(Player* player, const char* staticframe);
 	~Player_StandState() {}
 	PlayerState* HandleInput();
+	update_status Update();
 
 public:
 	SDL_Rect initial_rect = { 0,0,0,0 };
@@ -49,21 +50,42 @@ public:
 class Player_JumpState : public PlayerState
 {
 public:
-	Player_JumpState(Player* player, const char* jumpframe);
+	Player_JumpState(Player* player, const char* jump_frame, const char* jumpattack_frame);
 	~Player_JumpState() {}
 	PlayerState* HandleInput();
 	update_status Update();
-	void SetJumpParameters(int initial_y, Creature::XDirection jump_direction);
+	void SetJumpParameters(Creature::XDirection jump_direction);
 
 private:
-	SDL_Rect jumprect = { 0,0,0,0 };
-	int speed_y = 2;
-	int speed_x = 5;
+	SDL_Rect jump_rect = { 0,0,0,0 };
+	SDL_Rect jumpkick_rect = { 0,0,0,0 };
+	fPoint speed = { 0.0,0.0 };
 	float gravity = 1.0f;
 
-	int initial_y = 0;
+	iPoint initial_pos = { 0,0 };
+	iPoint final_pos = { 0,0 };
 	Creature::XDirection jump_direction = Creature::XDirection::XIDLE;
 	int time = 0;
+	fPoint current_position = { 0.0,0.0 };
 
+	bool jumping_to_platform = false;
+	bool jumping_off_platform = false;
+	bool maximum_reached = true;
+	bool attacking = false;
+
+};
+
+class Player_AttackState : public PlayerState
+{
+public:
+	Player_AttackState(Player* player, const char* punch_animation, const char* kick_animation);
+	~Player_AttackState() {}
+	PlayerState* HandleInput() { return this; }
+	update_status Update();
+
+public:
+	Animation punch;
+	Animation kick;
+	Animation* current_animation = nullptr;
 };
 #endif // !PLAYERSTATES_H

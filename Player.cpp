@@ -13,9 +13,13 @@ Player::Player(int number_player, SDL_Texture* texture, const char* name, Module
 		ispeed = App->parser->GetInt("Speed");
 		dimensions.z = App->parser->GetInt("Depth");
 
+		sound_attack = App->entities->GetSound(App->parser->GetInt("Sound_Attack"));
+		sound_jump = App->entities->GetSound(App->parser->GetInt("Sound_Jump"));
+
 		moving = new Player_MoveState(this, "Move_Animation", "MoveUp_Animation");
 		idle = new Player_StandState(this, "Static_Frame");
-		jumping = new Player_JumpState(this, "JumpFrame");
+		jumping = new Player_JumpState(this, "JumpFrame", "AerialKickFrame");
+		attacking = new Player_AttackState(this, "Punch_Animation", "Kick_Animation");
 
 		if (App->parser->UnloadObject() == true)
 		{
@@ -32,6 +36,7 @@ Player::~Player()
 	RELEASE(moving);
 	RELEASE(idle);
 	RELEASE(jumping);
+	RELEASE(attacking);
 }
 
 update_status Player::PreUpdate()
@@ -54,29 +59,29 @@ update_status Player::Update()
 
 void Player::HandleInput()
 {
+	jump = false;
+	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::JUMP))
+		jump = true;
 
-	zmovement = ZDirection::YIDLE;
-	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_UP))
-		zmovement = ZDirection::UP;
-	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_DOWN))
-		zmovement = ZDirection::DOWN;
-		
 	xmovement = XDirection::XIDLE;
 	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_LEFT))
 		xmovement = XDirection::LEFT;
 	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_RIGHT))
 		xmovement = XDirection::RIGHT;
-
+		
+	zmovement = ZDirection::YIDLE;
+	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_UP))
+		zmovement = ZDirection::UP;
+	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_DOWN))
+		zmovement = ZDirection::DOWN;
 
 	attack_cmd = Attack::NOATTACK;
-	if (App->input->GetPlayerOutput(number_player, PlayerOutput::PUNCH))
+	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::PUNCH))
 		attack_cmd = Attack::PUNCH;
-	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::KICK))
+	else if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::KICK))
 		attack_cmd = Attack::KICK;
 		
-	jump = false;
-	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::JUMP))
-		jump = true;
+	
 
 	current_state = current_state->HandleInput();
 }

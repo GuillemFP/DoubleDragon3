@@ -14,6 +14,8 @@ public:
 	Creature(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent = nullptr, bool active = true) : Entity(Entity::Type::PLAYER, texture, stage, parent, true) {}
 	~Creature() {}
 
+	void SetPosition(int x, int z) { position.x = x; position.z = z; position.y = z - dimensions.y; }
+
 public:
 	XDirection xmovement = XIDLE;
 	ZDirection zmovement = YIDLE;
@@ -21,8 +23,7 @@ public:
 	bool jump = false;
 	int ispeed;
 
-	bool binside_x = true;
-	bool binside_z = true;
+	bool in_plataform = false;
 
 };
 
