@@ -6,12 +6,15 @@
 #include "Player.h"
 #include "JsonHandler.h"
 
-Player::Player(int number_player, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent) : Creature(Entity::Type::PLAYER, texture, stage, parent, true), number_player(number_player)
+Player::Player(int number_player, const char* name, ModuleStages* stage, Entity* parent) : Creature(Entity::Type::PLAYER, App->entities->players, stage, parent, true), number_player(number_player)
 {
 	if (App->parser->LoadObject(name))
 	{
+		this->name = App->parser->GetString("Name");
 		ispeed = App->parser->GetInt("Speed");
 		dimensions.z = App->parser->GetInt("Depth");
+		health = abs(App->parser->GetInt("Health"));
+		App->parser->GetRect(face, "Face");
 
 		sound_attack = App->entities->GetSound(App->parser->GetInt("Sound_Attack"));
 		sound_jump = App->entities->GetSound(App->parser->GetInt("Sound_Jump"));
@@ -20,6 +23,8 @@ Player::Player(int number_player, SDL_Texture* texture, const char* name, Module
 		idle = new Player_StandState(this, "Static_Frame");
 		jumping = new Player_JumpState(this, "JumpFrame", "AerialKickFrame");
 		attacking = new Player_AttackState(this, "Punch_Animation", "Kick_Animation");
+
+		current_state = idle;
 
 		if (App->parser->UnloadObject() == true)
 		{

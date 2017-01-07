@@ -15,7 +15,7 @@ class Player_AttackState;
 class Player : public Creature
 {
 public:
-	Player(int number_player, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr);
+	Player(int number_player, const char* name, ModuleStages* stage, Entity* parent = nullptr);
 	~Player();
 	update_status PreUpdate();
 	update_status Update();
@@ -26,6 +26,7 @@ private:
 public:
 	bool running = false;
 	int number_player = 1;
+	const char* name;
 
 	unsigned int sound_attack = 0;
 	unsigned int sound_jump = 0;
@@ -36,7 +37,9 @@ public:
 	Player_StandState* idle;
 	Player_JumpState* jumping;
 	Player_AttackState* attacking;
-	PlayerState* current_state;
+	PlayerState* current_state = nullptr;
+
+	SDL_Rect face = { 0,0,0,0 };
 };
 
 #endif // PLAYER_H

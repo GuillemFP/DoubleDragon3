@@ -37,11 +37,16 @@ public:
 
 	int Load(const char* order, int char_width, int font_height, const iPoint& font_origin);
 
-	bool BlitXCentered(int id_font, int y, const char* string);
-	bool BlitXCentered(int id_font, int y, const char* string, float speed);
-	bool Blit(int id_font, const iPoint& origin, int number);
-	bool Blit(int id_font, const iPoint& origin, int number, float speed);
-	bool Blit(int id_font, const iPoint& origin, const char* string);
+	bool BlitScreenXCentered(int id_font, int y, const char* string) { return BlitScreenXCentered(id_font, y, string, fDEFAULT_SPEED); }
+	bool BlitScreenXCentered(int id_font, int y, const char* string, float speed);
+
+	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string) { return BlitFromXCenter(id_font, center_origin, string, fDEFAULT_SPEED); }
+	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string, float speed);
+
+	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string) { return BlitFromRight(id_font, right_origin, string, fDEFAULT_SPEED); }
+	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string, float speed);
+
+	bool Blit(int id_font, const iPoint& origin, const char* string) { return Blit(id_font, origin, string, fDEFAULT_SPEED); }
 	bool Blit(int id_font, const iPoint& origin, const char* string, float speed);
 
 	void FillTextLine(TextLine* line, int num_line);

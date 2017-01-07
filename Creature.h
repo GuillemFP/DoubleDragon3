@@ -25,6 +25,8 @@ public:
 
 	bool in_plataform = false;
 
+	int health = 1;
+
 };
 
 #endif // !CREATURE_H

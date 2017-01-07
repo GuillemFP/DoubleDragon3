@@ -83,12 +83,7 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-bool ModuleRender::BlitCentered(SDL_Texture* texture, SDL_Rect* section)
-{
-	return BlitCentered(texture, section, fDEFAULT_SPEED);
-}
-
-bool ModuleRender::BlitCentered(SDL_Texture* texture, SDL_Rect* section, float speed)
+bool ModuleRender::BlitScreenCentered(SDL_Texture* texture, SDL_Rect* section, float speed)
 {
 	iPoint draw_origin;
 
@@ -107,12 +102,7 @@ bool ModuleRender::BlitCentered(SDL_Texture* texture, SDL_Rect* section, float s
 	return Blit(texture, draw_origin, section, speed);
 }
 
-bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * section)
-{
-	return BlitXCentered(texture, y, section, fDEFAULT_SPEED);
-}
-
-bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * section, float speed)
+bool ModuleRender::BlitScreenXCentered(SDL_Texture * texture, int y, SDL_Rect * section, float speed)
 {
 	iPoint draw_origin;
 
@@ -129,11 +119,6 @@ bool ModuleRender::BlitXCentered(SDL_Texture * texture, int y, SDL_Rect * sectio
 	}
 
 	return Blit(texture, draw_origin, section, speed);
-}
-
-bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, bool inverse)
-{
-	return Blit(texture, position, section, fDEFAULT_SPEED, inverse);
 }
 
 bool ModuleRender::Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed, bool inverse)

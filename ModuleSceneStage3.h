@@ -15,6 +15,7 @@ struct SDL_Texture;
 class Player;
 class Room;
 class Creature;
+class Timer;
 
 class ModuleSceneStage3 : public ModuleStages
 {
@@ -35,8 +36,6 @@ public:
 
 private:
 	SDL_Texture* background = nullptr;
-	SDL_Texture* players = nullptr;
-	SDL_Texture* signals = nullptr;
 
 	SDL_Rect rect_back = { 0,0,0,0 };
 	

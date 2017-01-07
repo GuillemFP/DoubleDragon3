@@ -24,11 +24,13 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	bool BlitCentered(SDL_Texture* texture, SDL_Rect* section, float speed);
-	bool BlitCentered(SDL_Texture* texture, SDL_Rect* section);
-	bool BlitXCentered(SDL_Texture* texture, int y, SDL_Rect* section, float speed);
-	bool BlitXCentered(SDL_Texture* texture, int y, SDL_Rect* section);
-	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, bool inverse = false);
+	bool BlitScreenCentered(SDL_Texture* texture, SDL_Rect* section) { return BlitScreenCentered(texture, section, fDEFAULT_SPEED); }
+	bool BlitScreenCentered(SDL_Texture* texture, SDL_Rect* section, float speed);
+
+	bool BlitScreenXCentered(SDL_Texture* texture, int y, SDL_Rect* section) { return BlitScreenXCentered(texture, y, section, fDEFAULT_SPEED); }
+	bool BlitScreenXCentered(SDL_Texture* texture, int y, SDL_Rect* section, float speed);
+
+	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, bool inverse = false) { return Blit(texture, position, section, fDEFAULT_SPEED, inverse); }
 	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed, bool inverse = false);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 

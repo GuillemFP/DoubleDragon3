@@ -162,13 +162,13 @@ update_status ModuleSceneTitle::Update()
 	switch (current_state)
 	{
 	case LOGO1:
-		App->renderer->BlitCentered(texture, &(animated_title.GetCurrentFrame()));
+		App->renderer->BlitScreenCentered(texture, &(animated_title.GetCurrentFrame()));
 		if (timer->MaxTimeReached() == true && App->fade->isFading() == false)
 			App->fade->FadeToBlack(this, this, ffade_time);
 		break;
 	case LOGO2:
 		App->renderer->DrawQuad(App->renderer->camera, backcolor_r, backcolor_g, backcolor_b, backcolor_a, false);
-		App->renderer->BlitCentered(texture, NULL);
+		App->renderer->BlitScreenCentered(texture, NULL);
 		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || timer->MaxTimeReached() == true) && App->fade->isFading() == false)
 			App->fade->FadeToBlack(this, this, ffade_time);
 		break;

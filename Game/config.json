@@ -50,6 +50,24 @@
 				["0123456789", 16, 24, 0, 40],
 				["0123456789", 16, 24, 0, 64]
 			]
+		},
+		"UI" : {
+			"PlayersInUI" : 2,
+			"NumberLength" : 3,
+			"Health_RelPos" : [ [-64, 16], [64, 16] ],
+			"Health_Font" : [4, 5],
+			"Name_RelPos" : [ [-64, 40], [64, 40] ],
+			"Name_Font" : 0,
+			"Face_RelPos" : [ [-64, 16], [64, 16] ],
+			"TimeName" : "time",
+			"TimeName_RelPos" : [-32, 24],
+			"TimeNumber_RelPos" : [32, 24],
+			"CoinsName" : "coins",
+			"CoinsName_RelPos" : [-32, 32],
+			"CoinsNumber_RelPos" : [32, 32],
+			"PressStartTimer" : 1.5,
+			"NumTextLines" : 4,
+			"TextLines" : ["press" , "start" , "  to", "buy in"]
 		}
 	},
 	"Scenes" : {
@@ -159,8 +177,6 @@
 		},
 		"Stage3" : {
 			"BackgroundTexture" : "assets/back_japan.png",
-			"PlayerTexture" : "assets/char_billyjimmy.png",
-			"SceneSignals" : "assets/signals.png",
 			"MusicPath" : "assets/mus_in-japan.ogg",
 			"MusicFade" : 0,
 			"Entity_Scenario_Outside" : "Config.Entities.Japan_Outside",
@@ -169,20 +185,26 @@
 				"Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
 				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"
 			],
-			"Dimensions" : [1280, 224],
+			"Dimensions" : [1280, 223],
 			"Borders_zmin" : [ [0, 212], [96, 212], [128, 165], [470, 165], [471, 212], [1280, 212] ],
 			"Borders_xmin" : [ [0, 128], [165, 128], [211, 96], [212, 0], [224, 0] ],
 			"Borders_xmax" : [ [0, 470], [211, 470], [212, 1280], [224, 1280] ],
 			"Plataform_Min" : [470, 165],
 			"Plataform_Max" : [1280, 212],
 			"PlataformHeight" : 20,
-			"Player1_InitialPos" : [50, 220]
+			"Player1_InitialPos" : [50, 220],
+			"Timer" : 180.0
 		}
 	},
 	"Entities" : {
 		"Globals" : {
 			"NumberOfSounds" : 2,
-			"Sounds" : [ "assets/player_attack.wav", "assets/player_jump.wav" ]
+			"Sounds" : [ "assets/player_attack.wav", "assets/player_jump.wav" ],
+			"MaxPlayers" : 1,
+			"PlayerTexture" : "assets/char_billyjimmy.png",
+			"PlayerFaces" : "assets/faces.png",
+			"SceneSignals" : "assets/signals.png",
+			"Coins" : 25
 		},
 		"Japan_Outside" : {
 			"Rectangle" : [8 ,8, 1280, 224],
@@ -230,8 +252,11 @@
 			"RelativePosition" : [8, 107]
 		},
 		"Player1" : {
+			"Name" : "billy",
 			"Speed" : 1,
 			"Depth" : 5,
+			"Health" : 250,
+			"Face" : [0, 0, 32, 32],
 			"Sound_Jump" : 1,
 			"Sound_Attack" : 0,
 			"PlayerSign" : {
@@ -240,12 +265,12 @@
 					"Speed" : 0.1,
 					"Frames" : 2,
 					"Sprites" : [
-						[353,7,16,32],[369,7,16,32]
+						[0,93,16,32],[16,93,16,32]
 					]
 				},
 				"Timer" : true,
 				"MaxTime" : 5.0,
-				"Rectangle" : [353,7,16,32],
+				"Rectangle" : [0,93,16,32],
 				"RelativePosition" : [4, -39]
 			},
 			"Static_Frame" : [8,0,26,63],
@@ -281,7 +306,7 @@
 					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
 				]
 			}
-			}
 		}
 	}
-}}
+	}
+}

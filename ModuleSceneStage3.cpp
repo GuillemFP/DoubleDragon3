@@ -9,6 +9,8 @@
 #include "Room.h"
 #include "JsonHandler.h"
 
+#include "ModuleUI.h"
+
 ModuleSceneStage3::ModuleSceneStage3(bool active) : ModuleStages(MODULESCENE_STAGE3, active)
 {
 }
@@ -29,8 +31,6 @@ bool ModuleSceneStage3::Start()
 	if (App->parser->LoadObject(SCENE_SECTION_STAGE3))
 	{
 		background = App->textures->Load(App->parser->GetString("BackgroundTexture"));
-		players = App->textures->Load(App->parser->GetString("PlayerTexture"));
-		signals = App->textures->Load(App->parser->GetString("SceneSignals"));
 		float music_fade = App->parser->GetFloat("MusicFade");
 		const char* music_string = App->parser->GetString("MusicPath");
 
@@ -59,6 +59,8 @@ bool ModuleSceneStage3::Start()
 
 		App->parser->GetPoint(player1_initialpos, "Player1_InitialPos");
 
+		float time = App->parser->GetFloat("Timer");
+
 		ret = App->parser->UnloadObject();
 
 		if (ret == true)
@@ -73,16 +75,22 @@ bool ModuleSceneStage3::Start()
 				App->entities->CreateEntity(Entity::OBJECT, background, details[i], this, outside);
 			}
 		}
+
+		App->entities->stage_timer->SetMaxTime((Uint32)(time*1000.0f));
 	}
 
 	current_room = outside;
 
-	App->entities->CreateEntity(Entity::OBJECT, signals, ENTITY_STORESIGN, this, current_room);
+	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_STORESIGN, this, current_room);
 
-	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, players, ENTITY_PLAYER1, this, current_room);
+	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER1, this, current_room);
 	player_one->SetPosition(player1_initialpos.x, player1_initialpos.y);
 
-	App->entities->CreateEntity(Entity::OBJECT, players, ENTITY_PLAYER1_SIGN, this, player_one);
+	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_PLAYER1_SIGN, this, player_one);
+
+	App->user_interface->Enable();
+
+	App->entities->stage_timer->Start();
 
 	return ret;
 }
@@ -94,8 +102,6 @@ bool ModuleSceneStage3::CleanUp()
 	current_room->Disable();
 
 	App->textures->Unload(background);
-	App->textures->Unload(players);
-	App->textures->Unload(signals);
 
 	return true;
 }

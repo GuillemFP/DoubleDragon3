@@ -172,19 +172,19 @@ update_status ModuleScenePreStage::Update()
 	switch (current_state)
 	{
 	case HISTORY1:
-		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->BlitScreenXCentered(texture, ipos_map.y, &rect_map);
 		for (std::vector<TextLine*>::iterator it = lines.begin(); it != lines.end(); ++it)
-			App->fonts->BlitXCentered((*it)->id_font, (*it)->y, (*it)->line);
+			App->fonts->BlitScreenXCentered((*it)->id_font, (*it)->y, (*it)->line);
 		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || timer->MaxTimeReached() == true) && App->fade->isFading() == false)
 			App->fade->FadeToBlack(this, this, ffade_time);
 		break;
 	case HISTORY2:
-		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->BlitScreenXCentered(texture, ipos_map.y, &rect_map);
 		App->renderer->Blit(texture, ipos_face1, &(face1.GetCurrentFrame()));
 		App->renderer->Blit(texture, ipos_face2, &(face2.GetCurrentFrame()));
 		for (int i = 0; i < ilines_print; i++)
 			if (lines[i] != nullptr)
-				App->fonts->BlitXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
+				App->fonts->BlitScreenXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
 
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)
 			App->fade->FadeToBlack(this, this, ffade_time);
@@ -195,19 +195,19 @@ update_status ModuleScenePreStage::Update()
 		}
 		break;
 	case HISTORY3:
-		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->BlitScreenXCentered(texture, ipos_map.y, &rect_map);
 		App->renderer->Blit(texture, ipos_face1, &(face1.GetCurrentFrame()));
 		App->renderer->Blit(texture, ipos_face2, &(face2.GetCurrentFrame()));
 		for (int i = ilines_print; i < lines.size(); i++)
 			if (lines[i] != nullptr)
-				App->fonts->BlitXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
+				App->fonts->BlitScreenXCentered(lines[i]->id_font, lines[i]->y, lines[i]->line);
 		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || timer->MaxTimeReached() == true) && App->fade->isFading() == false)
 			App->fade->FadeToBlack(this, this, ffade_time);
 		break;
 	case STAGE3:
-		App->renderer->BlitXCentered(texture, ipos_map.y, &rect_map);
-		App->renderer->BlitXCentered(texture, ipos_mission.y, &rect_mission);
-		App->renderer->BlitXCentered(texture, ipos_country.y, &rect_country);
+		App->renderer->BlitScreenXCentered(texture, ipos_map.y, &rect_map);
+		App->renderer->BlitScreenXCentered(texture, ipos_mission.y, &rect_mission);
+		App->renderer->BlitScreenXCentered(texture, ipos_country.y, &rect_country);
 		App->renderer->Blit(texture, ipos_point, &(animated_point.GetCurrentFrame()));
 		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN || timer->MaxTimeReached() == true) && App->fade->isFading() == false)
 			App->fade->FadeToBlack((Module*) App->scene_stage3, this, ffade_time);

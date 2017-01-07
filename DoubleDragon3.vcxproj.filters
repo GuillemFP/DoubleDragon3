@@ -108,6 +108,9 @@
     <ClInclude Include="ModuleStages.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleUI.h">
+      <Filter>Game Logic Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -168,6 +171,9 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="ModuleCollision.cpp">
+      <Filter>Game Logic Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
       <Filter>Game Logic Modules</Filter>
     </ClCompile>
   </ItemGroup>

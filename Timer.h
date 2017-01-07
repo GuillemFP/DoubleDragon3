@@ -1,5 +1,5 @@
 #ifndef TIMER_H
-#define TIMER
+#define TIMER_H
 
 #include "SDL/include/SDL_timer.h"
 
@@ -78,6 +78,16 @@ public:
 		return ((float) GetTimeInMs()/1000.0f);
 	}
 
+	Uint32 GetCounterInMs() const
+	{
+		return max_time - GetTimeInMs();
+	}
+
+	int GetCounterInS() const
+	{
+		return (GetCounterInMs() / 1000);
+	}
+
 	TimerState GetState() const
 	{
 		return state;
@@ -101,6 +111,7 @@ public:
 	void SetMaxTime(Uint32 max_time)
 	{
 		this->max_time = max_time;
+		Stop();
 	}
 
 private:
