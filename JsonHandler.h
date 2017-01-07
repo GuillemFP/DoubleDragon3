@@ -21,6 +21,7 @@ public:
 
 	bool GetRect(SDL_Rect& rect, const char* name);
 	bool GetPoint(iPoint& point, const char* name);
+	bool GetPoint(fPoint& point, const char* name);
 	bool GetAnimation(Animation& anim, const char* name);
 	bool GetIntArray(const char* name, int* int_array);
 
@@ -38,6 +39,7 @@ public:
 private:
 	bool ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array);
 	bool ArrayToPoint(iPoint& point, JSON_Array* point_array);
+	bool ArrayToPoint(fPoint& point, JSON_Array* point_array);
 
 private:
 	JSON_Object* root_object = nullptr;

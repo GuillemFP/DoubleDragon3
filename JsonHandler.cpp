@@ -139,6 +139,39 @@ bool JSONParser::GetPoint(iPoint& point, const char * name)
 	return ret;
 }
 
+bool JSONParser::GetPoint(fPoint& point, const char * name)
+{
+	bool ret = false;
+
+	JSON_Array* loaded_array;
+
+	if (loaded_object != nullptr)
+	{
+		if (json_object_dothas_value_of_type(loaded_object, name, JSONArray))
+		{
+			loaded_array = json_object_get_array(loaded_object, name);
+			ret = ArrayToPoint(point, loaded_array);
+			if (ret == false)
+			{
+				LOG("JSONParser: Point array %s has incorrect number of elements.", name);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Point name %s not found.", name);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No section loaded. Point %s cannot load.", name);
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
 bool JSONParser::GetAnimation(Animation& anim, const char* name)
 {
 	bool ret = true;
@@ -221,7 +254,7 @@ bool JSONParser::GetIntArray(const char* name, int* int_array)
 		box_array = json_array_get_array(loaded_array, i + 1);
 		x1 = json_array_get_number(box_array, 0);
 		y1 = json_array_get_number(box_array, 1);
-		if (count >= x0 && count < x1)
+		if (count >= x0 && count <= x1)
 		{
 			float slope = 1.0f;
 			if (x1 != x0)
@@ -518,6 +551,20 @@ bool JSONParser::ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array)
 }
 
 bool JSONParser::ArrayToPoint(iPoint& point, JSON_Array* point_array)
+{
+	bool ret = false;
+
+	if (json_array_get_count(point_array) == 2)
+	{
+		point.x = json_array_get_number(point_array, 0);
+		point.y = json_array_get_number(point_array, 1);
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool JSONParser::ArrayToPoint(fPoint& point, JSON_Array* point_array)
 {
 	bool ret = false;
 
