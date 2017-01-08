@@ -11,6 +11,7 @@ class Player_MoveState;
 class Player_StandState;
 class Player_JumpState;
 class Player_AttackState;
+class Player_DamageState;
 
 class Player : public Creature
 {
@@ -19,6 +20,8 @@ public:
 	~Player();
 	update_status PreUpdate();
 	update_status Update();
+
+	void HasCollided(Collider* with);
 
 private:
 	void HandleInput();
@@ -31,15 +34,22 @@ public:
 	unsigned int sound_attack = 0;
 	unsigned int sound_jump = 0;
 
-	ZDirection last_zmov = YIDLE;
-
 	Player_MoveState* moving;
 	Player_StandState* idle;
 	Player_JumpState* jumping;
 	Player_AttackState* attacking;
+	Player_DamageState* damaging;
+
 	PlayerState* current_state = nullptr;
 
 	SDL_Rect face = { 0,0,0,0 };
+
+	Collider* attack_collider;
+	Point3d attack_position = { 0,0,0 };	
+	Point3d attack_dimensions = { 0,0,0 };
+
+	Point3d collider_position = { 0,0,0 };
+	Point3d collider_dimensions = { 0,0,0 };
 };
 
 #endif // PLAYER_H

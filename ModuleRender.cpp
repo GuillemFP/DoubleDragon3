@@ -64,7 +64,7 @@ update_status ModuleRender::Update()
 update_status ModuleRender::PostUpdate()
 {
 	if (debug == true)
-		App->fonts->Blit(0, { 0,0 }, "debug camera on", 0.0f);
+		App->fonts->Blit(0, { 150,0 }, "debug camera on", 0.0f);
 
 	SDL_RenderPresent(renderer);
 	return UPDATE_CONTINUE;

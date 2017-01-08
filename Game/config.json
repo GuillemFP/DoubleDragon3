@@ -255,6 +255,7 @@
 			"Name" : "billy",
 			"Speed" : 1,
 			"Depth" : 5,
+			"ImmunityAfterAttack" : 1.0,
 			"Health" : 250,
 			"Face" : [0, 0, 32, 32],
 			"Sound_Jump" : 1,
@@ -274,6 +275,9 @@
 				"RelativePosition" : [4, -39]
 			},
 			"Static_Frame" : [8,0,26,63],
+			"DamageHigh_Frame" : [8,392,26,63],
+			"DamageLow_Frame" : [40,392,26,63],
+			"Time_DamageState" : 0.5, 
 			"Move_Animation" : {
 				"Speed" : 0.08,
 				"Frames" : 4,
@@ -289,9 +293,11 @@
 				]
 			}, 
 			"JumpFrame" : [248, 95, 31, 48],
-			"AerialKickFrame" : [288, 101, 46, 42],
 			"JumpSpeed" : [1.4, 3],
 			"Gravity" : 0.08,
+			"AerialKickFrame" : [288, 101, 46, 42],
+			"AerialKickDamage" : 30,
+			"AerialKickRect" : [20, 16, 26, 17],
 			"Punch_Animation" : {
 				"Speed" : 0.15,
 				"Frames" : 4,
@@ -299,13 +305,19 @@
 					[8,80,26,63],[40,80,39,63],[8,80,26,63],[8,0,26,63]
 				]
 			},
+			"PunchDamage" : 20,
+			"PunchDamageFrame" : 1,
+			"PunchRect" : [23, 5, 16, 16],
 			"Kick_Animation" : {
 				"Speed" : 0.15,
 				"Frames" : 4,
 				"Sprites" : [
 					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
 				]
-			}
+			},
+			"KickDamage" : 25,
+			"KickDamageFrame" : 1,
+			"KickRect" : [16, 19, 22, 18]
 		}
 	}
 	}

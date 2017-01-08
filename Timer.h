@@ -16,15 +16,9 @@ public:
 	Timer(Uint32 max_time = 0) : max_time(max_time) {};
 	~Timer() {};
 
-	void Start()
-	{
-		Start(max_time);
-	}
+	void Start() { Start(max_time); }
 
-	void Start(float max_time)
-	{
-		Start((Uint32)max_time * 1000);
-	}
+	void Start(float max_time) { Start((Uint32)max_time * 1000); }
 
 	void Start(Uint32 max_time)
 	{
@@ -68,35 +62,17 @@ public:
 		}
 	}
 
-	Uint32 GetTimeInMs() const
-	{
-		return accumulated_time + CurrentTime();
-	}
+	Uint32 GetTimeInMs() const { return accumulated_time + CurrentTime(); }
 
-	float GetTimeInSeconds() const
-	{
-		return ((float) GetTimeInMs()/1000.0f);
-	}
+	float GetTimeInSeconds() const { return ((float) GetTimeInMs()/1000.0f); }
 
-	Uint32 GetCounterInMs() const
-	{
-		return max_time - GetTimeInMs();
-	}
+	Uint32 GetCounterInMs() const { return max_time - GetTimeInMs(); }
 
-	int GetCounterInS() const
-	{
-		return (GetCounterInMs() / 1000);
-	}
+	int GetCounterInS() const { return (GetCounterInMs() / 1000); }
 
-	TimerState GetState() const
-	{
-		return state;
-	}
+	TimerState GetState() const { return state; }
 
-	Uint32 GetMaxTimeInMs() const
-	{
-		return max_time;
-	}
+	Uint32 GetMaxTimeInMs() const { return max_time; }
 
 	bool MaxTimeReached() const
 	{

@@ -14,6 +14,7 @@ public:
 	virtual ~PlayerState() {}
 	virtual PlayerState* HandleInput() { return nullptr; }
 	virtual update_status Update() { return UPDATE_CONTINUE; }
+	virtual void OnExit() {}
 
 protected:
 	Player* player;
@@ -26,6 +27,7 @@ public:
 	~Player_StandState() {}
 	PlayerState* HandleInput();
 	update_status Update();
+	void OnExit();
 
 public:
 	SDL_Rect initial_rect = { 0,0,0,0 };
@@ -40,12 +42,14 @@ public:
 	~Player_MoveState() {}
 	PlayerState* HandleInput();
 	update_status Update();
+	void OnExit();
 
 public:
 	Animation moving;
 	Animation moving_up;
 	Animation* current_animation = nullptr;
-	SDL_Rect current_frame;
+	SDL_Rect last_moving = { 0,0,0,0 };
+	SDL_Rect last_moving_up = { 0,0,0,0 };
 };
 
 class Player_JumpState : public PlayerState
@@ -55,6 +59,7 @@ public:
 	~Player_JumpState() {}
 	PlayerState* HandleInput();
 	update_status Update();
+	void OnExit();
 
 private:
 	void SetJumpParameters();
@@ -77,6 +82,8 @@ private:
 	bool maximum_reached = true;
 	bool attacking = false;
 
+	SDL_Rect kick_rect = { 0,0,0,0 };
+	int kick_damage = 0;
 };
 
 class Player_AttackState : public PlayerState
@@ -84,12 +91,59 @@ class Player_AttackState : public PlayerState
 public:
 	Player_AttackState(Player* player, const char* punch_animation, const char* kick_animation);
 	~Player_AttackState() {}
-	PlayerState* HandleInput() { return this; }
+	PlayerState* HandleInput();
 	update_status Update();
+	void OnExit();
 
 public:
 	Animation punch;
 	Animation kick;
 	Animation* current_animation = nullptr;
+
+private:
+	SDL_Rect punch_rect = { 0,0,0,0 };
+	SDL_Rect kick_rect = { 0,0,0,0 };
+	int punch_damage = 0;
+	int kick_damage = 0;
+	int punch_frame = 0;
+	int kick_frame = 0;
+
+	bool attacking = false;
+	int attack_frame = 0;
+	SDL_Rect* attack_rect;
+
 };
+
+class Player_DamageState : public PlayerState
+{
+public:
+	Player_DamageState(Player* player, const char* high_frame, const char* low_frame);
+	~Player_DamageState() { RELEASE(in_damaged_state); }
+	PlayerState* HandleInput();
+	update_status Update();
+	void OnExit();
+
+	void SetFrame(Creature::Attack attack_type) 
+	{
+		switch (attack_type)
+		{
+		case Creature::PUNCH:
+			damage_rect = &high_rect;
+			break;
+		case Creature::KICK:
+			damage_rect = &low_rect;
+			break;
+		}
+	}
+
+private:
+	SDL_Rect high_rect = { 0,0,0,0 };
+	SDL_Rect low_rect = { 0,0,0,0 };
+	SDL_Rect* damage_rect = &high_rect;
+
+	Timer* in_damaged_state = nullptr;
+};
+
+
+
 #endif // !PLAYERSTATES_H

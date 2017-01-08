@@ -176,5 +176,8 @@
     <ClCompile Include="ModuleUI.cpp">
       <Filter>Game Logic Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

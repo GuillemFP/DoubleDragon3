@@ -9,6 +9,7 @@
 
 struct SDL_Texture;
 enum update_status;
+struct Collider;
 
 class Entity
 {
@@ -35,6 +36,8 @@ public:
 	virtual bool Disable();
 	virtual bool Delete();
 
+	virtual void HasCollided(Collider* with) {}
+
 	virtual void ChangeParent(Entity* new_parent);
 
 public:
@@ -55,6 +58,8 @@ public:
 
 	Entity* parent = nullptr;
 	ModuleStages* stage = nullptr;
+
+	Collider* collider = nullptr;
 };
 
 #endif // !ENTITY_H

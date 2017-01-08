@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleAudio.h"
+#include "ModuleCollision.h"
 #include "JsonHandler.h"
 #include "SDL/include/SDL_scancode.h"
 #include "Player.h"
@@ -27,11 +28,16 @@ update_status Player_StandState::Update()
 	return UPDATE_CONTINUE; 
 }
 
+void Player_StandState::OnExit()
+{
+	current_rect = initial_rect;
+}
+
 Player_MoveState::Player_MoveState(Player* player, const char* move_animation, const char* moveup_animation) : PlayerState(player)
 {
 	App->parser->GetAnimation(moving, move_animation);
 	App->parser->GetAnimation(moving_up, moveup_animation);
-	App->parser->GetRect(current_frame, "Static_Frame");
+	App->parser->GetRect(last_moving, "Static_Frame");
 	current_animation = &moving;
 }
 
@@ -39,7 +45,7 @@ PlayerState* Player_MoveState::HandleInput()
 {
 	PlayerState* ret = this;
 
-	player->idle->current_rect = current_frame;
+	player->idle->current_rect = last_moving;
 
 	if (player->jump == true)
 		ret = player->jumping->HandleInput();
@@ -56,7 +62,7 @@ PlayerState* Player_MoveState::HandleInput()
 				switch (player->zmovement)
 				{
 				case Creature::ZDirection::UP:
-					player->idle->current_rect = player->idle->initial_rect;
+					last_moving = player->idle->initial_rect;
 					current_animation = &moving_up;
 					moving.Reset();
 				case Creature::ZDirection::DOWN:
@@ -74,7 +80,7 @@ PlayerState* Player_MoveState::HandleInput()
 				switch (player->zmovement)
 				{
 				case Creature::ZDirection::UP:
-					player->idle->current_rect = player->idle->initial_rect;
+					last_moving = player->idle->initial_rect;
 					current_animation = &moving_up;
 					moving.Reset();
 					break;
@@ -91,7 +97,7 @@ PlayerState* Player_MoveState::HandleInput()
 				switch (player->zmovement)
 				{
 				case Creature::ZDirection::UP:
-					player->idle->current_rect = player->idle->initial_rect;
+					last_moving = player->idle->initial_rect;
 					current_animation = &moving_up;
 					moving.Reset();
 					break;
@@ -101,7 +107,7 @@ PlayerState* Player_MoveState::HandleInput()
 					break;
 				case Creature::ZDirection::YIDLE:
 					ret = player->idle;
-					player->idle->current_rect = current_frame;
+					player->idle->current_rect = last_moving;
 					current_animation = &moving;
 					moving_up.Reset();
 					break;
@@ -112,23 +118,18 @@ PlayerState* Player_MoveState::HandleInput()
 		}
 		break;
 		case Creature::Attack::PUNCH:
-			App->audio->PlayFx(player->sound_attack);
-			player->attacking->current_animation = &(player->attacking->punch);
-			ret = player->attacking;
-			break;
 		case Creature::Attack::KICK:
-			App->audio->PlayFx(player->sound_attack);
-			player->attacking->current_animation = &(player->attacking->kick);
-			ret = player->attacking;
+			ret = player->attacking->HandleInput();
 			break;
 		}
 	}
 
 	if (ret != this && ret != player->idle)
 	{
-		moving.Reset();
-		current_frame = player->idle->initial_rect;
-		player->idle->current_rect = current_frame;
+		/*moving.Reset();
+		last_moving = player->idle->initial_rect;
+		player->idle->current_rect = last_moving;*/
+		OnExit();
 	}
 
 	return ret;
@@ -177,15 +178,28 @@ update_status Player_MoveState::Update()
 		break;
 	}
 
-	if (player_static == false)
-		player->entity_rect = current_animation->GetCurrentFrame();
-
 	if (current_animation == &moving)
-		current_frame = player->entity_rect;
-	else
-		current_frame = player->idle->initial_rect;
+	{
+		if (player_static == false)
+			last_moving = current_animation->GetCurrentFrame();
+		player->entity_rect = last_moving;
+	}
+	else if (current_animation == &moving_up)
+	{
+		if (player_static == false)
+			last_moving_up = current_animation->GetCurrentFrame();
+		player->entity_rect = last_moving_up;
+	}		
 
 	return UPDATE_CONTINUE;
+}
+
+void Player_MoveState::OnExit()
+{
+	moving.Reset();
+	moving_up.Reset();
+	last_moving = player->idle->initial_rect;
+	player->idle->current_rect = last_moving;
 }
 
 Player_JumpState::Player_JumpState(Player* player, const char* jump_frame, const char* jumpattack_frame) : PlayerState(player)
@@ -194,6 +208,9 @@ Player_JumpState::Player_JumpState(Player* player, const char* jump_frame, const
 	App->parser->GetRect(jumpkick_rect, jumpattack_frame);
 	App->parser->GetPoint(speed, "JumpSpeed");
 	gravity = App->parser->GetFloat("Gravity");
+
+	App->parser->GetRect(kick_rect, "AerialKickRect");
+	kick_damage = App->parser->GetInt("AerialKickDamage");
 }
 
 PlayerState* Player_JumpState::HandleInput()
@@ -205,6 +222,14 @@ PlayerState* Player_JumpState::HandleInput()
 		App->audio->PlayFx(player->sound_attack);
 		attacking = true;
 		player->entity_rect = jumpkick_rect;
+		player->attack_collider->damage = kick_damage;
+
+		player->attack_position.z = player->position.z;
+		player->attack_dimensions.x = kick_rect.w;
+		player->attack_dimensions.y = kick_rect.h;
+		player->attack_dimensions.z = player->dimensions.z;
+
+		player->attack_collider->active = true;
 	}
 
 	return this;
@@ -248,6 +273,12 @@ update_status Player_JumpState::Update()
 		break;
 	}
 
+	if (player->inverted_texture == false)
+		player->attack_position.x = player->position.x + kick_rect.x;
+	if (player->inverted_texture == true)
+		player->attack_position.x = player->position.x + player->dimensions.x - kick_rect.x - kick_rect.w;
+	player->attack_position.y = player->position.y + kick_rect.y;
+
 	time++;
 
 	if (player->position.y >= final_pos.y && maximum_reached == true)
@@ -265,9 +296,23 @@ update_status Player_JumpState::Update()
 		}
 		if (attacking == false)
 			App->audio->PlayFx(player->sound_jump);
+		else
+		{
+			attacking = false;
+			player->attack_collider->active = false;
+		}
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+void Player_JumpState::OnExit()
+{
+	if (attacking == true)
+	{
+		attacking = false;
+		player->attack_collider->active = false;
+	}
 }
 
 void Player_JumpState::SetJumpParameters()
@@ -366,19 +411,109 @@ Player_AttackState::Player_AttackState(Player* player, const char* punch_animati
 {
 	App->parser->GetAnimation(punch, punch_animation);
 	App->parser->GetAnimation(kick, kick_animation);
+
+	punch_damage = App->parser->GetInt("PunchDamage");
+	punch_frame = App->parser->GetInt("PunchDamageFrame");
+	App->parser->GetRect(punch_rect, "PunchRect");
+	
+	kick_damage = App->parser->GetInt("KickDamage");
+	kick_frame = App->parser->GetInt("KickDamageFrame");
+	App->parser->GetRect(kick_rect, "KickRect");
+
 	current_animation = &punch;
+}
+
+PlayerState* Player_AttackState::HandleInput()
+{
+	if (attacking == false)
+	{
+		attacking = true;
+		App->audio->PlayFx(player->sound_attack);
+		player->attack_collider->attack_type = player->attack_cmd;
+		switch (player->attack_cmd)
+		{
+		case Creature::Attack::PUNCH:
+			current_animation = &punch;
+			player->attack_collider->damage = punch_damage;
+			attack_frame = punch_frame;
+			attack_rect = &punch_rect;
+			break;
+		case Creature::Attack::KICK:
+			current_animation = &kick;
+			player->attack_collider->damage = kick_damage;
+			attack_frame = kick_frame;
+			attack_rect = &kick_rect;
+			break;
+		default:
+			break;
+		}
+		if (player->inverted_texture == false)
+			player->attack_position.x = player->position.x + attack_rect->x;
+		if (player->inverted_texture == true)
+			player->attack_position.x = player->position.x + player->dimensions.x - attack_rect->x - attack_rect->w;
+		player->attack_position.y = player->position.y + attack_rect->y;
+		player->attack_position.z = player->position.z;
+		player->attack_dimensions.x = attack_rect->w;
+		player->attack_dimensions.y = attack_rect->h;
+		player->attack_dimensions.z = player->dimensions.z;
+	}
+
+	return this;
 }
 
 update_status Player_AttackState::Update()
 {
 	player->entity_rect = current_animation->GetCurrentFrame();
+	if (current_animation->GetCurrentFrameNumber() == attack_frame && player->attack_collider->active == false)
+		player->attack_collider->active = true;
+	else if (current_animation->GetCurrentFrameNumber() != attack_frame && player->attack_collider->active == true)
+		player->attack_collider->active = false;
 	if (current_animation->Finished() == true)
-	{
-		current_animation->Reset();
-		player->current_state = player->idle;
-		player->entity_rect = player->idle->initial_rect;
-	}
+		OnExit();
 
 	return UPDATE_CONTINUE;
 }
 
+void Player_AttackState::OnExit()
+{
+	attacking = false;
+	player->attack_collider->active = false;
+
+	current_animation->Reset();
+	player->current_state = player->idle;
+	player->entity_rect = player->idle->initial_rect;
+}
+
+Player_DamageState::Player_DamageState(Player* player, const char* high_frame, const char* low_frame) : PlayerState(player)
+{
+	App->parser->GetRect(high_rect, high_frame);
+	App->parser->GetRect(low_rect, low_frame);
+	float time = App->parser->GetFloat("Time_DamageState");
+
+	in_damaged_state = new Timer((Uint32)(time * 1000.0f));
+}
+
+PlayerState* Player_DamageState::HandleInput()
+{
+	in_damaged_state->Start();
+
+	return this;
+}
+
+update_status Player_DamageState::Update()
+{
+	if (in_damaged_state->MaxTimeReached())
+		OnExit();
+	else
+		player->entity_rect = *damage_rect;
+
+	return UPDATE_CONTINUE;
+}
+
+void Player_DamageState::OnExit()
+{
+	in_damaged_state->Stop();
+	player->current_state = player->idle;
+	player->entity_rect = player->idle->initial_rect;
+	player->collider->active = true;
+}

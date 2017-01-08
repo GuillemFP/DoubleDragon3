@@ -2,6 +2,9 @@
 #define CREATURE_H
 
 #include "Entity.h"
+#include "Timer.h"
+
+struct Collider;
 
 class Creature : public Entity
 {
@@ -11,10 +14,12 @@ public:
 	enum Attack { PUNCH, KICK, NOATTACK };
 
 public:
-	Creature(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent = nullptr, bool active = true) : Entity(Entity::Type::PLAYER, texture, stage, parent, true) {}
-	~Creature() {}
+	Creature(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent = nullptr, bool active = true);
+	~Creature();
 
 	void SetPosition(int x, int z) { position.x = x; position.z = z; position.y = z - dimensions.y; }
+
+	void HasCollided(Collider* with);
 
 public:
 	XDirection xmovement = XIDLE;
@@ -27,6 +32,7 @@ public:
 
 	int health = 1;
 
+	Timer* immunity_after_attack;
 };
 
 #endif // !CREATURE_H
