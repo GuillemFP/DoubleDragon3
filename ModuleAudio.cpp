@@ -74,11 +74,6 @@ bool ModuleAudio::CleanUp()
 	return true;
 }
 
-bool ModuleAudio::PlayMusic(const char* path)
-{
-	return PlayMusic(path, fDEFAULT_FADE);
-}
-
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
@@ -164,9 +159,9 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 	return ret;
 }
 
-bool ModuleAudio::isPlayingMusic() const
-{
-	return Mix_PlayingMusic();
+bool ModuleAudio::isPlayingMusic() const 
+{ 
+	return Mix_PlayingMusic(); 
 }
 
 bool ModuleAudio::ConstantConfig()

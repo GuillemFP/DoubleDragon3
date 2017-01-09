@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleRender.h"
-#include "Timer.h"
 #include "SDL/include/SDL.h"
 #include "JsonHandler.h"
 
@@ -77,16 +76,6 @@ update_status ModuleFadeToBlack::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModuleFadeToBlack::FadeToBlack(Module * module_on, float time)
-{
-	FadeToBlack(module_on, nullptr, time);
-}
-
-void ModuleFadeToBlack::FadeToBlack(Module * module_on, Module * module_off)
-{
-	FadeToBlack(module_on, module_off, fDEFAULT_TIME);
-}
-
 void ModuleFadeToBlack::FadeToBlack(Module * module_on, Module * module_off, float time)
 {
 	fading_in = (module_off != nullptr) ? true : false;
@@ -100,16 +89,6 @@ void ModuleFadeToBlack::FadeToBlack(Module * module_on, Module * module_off, flo
 	this->module_off = module_off;
 }
 
-void ModuleFadeToBlack::FadeToWhite(Module * module_on, float time)
-{
-	FadeToWhite(module_on, nullptr, time);
-}
-
-void ModuleFadeToBlack::FadeToWhite(Module * module_on, Module * module_off)
-{
-	FadeToWhite(module_on, module_off, fDEFAULT_TIME);
-}
-
 void ModuleFadeToBlack::FadeToWhite(Module * module_on, Module * module_off, float time)
 {
 	fading_in = (module_off != nullptr) ? true : false;
@@ -121,11 +100,6 @@ void ModuleFadeToBlack::FadeToWhite(Module * module_on, Module * module_off, flo
 
 	this->module_on = module_on;
 	this->module_off = module_off;
-}
-
-bool ModuleFadeToBlack::isFading() const
-{
-	return (fade_time->GetState() == RUNNING);
 }
 
 bool ModuleFadeToBlack::ConstantConfig()

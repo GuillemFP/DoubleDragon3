@@ -3,11 +3,10 @@
 
 #include "Module.h"
 #include "SDL/include/SDL_stdinc.h"
+#include "Timer.h"
 
 #define MODULE_FADETOBLACK "ModuleFadeToBlack"
 #define FADETOBLACK_SECTION "Config.Modules.FadeToBlack"
-
-class Timer;
 
 class ModuleFadeToBlack : public Module
 {
@@ -18,13 +17,14 @@ public:
 	bool Init();
 	bool Start();
 	update_status Update();
-	void FadeToBlack(Module* module_on, float time);
-	void FadeToBlack(Module* module_on, Module* module_off);
+	void FadeToBlack(Module* module_on, float time) { FadeToBlack(module_on, nullptr, time); }
+	void FadeToBlack(Module* module_on, Module* module_off) { FadeToBlack(module_on, module_off, fDEFAULT_TIME); }
 	void FadeToBlack(Module* module_on, Module* module_off, float time);
-	void FadeToWhite(Module* module_on, float time);
-	void FadeToWhite(Module* module_on, Module* module_off);
+
+	void FadeToWhite(Module* module_on, float time) { FadeToWhite(module_on, nullptr, time); }
+	void FadeToWhite(Module* module_on, Module* module_off) { FadeToWhite(module_on, module_off, fDEFAULT_TIME); }
 	void FadeToWhite(Module* module_on, Module* module_off, float time);
-	bool isFading() const;
+	bool isFading() const { return (fade_time->GetState() == RUNNING); }
 
 	bool ConstantConfig();
 

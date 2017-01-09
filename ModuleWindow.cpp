@@ -106,18 +106,3 @@ ModuleWindow::ModuleWindow() : Module(MODULE_WINDOW)
 
 	 return ret;
  }
-
- int ModuleWindow::GetScreenWidth() const
- {
-	 return iSCREENWIDTH;
- }
-
- int ModuleWindow::GetScreenHeight() const
- {
-	 return iSCREENHEIGHT;
- }
-
- int ModuleWindow::GetScreenSize() const
- {
-	 return iSCREENSIZE;
- }

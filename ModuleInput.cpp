@@ -152,31 +152,6 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-KeyState ModuleInput::GetKey(int id) const
-{
-	return keyboard[id];
-}
-
-KeyState ModuleInput::GetMouseButtonDown(int id) const
-{
-	return mouse_buttons[id - 1];
-}
-
-bool ModuleInput::GetWindowEvent(EventWindow code) const
-{
-	return bwindowEvents[code];
-}
-
-const iPoint& ModuleInput::GetMouseMotion() const
-{
-	return mouse_motion;
-}
-
-const iPoint& ModuleInput::GetMousePosition() const
-{
-	return mouse;
-}
-
 bool ModuleInput::GetPlayerOutput(int num_player, PlayerOutput input) const
 {
 	if (keyboard[keys_player[(num_player - 1)*iKEYS_PLAYER + input]] == KEY_DOWN || keyboard[keys_player[(num_player - 1)*iKEYS_PLAYER + input]] == KEY_REPEAT)

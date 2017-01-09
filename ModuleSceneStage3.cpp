@@ -106,9 +106,9 @@ bool ModuleSceneStage3::CleanUp()
 	return true;
 }
 
-update_status ModuleSceneStage3::Update()
+update_status ModuleSceneStage3::PreUpdate()
 {
-	App->renderer->CameraInsideScene(player_one->position.x + player_one->dimensions.x / 2, current_room->position.x, current_room->dimensions.x);
+	App->renderer->CameraInsideScene(player_one->position.x + player_one->dimensions.x / 2, current_room->position.x, current_room->dimensions.x, current_room->position.y);
 
 	return UPDATE_CONTINUE;
 }

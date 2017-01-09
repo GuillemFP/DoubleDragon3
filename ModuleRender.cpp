@@ -50,22 +50,8 @@ update_status ModuleRender::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleRender::Update()
-{
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-		debug = !debug;
-
-	if (debug == true)
-		DebugCamera();
-
-	return UPDATE_CONTINUE;
-}
-
 update_status ModuleRender::PostUpdate()
 {
-	if (debug == true)
-		App->fonts->Blit(0, { 150,0 }, "debug camera on", 0.0f);
-
 	SDL_RenderPresent(renderer);
 	return UPDATE_CONTINUE;
 }
@@ -185,18 +171,22 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	return ret;
 }
 
-void ModuleRender::CameraInsideScene(int center_player, int room_x, int room_width)
+void ModuleRender::CameraInsideScene(int center_player, int room_x, int room_width, int room_y)
 {
-	if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
+	if (bCenterCamera)
+	{
+		if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
 			camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
-	else if (center_player*iSCREENSIZE + camera.x > (int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
+		else if (center_player*iSCREENSIZE + camera.x >(int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
 			camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - center_player)*iSCREENSIZE;
 
-	if (camera.x < (room_x - room_width) * iSCREENSIZE + camera.w)
-		camera.x = (room_x - room_width) * iSCREENSIZE + camera.w;
-	else if (camera.x > room_x)
-		camera.x = room_x;
+		if (camera.x < (room_x - room_width) * iSCREENSIZE + camera.w)
+			camera.x = (room_x - room_width) * iSCREENSIZE + camera.w;
+		else if (camera.x > room_x)
+			camera.x = room_x;
 
+		camera.y = room_y;
+	}
 }
 
 bool ModuleRender::ConstantConfig()

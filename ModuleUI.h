@@ -27,6 +27,9 @@ public:
 	void IntToString(int number, char* string) { IntToString(number, GetLength(number), string); }
 	void IntToString(int number, int final_length, char* string);
 
+	int GetNumberOfUIs() const { return players.size(); }
+	Player* GetPlayerInfo(int num_player) const { return (num_player < iPLAYERS_IN_UI) ? players[num_player] : nullptr; }
+
 private:
 	std::vector<Player*> players;
 	iPoint* health_pos;
@@ -47,8 +50,6 @@ private:
 	const char** string_noplayer;
 	int num_noplayer_str;
 	bool first_lines = true;
-
-	int number_of_players = 0;
 
 	int iPLAYERS_IN_UI = 1;
 	int iNUMBER_LENGTH = 4;

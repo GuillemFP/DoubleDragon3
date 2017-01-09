@@ -19,9 +19,9 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	int GetScreenWidth() const;
-	int GetScreenHeight() const;
-	int GetScreenSize() const;
+	int GetScreenWidth() const { return iSCREENWIDTH; }
+	int GetScreenHeight() const { return iSCREENHEIGHT; }
+	int GetScreenSize() const { return iSCREENSIZE; }
 
 private:
 	bool ConstantConfig();

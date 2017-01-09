@@ -20,7 +20,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	bool PlayMusic(const char* path);
+	bool PlayMusic(const char* path) { return PlayMusic(path, fDEFAULT_FADE); }
 	bool PlayMusic(const char* path, float fade_time);
 	void StopMusic();
 	unsigned int LoadFx(const char* path);

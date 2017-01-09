@@ -24,7 +24,7 @@ public:
 	~ModuleSceneStage3();
 
 	bool Start();
-	update_status Update();
+	update_status PreUpdate();
 	bool CleanUp();
 
 	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;

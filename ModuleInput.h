@@ -49,11 +49,11 @@ public:
 	update_status PreUpdate();
 	bool CleanUp();
 
-	KeyState GetKey(int id) const;
-	KeyState GetMouseButtonDown(int id) const;
-	bool GetWindowEvent(EventWindow code) const;
-	const iPoint& GetMouseMotion() const;
-	const iPoint& GetMousePosition() const;
+	KeyState GetKey(int id) const { return keyboard[id]; }
+	KeyState GetMouseButtonDown(int id) const { return mouse_buttons[id - 1]; }
+	bool GetWindowEvent(EventWindow code) const { return bwindowEvents[code]; }
+	const iPoint& GetMouseMotion() const { return mouse_motion; }
+	const iPoint& GetMousePosition() const { return mouse; }
 
 	bool GetPlayerOutput(int num_player, PlayerOutput input) const;
 	bool GetPlayerOutput_KeyDown(int num_player, PlayerOutput input) const;

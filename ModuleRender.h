@@ -20,7 +20,6 @@ public:
 
 	bool Init();
 	update_status PreUpdate();
-	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
 
@@ -34,15 +33,17 @@ public:
 	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed, bool inverse = false);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 
-	void CameraInsideScene(int player_x, int x_min, int x_max);
+	void CameraInsideScene(int player_x, int x_min, int x_max, int room_y);
+
+	void DebugCamera();
 
 private:
 	bool ConstantConfig();
-	void DebugCamera();
 
 public:
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect camera = { 0,0,0,0 };
+	bool bCenterCamera = true;
 
 private:
 	int iSCREENSIZE = 0;
@@ -51,8 +52,6 @@ private:
 	float fDEFAULT_SPEED = 1.0f;
 	bool bVSYNC = true;
 	float fCAMERA_MARGIN = 0.5f;
-
-	bool debug = false;
 };
 
 #endif // !MODULERENDER_H

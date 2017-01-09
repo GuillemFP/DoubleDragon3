@@ -23,6 +23,7 @@ class ModuleEntities;
 
 class ModuleCollision;
 class ModuleUI;
+class ModuleDebug;
 class ModuleFadeToBlack;
 
 class Application
@@ -50,6 +51,7 @@ public:
 
 	ModuleCollision* collision;
 	ModuleUI* user_interface;
+	ModuleDebug* debug;
 	ModuleFadeToBlack* fade;
 
 	JSONParser* parser;
