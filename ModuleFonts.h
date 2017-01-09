@@ -30,7 +30,7 @@ class ModuleFonts : public Module
 {
 public:
 	ModuleFonts();
-	~ModuleFonts();
+	~ModuleFonts() {}
 
 	bool Start();
 	bool CleanUp();

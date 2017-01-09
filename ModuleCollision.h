@@ -45,7 +45,6 @@ public:
 private:
 	std::list<Collider*> creatures;
 	std::list<Collider*> attacks;
-	bool debug = false;
 
 };
 

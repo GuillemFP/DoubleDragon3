@@ -84,6 +84,7 @@ private:
 
 	SDL_Rect kick_rect = { 0,0,0,0 };
 	int kick_damage = 0;
+	iPoint jumpkick_coll_dimensions = { 0,0 };
 };
 
 class Player_AttackState : public PlayerState
@@ -144,6 +145,49 @@ private:
 	Timer* in_damaged_state = nullptr;
 };
 
+class Player_FallState : public PlayerState
+{
+private:
+	enum FallingState { FALLING, LYING, RISING };
 
+public:
+	Player_FallState(Player* player, const char* falling_frame, const char* fallen_frame, const char* rising_frame);
+	~Player_FallState() {}
+	PlayerState* HandleInput();
+	update_status Update();
+	void OnExit();
+
+	//void InitFall(Creature::XDirection fall_direction, int final_y) { this->fall_direction = fall_direction; this->final_pos.y = final_y; }
+	void InitFall(Creature::XDirection fall_direction) { this->fall_direction = fall_direction; }
+
+private:
+	void SetFallParameters();
+
+private:
+	SDL_Rect falling_rect = { 0,0,0,0 };
+	SDL_Rect fallen_rect = { 0,0,0,0 };
+	SDL_Rect rising_rect = { 0,0,0,0 };
+	fPoint speed = { 0.0,0.0 };
+	float gravity = 1.0f;
+
+	iPoint initial_pos = { 0,0 };
+	iPoint final_pos = { 0,0 };
+	Creature::XDirection fall_direction = Creature::XDirection::XIDLE;
+	int time = 0;
+	fPoint current_position = { 0.0,0.0 };
+
+	bool jumping_to_platform = false;
+	bool jumping_off_platform = false;
+	bool maximum_reached = true;
+
+	FallingState state = FALLING;
+	Timer* states_timer;
+
+	float fallen_time = 1.0f;
+	float rising_time = 1.0f;
+
+	int final_x = 0;
+	int fallen_x_shift = 0;
+};
 
 #endif // !PLAYERSTATES_H

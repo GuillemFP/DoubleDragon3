@@ -56,15 +56,6 @@ update_status ModuleCollision::Update()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;
-
-	if (debug == true)
-	{
-		DebugDraw();
-		App->fonts->Blit(0, { 0,0 }, "debug colliders on", 0.0f);
-	}
-
 	return UPDATE_CONTINUE;
 }
 

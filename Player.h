@@ -12,6 +12,7 @@ class Player_StandState;
 class Player_JumpState;
 class Player_AttackState;
 class Player_DamageState;
+class Player_FallState;
 
 class Player : public Creature
 {
@@ -21,7 +22,11 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 
+	void SetPosition(int x, int z) { Creature::SetPosition(x, z); collider_position = position; }
+
 	void HasCollided(Collider* with);
+	void ResetCollider() { collider_position = position; collider_dimensions = dimensions; };
+	void ResetColliderPositions() { collider_position = position; }
 
 private:
 	void HandleInput();
@@ -39,6 +44,7 @@ public:
 	Player_JumpState* jumping;
 	Player_AttackState* attacking;
 	Player_DamageState* damaging;
+	Player_FallState* falling;
 
 	PlayerState* current_state = nullptr;
 

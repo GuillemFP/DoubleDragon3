@@ -10,10 +10,6 @@ ModuleFonts::ModuleFonts() : Module(MODULE_FONTS)
 {
 }
 
-ModuleFonts::~ModuleFonts()
-{
-}
-
 bool ModuleFonts::Start()
 {
 	bool ret = true;

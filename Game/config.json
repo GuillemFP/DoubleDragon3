@@ -68,6 +68,16 @@
 			"PressStartTimer" : 1.5,
 			"NumTextLines" : 4,
 			"TextLines" : ["press" , "start" , "  to", "buy in"]
+		},
+		"Debug" : {
+			"FunctionKeyNumber" : 3,
+			"FunctionKeys" : ["f1-colliders","f2-camera","f3-position"],
+			"FunctionPositions" : [ [0,0],[104,0],[184,0] ],
+			"Letter_Init" : [8,48],
+			"Number_Init" : [48,48],
+			"XIncrement" : 48,
+			"UnactivatedFontId" : 0,
+			"ActivatedFontId" : 2
 		}
 	},
 	"Scenes" : {
@@ -277,6 +287,12 @@
 			"Static_Frame" : [8,0,26,63],
 			"DamageHigh_Frame" : [8,392,26,63],
 			"DamageLow_Frame" : [40,392,26,63],
+			"Falling_Frame" : [72,408,46,47],
+			"Fallen_Frame" : [128,392,61,63],
+			"Fallen_Time" : 2,
+			"FallenXShift" : 15,
+			"Rising_Frame" : [200,392,26,63],
+			"Rising_Time" : 0.5,
 			"Time_DamageState" : 0.5, 
 			"Move_Animation" : {
 				"Speed" : 0.08,
@@ -296,6 +312,7 @@
 			"JumpSpeed" : [1.4, 3],
 			"Gravity" : 0.08,
 			"AerialKickFrame" : [288, 101, 46, 42],
+			"AerialKickCollidorDimensions" : [27, 42],
 			"AerialKickDamage" : 30,
 			"AerialKickRect" : [20, 16, 26, 17],
 			"Punch_Animation" : {

@@ -17,7 +17,7 @@ public:
 	Creature(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent = nullptr, bool active = true);
 	~Creature();
 
-	void SetPosition(int x, int z) { position.x = x; position.z = z; position.y = z - dimensions.y; }
+	virtual void SetPosition(int x, int z) { position.x = x; position.z = z; position.y = z - dimensions.y; }
 
 	void HasCollided(Collider* with);
 

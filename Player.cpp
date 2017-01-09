@@ -26,6 +26,7 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		jumping = new Player_JumpState(this, "JumpFrame", "AerialKickFrame");
 		attacking = new Player_AttackState(this, "Punch_Animation", "Kick_Animation");
 		damaging = new Player_DamageState(this, "DamageHigh_Frame", "DamageLow_Frame");
+		falling = new Player_FallState(this, "Falling_Frame", "Fallen_Frame", "Rising_Frame");
 
 		current_state = idle;
 
@@ -36,10 +37,11 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 			dimensions.x = idle->initial_rect.w;
 			dimensions.y = idle->initial_rect.h;
 
+			collider_dimensions = dimensions;
+
 			immunity_after_attack->SetMaxTime((Uint32)(immunity_seconds * 1000.0f));
 		}
 
-		//collider = App->collision->AddCollider(&position, &dimensions, ColliderType::PLAYER, this);
 		collider = App->collision->AddCollider(&collider_position, &collider_dimensions, ColliderType::PLAYER, this);
 		attack_collider = App->collision->AddCollider(&attack_position, &attack_dimensions, ColliderType::PLAYER_ATTACK, this);
 		attack_collider->active = false;
@@ -55,6 +57,7 @@ Player::~Player()
 	RELEASE(jumping);
 	RELEASE(attacking);
 	RELEASE(damaging);
+	RELEASE(falling);
 }
 
 update_status Player::PreUpdate()
@@ -68,9 +71,6 @@ update_status Player::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	collider_position = position;
-	collider_dimensions = dimensions;
-
 	current_state->Update();
 
 	return ret;
@@ -80,13 +80,25 @@ void Player::HasCollided(Collider* with)
 {
 	if (immunity_after_attack->MaxTimeReached())
 	{
-		
-		if (current_state != jumping)
+		if (current_state != jumping && health > 200)
 		{
 			collider->active = false;
 			current_state->OnExit();
 			current_state = damaging;
 			damaging->SetFrame(with->attack_type);
+		}
+		else
+		{
+			collider->active = false;
+
+			if (collider->position->x < with->position->x)
+				falling->InitFall(Creature::XDirection::LEFT);
+			else
+				falling->InitFall(Creature::XDirection::RIGHT);
+
+			current_state->OnExit();
+			current_state = falling;
+			
 		}
 	}
 	Creature::HasCollided(with);
