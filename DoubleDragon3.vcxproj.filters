@@ -111,6 +111,9 @@
     <ClInclude Include="ModuleUI.h">
       <Filter>Game Logic Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleDebug.h">
+      <Filter>Game Logic Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -178,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="Creature.cpp">
       <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDebug.cpp">
+      <Filter>Game Logic Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
