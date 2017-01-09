@@ -162,6 +162,7 @@
     <ClCompile Include="ModuleScenePreStage.cpp" />
     <ClCompile Include="ModuleSceneTitle.cpp" />
     <ClCompile Include="ModuleSceneStage3.cpp" />
+    <ClCompile Include="ModuleStages.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleUI.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />

@@ -25,6 +25,7 @@ public:
 
 	bool Start();
 	update_status PreUpdate();
+	update_status Update();
 	bool CleanUp();
 
 	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;

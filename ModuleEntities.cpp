@@ -32,13 +32,21 @@ bool ModuleEntities::Start()
 			sounds[i] = App->audio->LoadFx(App->parser->GetStringFromArray(i));
 
 		iMAX_PLAYERS = App->parser->GetInt("MaxPlayers");
-		coins = App->parser->GetInt("Coins");
+		initial_coins = App->parser->GetInt("Coins");
 
 		players = App->textures->Load(App->parser->GetString("PlayerTexture"));
 		faces = App->textures->Load(App->parser->GetString("PlayerFaces"));
 		signals = App->textures->Load(App->parser->GetString("SceneSignals"));
 
-		App->parser->UnloadObject();
+		float continue_time = App->parser->GetFloat("ContinueTime");
+
+		ret = App->parser->UnloadObject();
+
+		if (ret == true)
+		{
+			continue_timer = new Timer((Uint32)(continue_time*1000.0f));
+			coins = initial_coins;
+		}
 	}
 
 	stage_timer = new Timer();
@@ -52,7 +60,6 @@ bool ModuleEntities::CleanUp()
 
 	for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it)
 		RELEASE(*it);
-
 	entities.clear();
 
 	RELEASE_ARRAY(sounds);
@@ -61,6 +68,7 @@ bool ModuleEntities::CleanUp()
 	App->textures->Unload(signals);
 
 	RELEASE(stage_timer);
+	RELEASE(continue_timer);
 
 	return true;
 }
@@ -107,6 +115,8 @@ update_status ModuleEntities::PreUpdate()
 	{
 		if ((*it)->to_delete == true)
 		{
+			if ((*it)->type == Entity::Type::PLAYER)
+				--num_players;
 			RELEASE(*it);
 			it = entities.erase(it);
 		}
@@ -138,16 +148,16 @@ update_status ModuleEntities::Update()
 	return ret;
 }
 
-Player* ModuleEntities::GetPlayerByNumber(int player_num)
+Player* ModuleEntities::GetPlayerByNumber(int player_num) const
 {
-	if (player_num <= num_players)
+	if (player_num < num_players)
 	{
-		for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it)
+		for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
 		{
 			if ((*it)->type == Entity::Type::PLAYER)
 			{
 				Player* player = (Player*)(*it);
-				if (player->number_player == player_num)
+				if (player->number_player - 1 == player_num)
 				{
 					return player;
 				}
@@ -156,4 +166,15 @@ Player* ModuleEntities::GetPlayerByNumber(int player_num)
 	}
 
 	return nullptr;
+}
+
+int ModuleEntities::NumberActivePlayers() const
+{
+	int ret = 0;
+	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
+	{
+		if ((*it)->type == Entity::Type::PLAYER && (*it)->active)
+			++ret;
+	}
+	return ret;
 }

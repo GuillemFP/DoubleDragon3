@@ -6,6 +6,7 @@
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
+#include "ModuleEntities.h"
 #include "SDL/include/SDL_scancode.h"
 #include "JsonHandler.h"
 #include "Timer.h"
@@ -121,6 +122,7 @@ bool ModuleSceneTitle::Start()
 		}
 		else
 			ret = false;
+		App->entities->ResetCoins();
 		break;
 	default:
 		ret = false;
@@ -148,7 +150,7 @@ bool ModuleSceneTitle::CleanUp()
 		current_state = TITLE;
 		break;
 	case TITLE:
-		current_state = UNKNOWN;
+		current_state = LOGO1;
 		break;
 	}
 

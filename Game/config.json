@@ -67,7 +67,8 @@
 			"CoinsNumber_RelPos" : [32, 32],
 			"PressStartTimer" : 1.5,
 			"NumTextLines" : 4,
-			"TextLines" : ["press" , "start" , "  to", "buy in"]
+			"TextLines" : ["press" , "start" , "  to", "buy in"],
+			"TextLines2" : ["cont -", "inue ?", "press" , "start"]
 		},
 		"Debug" : {
 			"FunctionKeyNumber" : 3,
@@ -214,7 +215,8 @@
 			"PlayerTexture" : "assets/char_billyjimmy.png",
 			"PlayerFaces" : "assets/faces.png",
 			"SceneSignals" : "assets/signals.png",
-			"Coins" : 25
+			"Coins" : 25,
+			"ContinueTime" : 10.0
 		},
 		"Japan_Outside" : {
 			"Rectangle" : [8 ,8, 1280, 224],
@@ -266,7 +268,10 @@
 			"Speed" : 1,
 			"Depth" : 5,
 			"ImmunityAfterAttack" : 1.0,
+			"BlinkRatio" : 0.1,
+			"BlinkTimeAlive" : 3.0,
 			"Health" : 250,
+			"MaxAccumulatedDamage" : 50,
 			"Face" : [0, 0, 32, 32],
 			"Sound_Jump" : 1,
 			"Sound_Attack" : 0,
@@ -332,7 +337,7 @@
 					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
 				]
 			},
-			"KickDamage" : 25,
+			"KickDamage" : 300,
 			"KickDamageFrame" : 1,
 			"KickRect" : [16, 19, 22, 18]
 		}

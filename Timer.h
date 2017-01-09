@@ -74,6 +74,8 @@ public:
 
 	Uint32 GetMaxTimeInMs() const { return max_time; }
 
+	void DoubleMaxTime() { max_time *= 2; }
+
 	bool MaxTimeReached() const
 	{
 		if (max_time > 0)
@@ -93,7 +95,7 @@ public:
 private:
 	Uint32 CurrentTime() const
 	{
-		if (state == PAUSED)
+		if (state == PAUSED || state == OFF)
 			return 0;
 		else
 			return SDL_GetTicks() - start_time;

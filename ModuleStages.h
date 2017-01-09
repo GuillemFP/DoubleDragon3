@@ -11,6 +11,8 @@ public:
 	ModuleStages(const char* name, bool active) : Module(name, active) {}
 	~ModuleStages() {}
 
+	virtual update_status Update();
+
 	virtual bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }
 	virtual bool InsideScene_RightBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }
 	virtual bool InsideScene_LowBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }

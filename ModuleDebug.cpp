@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleEntities.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleFonts.h"
@@ -96,7 +97,7 @@ update_status ModuleDebug::Update()
 			num_players = (num_players > 2) ? 2 : num_players;
 			for (int i = 0; i < num_players; i++)
 			{
-				Player* player = App->user_interface->GetPlayerInfo(i);
+				Player* player = App->entities->GetPlayerByNumber(i);
 				App->fonts->Blit(activated_font, position_letter, "x", 0.0f);
 				App->fonts->Blit(activated_font, {position_letter.x + x_increment, position_letter.y}, "y", 0.0f);
 				App->fonts->Blit(activated_font, { position_letter.x + 2 * x_increment, position_letter.y }, "z", 0.0f);

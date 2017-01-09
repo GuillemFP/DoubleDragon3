@@ -14,9 +14,13 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		this->name = App->parser->GetString("Name");
 		ispeed = App->parser->GetInt("Speed");
 		dimensions.z = App->parser->GetInt("Depth");
-		health = abs(App->parser->GetInt("Health"));
+		initial_health = abs(App->parser->GetInt("Health"));
 		float immunity_seconds = App->parser->GetFloat("ImmunityAfterAttack");
 		App->parser->GetRect(face, "Face");
+		damage_treshold = App->parser->GetInt("MaxAccumulatedDamage");
+
+		blink_ratio = App->parser->GetFloat("BlinkRatio");
+		blink_time_alive = App->parser->GetFloat("BlinkTimeAlive");
 
 		sound_attack = App->entities->GetSound(App->parser->GetInt("Sound_Attack"));
 		sound_jump = App->entities->GetSound(App->parser->GetInt("Sound_Jump"));
@@ -32,6 +36,8 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 
 		if (App->parser->UnloadObject() == true)
 		{
+			health = initial_health;
+
 			current_state = idle;
 			entity_rect = idle->initial_rect;
 			dimensions.x = idle->initial_rect.w;
@@ -47,6 +53,7 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		attack_collider->active = false;
 	}
 
+	reviving_timer = new Timer((Uint32)(blink_time_alive*1000.0f));
 	immunity_after_attack->Start();
 }
 
@@ -58,6 +65,19 @@ Player::~Player()
 	RELEASE(attacking);
 	RELEASE(damaging);
 	RELEASE(falling);
+}
+
+void Player::Revive()
+{
+	reviving = true;
+	active = true;
+	collider->active = false;
+	health = initial_health;
+	accumulated_damage = 0;
+	reviving_timer->Start();
+	blink->Reset();
+	current_state = idle;
+	idle->current_rect = idle->initial_rect;
 }
 
 update_status Player::PreUpdate()
@@ -73,6 +93,14 @@ update_status Player::Update()
 
 	current_state->Update();
 
+	if (reviving && reviving_timer->MaxTimeReached())
+	{
+		reviving_timer->Stop();
+		reviving = false;
+		dead = false;
+		collider->active = true;
+	}
+
 	return ret;
 }
 
@@ -80,7 +108,25 @@ void Player::HasCollided(Collider* with)
 {
 	if (immunity_after_attack->MaxTimeReached())
 	{
-		if (current_state != jumping && health > 200)
+		bool fall = false;
+		if (current_state == jumping)
+			fall = true;
+
+		accumulated_damage += with->damage;
+		if (accumulated_damage >= damage_treshold)
+		{
+			accumulated_damage -= damage_treshold;
+			fall = true;
+		}
+		health -= with->damage;
+		if (health < 0)
+		{
+			health = 0;
+			accumulated_damage = 0;
+			fall = true;
+		}
+
+		if (fall == false)
 		{
 			collider->active = false;
 			current_state->OnExit();
@@ -100,8 +146,9 @@ void Player::HasCollided(Collider* with)
 			current_state = falling;
 			
 		}
+
+		immunity_after_attack->Reset();
 	}
-	Creature::HasCollided(with);
 }
 
 void Player::HandleInput()

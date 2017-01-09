@@ -158,7 +158,7 @@ bool ModuleScenePreStage::CleanUp()
 		break;
 	case STAGE3:
 		timer->Stop();
-		current_state = UNKNOWN;
+		current_state = HISTORY1;
 		break;
 	default:
 		break;

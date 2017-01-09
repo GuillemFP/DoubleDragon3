@@ -4,7 +4,7 @@
 #define MODULE_UI "ModuleUI"
 #define UI_SECTION "Config.Modules.UI"
 
-#include <vector>
+//#include <vector>
 #include "Module.h"
 #include "Point.h"
 
@@ -20,18 +20,19 @@ public:
 
 	bool Start();
 	bool CleanUp();
-	update_status PreUpdate();
 	update_status Update();
 
 	int GetLength(int number);
 	void IntToString(int number, char* string) { IntToString(number, GetLength(number), string); }
 	void IntToString(int number, int final_length, char* string);
 
-	int GetNumberOfUIs() const { return players.size(); }
-	Player* GetPlayerInfo(int num_player) const { return (num_player < iPLAYERS_IN_UI) ? players[num_player] : nullptr; }
+	int GetNumberOfUIs() const;
 
 private:
-	std::vector<Player*> players;
+	void PrintStrings(int player, bool first_lines, const char** string_array);
+
+private:
+	//std::vector<Player*> players;
 	iPoint* health_pos;
 	int* health_fonts;
 	iPoint* name_pos;
@@ -48,6 +49,7 @@ private:
 	char* number_string;
 
 	const char** string_noplayer;
+	const char** string_deadplayer;
 	int num_noplayer_str;
 	bool first_lines = true;
 

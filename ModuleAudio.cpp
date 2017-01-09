@@ -86,6 +86,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 			Mix_HaltMusic();
 
 		Mix_FreeMusic(music);
+		music = nullptr;
 	}
 
 	music = Mix_LoadMUS(path);
@@ -125,6 +126,7 @@ void ModuleAudio::StopMusic()
 	{
 		Mix_HaltMusic();
 		Mix_FreeMusic(music);
+		music = nullptr;
 	}
 }
 

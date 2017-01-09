@@ -5,6 +5,7 @@
 #include "ModuleAudio.h"
 #include "ModuleSceneStage3.h"
 #include "ModuleEntities.h"
+#include "ModuleFadeToBlack.h"
 #include "Player.h"
 #include "Room.h"
 #include "JsonHandler.h"
@@ -100,6 +101,7 @@ bool ModuleSceneStage3::CleanUp()
 	LOG("Unloading Stage3 scene");
 
 	current_room->Disable();
+	current_room->Delete();
 
 	App->textures->Unload(background);
 
@@ -109,6 +111,13 @@ bool ModuleSceneStage3::CleanUp()
 update_status ModuleSceneStage3::PreUpdate()
 {
 	App->renderer->CameraInsideScene(player_one->position.x + player_one->dimensions.x / 2, current_room->position.x, current_room->dimensions.x, current_room->position.y);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleSceneStage3::Update()
+{
+	ModuleStages::Update();
 
 	return UPDATE_CONTINUE;
 }

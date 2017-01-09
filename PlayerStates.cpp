@@ -557,9 +557,9 @@ PlayerState* Player_FallState::HandleInput()
 			App->renderer->bCenterCamera = false;
 			final_x = player->position.x;
 			if (player->inverted_texture == false)
-				player->position.x -= fallen_x_shift;
+				player->position.x = final_x - fallen_x_shift;
 			else
-				player->position.x += fallen_x_shift;
+				player->position.x = final_x + fallen_x_shift;
 			states_timer->SetMaxTime((Uint32)(fallen_time*1000.0f));
 			states_timer->Start();
 		}
@@ -636,8 +636,23 @@ update_status Player_FallState::Update()
 	case Player_FallState::LYING:
 		if (states_timer->MaxTimeReached() == true)
 		{
-			state = RISING;
-			states_timer->Stop();
+			if (player->health > 0)
+			{
+				state = RISING;
+				states_timer->Stop();
+			}
+			else if (player->dead == false)
+			{
+				states_timer->DoubleMaxTime();
+				player->dead = true;
+			}
+			else
+			{
+				player->position.x = final_x;
+				OnExit();
+				player->collider->active = false;
+				player->active = false;
+			}
 		}
 		else
 			player->entity_rect = fallen_rect;

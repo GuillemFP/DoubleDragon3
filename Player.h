@@ -22,6 +22,8 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 
+	void Revive();
+
 	void SetPosition(int x, int z) { Creature::SetPosition(x, z); collider_position = position; }
 
 	void HasCollided(Collider* with);
@@ -35,6 +37,7 @@ public:
 	bool running = false;
 	int number_player = 1;
 	const char* name;
+	int initial_health = 250;
 
 	unsigned int sound_attack = 0;
 	unsigned int sound_jump = 0;
@@ -56,6 +59,10 @@ public:
 
 	Point3d collider_position = { 0,0,0 };
 	Point3d collider_dimensions = { 0,0,0 };
+
+	Timer* reviving_timer;
+	float blink_time_alive = 0.0f;
+	bool reviving = false;
 };
 
 #endif // PLAYER_H

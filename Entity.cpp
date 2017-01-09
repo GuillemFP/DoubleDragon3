@@ -75,21 +75,19 @@ bool Entity::Disable()
 
 bool Entity::Delete()
 {
+	bool ret = true;
+
 	if (has_timer == true)
 		timer->Stop();
 
 	if (active == false)
 	{
 		to_delete = true;
-		for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end(); ++it)
-		{
-			(*it)->active = false;
-			(*it)->to_delete = true;
-		}
-
+		for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end() && ret == true; ++it)
+			ret = (*it)->Delete();
 	}
 
-	return to_delete;
+	return ret;
 }
 
 void Entity::ChangeParent(Entity* new_parent)

@@ -32,11 +32,14 @@ public:
 
 	Entity* CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr);
 
-	unsigned int GetSound(int num_table) { return sounds[num_table]; }
-	int GetNumberPlayers() { return num_players; }
-	int GetNumberCoins() { return coins; }
+	unsigned int GetSound(int num_table) const { return sounds[num_table]; }
+	int GetNumberPlayers() const { return num_players; }
+	int GetNumberCoins() const { return coins; }
+	void ResetCoins() { coins = initial_coins; }
+	void SpendCoin() { --coins; }
 
-	Player* GetPlayerByNumber(int player_num);
+	Player* GetPlayerByNumber(int player_num) const;
+	int NumberActivePlayers() const;
 
 public:
 	SDL_Texture* players = nullptr;
@@ -44,6 +47,7 @@ public:
 	SDL_Texture* signals = nullptr;
 
 	Timer* stage_timer;
+	Timer* continue_timer;
 
 private:
 	std::list<Entity*> entities;
@@ -51,6 +55,7 @@ private:
 
 	int num_players = 0;
 	int coins = 0;
+	int initial_coins = 10;
 
 	int iMAX_PLAYERS = 1;
 };

@@ -185,5 +185,8 @@
     <ClCompile Include="ModuleDebug.cpp">
       <Filter>Game Logic Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleStages.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

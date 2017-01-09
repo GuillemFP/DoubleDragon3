@@ -69,6 +69,10 @@ bool ModuleUI::Start()
 		App->parser->LoadArrayInObject("TextLines");
 		for (int i = 0; i < num_noplayer_str; i++)
 			string_noplayer[i] = App->parser->GetStringFromArray(i);
+		string_deadplayer = new const char*[num_noplayer_str];
+		App->parser->LoadArrayInObject("TextLines2");
+		for (int i = 0; i < num_noplayer_str; i++)
+			string_deadplayer[i] = App->parser->GetStringFromArray(i);
 
 		ret = App->parser->UnloadObject();
 
@@ -103,67 +107,65 @@ bool ModuleUI::CleanUp()
 
 	LOG("Freeing user interface");
 
-	players.clear();
+	//players.clear();
+
+	RELEASE_ARRAY(number_string);
+	RELEASE(timer);
 
 	RELEASE_ARRAY(health_pos);
 	RELEASE_ARRAY(name_pos);
 	RELEASE_ARRAY(face_pos);
 	RELEASE_ARRAY(health_fonts);
 
-	RELEASE_ARRAY(number_string);
+	RELEASE_ARRAY(string_noplayer);
+	RELEASE_ARRAY(string_deadplayer);
 
 	return ret;
 }
 
-update_status ModuleUI::PreUpdate()
-{
-	if (players.size() <= iPLAYERS_IN_UI)
+update_status ModuleUI::Update()
+{	
+	bool no_players_alive = false;
+
+	if (timer->MaxTimeReached())
 	{
-		Player* new_player = App->entities->GetPlayerByNumber(players.size() + 1);
-		if (new_player != nullptr)
-		{
-			players.push_back(new_player);
-		}
+		timer->Reset();
+		first_lines = !first_lines;
 	}
 
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleUI::Update()
-{
-	
-	for (int i = 0; i < iPLAYERS_IN_UI; i++)
+	if (App->entities->NumberActivePlayers() == 0)
 	{
-		if (i < players.size())
+		PrintStrings(0, first_lines, string_deadplayer);
+		for (int i = 1; i < iPLAYERS_IN_UI; i++)
+			PrintStrings(i, first_lines, string_noplayer);
+		IntToString(App->entities->continue_timer->GetCounterInS(), iNUMBER_LENGTH, number_string);
+		App->fonts->BlitFromRight(name_font, time_number, number_string);
+	}
+	else
+	{
+		for (int i = 0; i < iPLAYERS_IN_UI; i++)
 		{
-			IntToString(players[i]->health, iNUMBER_LENGTH, number_string);
-			App->fonts->BlitFromRight(health_fonts[i], health_pos[i], number_string);
-			App->fonts->BlitFromRight(name_font, name_pos[i], players[i]->name);
-			App->renderer->Blit(App->entities->faces, face_pos[i], &(players[i]->face), 0.0f);
+			if (i < App->entities->GetNumberPlayers())
+			{
+				Player* player = App->entities->GetPlayerByNumber(i);
+				if (player->active)
+				{
+					IntToString(player->health, iNUMBER_LENGTH, number_string);
+					App->fonts->BlitFromRight(health_fonts[i], health_pos[i], number_string);
+					App->fonts->BlitFromRight(name_font, name_pos[i], player->name);
+					App->renderer->Blit(App->entities->faces, face_pos[i], &(player->face), 0.0f);
+				}
+				else
+					PrintStrings(i, first_lines, string_noplayer);
+			}
+			/*else
+				PrintStrings(iPLAYERS_IN_UI - 1, first_lines, string_noplayer);*/
 		}
-		else
-		{
-			if (first_lines == true)
-			{
-				App->fonts->Blit(name_font, { health_pos[iPLAYERS_IN_UI - 1].x, time_name.y }, string_noplayer[0]);
-				App->fonts->Blit(name_font, { health_pos[iPLAYERS_IN_UI - 1].x, coins_name.y }, string_noplayer[1]);
-			}
-			else
-			{
-				App->fonts->Blit(name_font, { health_pos[iPLAYERS_IN_UI - 1].x, time_name.y }, string_noplayer[2]);
-				App->fonts->Blit(name_font, { health_pos[iPLAYERS_IN_UI - 1].x, coins_name.y }, string_noplayer[3]);
-			}
-			if (timer->MaxTimeReached())
-			{
-				timer->Reset();
-				first_lines = !first_lines;
-			}
-		}
+		IntToString(App->entities->stage_timer->GetCounterInS(), iNUMBER_LENGTH, number_string);
+		App->fonts->BlitFromRight(name_font, time_number, number_string);
 	}
 
 	App->fonts->Blit(name_font, time_name, time_string);
-	IntToString(App->entities->stage_timer->GetCounterInS(), iNUMBER_LENGTH, number_string);
-	App->fonts->BlitFromRight(name_font, time_number, number_string);
 	App->fonts->Blit(name_font, coins_name, coins_string);
 	IntToString(App->entities->GetNumberCoins(), iNUMBER_LENGTH - 1, number_string);
 	App->fonts->BlitFromRight(name_font, coins_number, number_string);
@@ -192,4 +194,41 @@ void ModuleUI::IntToString(int number, int final_length, char* string)
 		string[i] = '0';
 	sprintf(&string[final_length - intlength], "%d", number);
 	
+}
+
+void ModuleUI::PrintStrings(int player, bool first_lines, const char** string_array)
+{
+	if (player % 2 == 0)
+	{
+		if (first_lines == true)
+		{
+			App->fonts->BlitFromRight(name_font, { health_pos[player].x, time_name.y }, string_array[0]);
+			App->fonts->BlitFromRight(name_font, { health_pos[player].x, coins_name.y }, string_array[1]);
+		}
+		else
+		{
+			App->fonts->BlitFromRight(name_font, { health_pos[player].x, time_name.y }, string_array[2]);
+			App->fonts->BlitFromRight(name_font, { health_pos[player].x, coins_name.y }, string_array[3]);
+		}
+	}
+	else
+	{
+		if (first_lines == true)
+		{
+			App->fonts->Blit(name_font, { health_pos[player].x, time_name.y }, string_array[0]);
+			App->fonts->Blit(name_font, { health_pos[player].x, coins_name.y }, string_array[1]);
+		}
+		else
+		{
+			App->fonts->Blit(name_font, { health_pos[player].x, time_name.y }, string_array[2]);
+			App->fonts->Blit(name_font, { health_pos[player].x, coins_name.y }, string_array[3]);
+		}
+	}
+}
+
+int ModuleUI::GetNumberOfUIs() const 
+{
+	int number_players = App->entities->GetNumberPlayers();
+
+	return ((number_players > iPLAYERS_IN_UI) ? iPLAYERS_IN_UI : number_players);
 }
