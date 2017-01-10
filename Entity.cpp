@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleRender.h"
+#include "ModuleCollision.h"
 #include "Entity.h"
 
 Entity::Entity(Entity::Type type, SDL_Texture* texture, ModuleStages* stage, Entity* parent, bool active) : type(type), texture(texture), stage(stage), parent(parent), active(active)
@@ -67,8 +68,13 @@ bool Entity::Disable()
 		timer->Stop();
 
 	active = false;
+	if (collider != nullptr)
+		collider->active = false;
+
 	for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end() && ret == true; ++it)
 		ret = (*it)->Disable();
+
+	contains.clear();
 
 	return ret;
 }
@@ -83,6 +89,8 @@ bool Entity::Delete()
 	if (active == false)
 	{
 		to_delete = true;
+		if (collider != nullptr)
+			collider->to_delete = true;
 		for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end() && ret == true; ++it)
 			ret = (*it)->Delete();
 	}
@@ -90,15 +98,46 @@ bool Entity::Delete()
 	return ret;
 }
 
+void Entity::EnableCollider() 
+{ 
+	if (collider != nullptr)
+		collider->active = true; 
+}
+
+void Entity::DisableCollider() 
+{ 
+	if (collider != nullptr)
+		collider->active = false; 
+}
+
+bool Entity::ColliderIsActive() const 
+{ 
+	bool ret = false;
+	if (collider != nullptr)
+		ret = collider->active; 
+	return ret;
+}
+
+void Entity::SetCollider(const SDL_Rect& rect)
+{
+	if (inverted_texture == true)
+		collider->position.x = position.x + dimensions.x - rect.x - rect.w - shifted_draw.x;
+	else
+		collider->position.x = position.x + rect.x + shifted_draw.x;
+	collider->position.y = position.y + rect.y + shifted_draw.y;
+	collider->position.z = position.z;
+	collider->dimensions.x = rect.w;
+	collider->dimensions.y = rect.h;
+	collider->dimensions.z = dimensions.z;
+}
+
 void Entity::ChangeParent(Entity* new_parent)
 {
 	if (parent != nullptr)
 	{
 		parent->contains.remove(this);
+		parent = new_parent;
 		if (new_parent != nullptr)
-		{
-			parent = new_parent;
 			parent->contains.push_back(this);
-		}
 	}
 }

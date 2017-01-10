@@ -19,9 +19,30 @@ public:
 
 	bool Draw();
 
-	virtual void SetPosition(int x, int z) { position.x = x; position.z = z; position.y = z - dimensions.y; }
+	void Dying();
+
+	virtual void SetPosition(int x, int z);
+	void ResetShift();
+
+	void SetAttackCollider(const SDL_Rect& rect);
+	void ResetCollider();
+	void ResetColliderPositions();
+
+	void EnableAttackCollider();
+	void DisableAttackCollider();
+	bool AttackColliderIsActive() const;
+	void SetAttackDamage(int damage);
+	void SetAttackType(Creature::Attack type);
 
 	void HasCollided(Collider* with);
+
+	Creature::XDirection RelativeDirectionXTo(Creature* target) const { return RelativeDirectionXTo(target->position.x); }
+	Creature::ZDirection RelativeDirectionZTo(Creature* target) const { return RelativeDirectionZTo(target->position.z); }
+	Creature::XDirection RelativeDirectionXTo(int x_coordinate) const;
+	Creature::ZDirection RelativeDirectionZTo(int z_coordinate) const;
+
+protected:
+	void ShiftedDraw();
 
 public:
 	XDirection xmovement = XIDLE;
@@ -38,13 +59,13 @@ public:
 
 	Timer* immunity_after_attack;
 	bool dead = false;
+	bool draw = true;
+	bool blinking = false;
 
 protected:
 	Timer* blink;
 	float blink_ratio = 0.0f;
-
-private:
-	bool blinking_on = false;
+	Collider* attack_collider;
 };
 
 #endif // !CREATURE_H

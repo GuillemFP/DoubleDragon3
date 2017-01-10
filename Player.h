@@ -23,15 +23,9 @@ public:
 	update_status Update();
 
 	void Revive();
-
-	void SetPosition(int x, int z) { Creature::SetPosition(x, z); collider_position = position; }
+	void Rising();
 
 	void HasCollided(Collider* with);
-	void ResetCollider() { collider_position = position; collider_dimensions = dimensions; };
-	void ResetColliderPositions() { collider_position = position; }
-
-private:
-	void HandleInput();
 
 public:
 	bool running = false;
@@ -41,6 +35,9 @@ public:
 
 	unsigned int sound_attack = 0;
 	unsigned int sound_jump = 0;
+	unsigned int sound_hit = 0;
+	unsigned int sound_falling = 0;
+	unsigned int sound_dying = 0;
 
 	Player_MoveState* moving;
 	Player_StandState* idle;
@@ -53,16 +50,10 @@ public:
 
 	SDL_Rect face = { 0,0,0,0 };
 
-	Collider* attack_collider;
-	Point3d attack_position = { 0,0,0 };	
-	Point3d attack_dimensions = { 0,0,0 };
-
-	Point3d collider_position = { 0,0,0 };
-	Point3d collider_dimensions = { 0,0,0 };
-
 	Timer* reviving_timer;
 	float blink_time_alive = 0.0f;
 	bool reviving = false;
+	bool rising = false;
 };
 
 #endif // PLAYER_H

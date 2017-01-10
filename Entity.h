@@ -36,6 +36,11 @@ public:
 	virtual bool Disable();
 	virtual bool Delete();
 
+	void EnableCollider();
+	void DisableCollider();
+	bool ColliderIsActive() const;
+
+	void SetCollider(const SDL_Rect& rect);
 	virtual void HasCollided(Collider* with) {}
 
 	virtual void ChangeParent(Entity* new_parent);
@@ -59,7 +64,11 @@ public:
 	Entity* parent = nullptr;
 	ModuleStages* stage = nullptr;
 
+	iPoint shifted_draw = { 0,0 };
+
+protected:
 	Collider* collider = nullptr;
+	
 };
 
 #endif // !ENTITY_H

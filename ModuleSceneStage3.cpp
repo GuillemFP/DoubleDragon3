@@ -7,6 +7,7 @@
 #include "ModuleEntities.h"
 #include "ModuleFadeToBlack.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Room.h"
 #include "JsonHandler.h"
 
@@ -86,6 +87,11 @@ bool ModuleSceneStage3::Start()
 
 	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER1, this, current_room);
 	player_one->SetPosition(player1_initialpos.x, player1_initialpos.y);
+
+	Enemy* test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
+	test_enemy->SetPosition(200, 220);
+	/*test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
+	test_enemy->SetPosition(300, 180);*/
 
 	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_PLAYER1_SIGN, this, player_one);
 

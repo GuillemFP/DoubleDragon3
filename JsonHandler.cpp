@@ -466,6 +466,64 @@ const char * JSONParser::GetStringFromArray(int index_array)
 	return ret;
 }
 
+bool JSONParser::GetRectFromArray(SDL_Rect& rect, int index_array)
+{
+	bool ret = false;
+
+	if (loaded_array != nullptr)
+	{
+		if (index_array < json_array_get_count(loaded_array))
+		{
+			JSON_Array* in_array = json_array_get_array(loaded_array, index_array);
+			if (json_array_get_count(in_array) == 4)
+			{
+				ret = ArrayToRect(rect, in_array);
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Error loading element in loaded array. Index %i out of range.", index_array);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
+bool JSONParser::GetPointFromArray(iPoint& point, int index_array)
+{
+	bool ret = false;
+
+	if (loaded_array != nullptr)
+	{
+		if (index_array < json_array_get_count(loaded_array))
+		{
+			JSON_Array* in_array = json_array_get_array(loaded_array, index_array);
+			if (json_array_get_count(in_array) == 2)
+			{
+				ret = ArrayToPoint(point, in_array);
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Error loading element in loaded array. Index %i out of range.", index_array);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No array loaded to extract value.");
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
 int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
 {
 	int ret = NULL;

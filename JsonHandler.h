@@ -33,6 +33,8 @@ public:
 
 	int GetIntFromArray(int index_array);
 	const char* GetStringFromArray(int index_array);
+	bool GetRectFromArray(SDL_Rect& rect, int index_array);
+	bool GetPointFromArray(iPoint& point, int index_array);
 	int GetIntFromArrayInArray(int array_element, int index_array);
 	const char* GetStringFromArrayInArray(int array_element, int index_array);
 

@@ -9,7 +9,7 @@
 class Object : public Entity
 {
 public:
-	Object(SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr) : Entity(Entity::Type::ROOM, texture, stage, parent)
+	Object(SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent = nullptr) : Entity(Entity::Type::OBJECT, texture, stage, parent)
 	{
 		if (App->parser->LoadObject(name))
 		{

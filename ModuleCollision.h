@@ -10,12 +10,14 @@
 
 class Entity;
 
-enum ColliderType { PLAYER, ENEMY, PLAYER_ATTACK, ENEMY_ATTACK };
+enum ColliderType { PLAYER = 0, ENEMY, PLAYER_ATTACK, ENEMY_ATTACK };
+
+const bool ColliderMatrix[4][4] = { { false,false,false,true },{ false,false,true,false },{ false,true,false,false },{ true,false,false,false } };
 
 struct Collider
 {
-	Point3d* position;
-	Point3d* dimensions;
+	Point3d position;
+	Point3d dimensions;
 	bool to_delete = false;
 	bool active = true;
 	ColliderType type;
@@ -24,9 +26,9 @@ struct Collider
 	int damage = 0;
 	Creature::Attack attack_type = Creature::Attack::NOATTACK;
 
-	Collider(Point3d* position, Point3d* dimensions, ColliderType type, Entity* parent) : type(type), parent(parent), position(position), dimensions(dimensions) {};
+	Collider(const Point3d& position, const Point3d& dimensions, ColliderType type, Entity* parent) : type(type), parent(parent), position(position), dimensions(dimensions) {};
 
-	bool CheckCollision(Collider& collider) const;
+	bool CheckCollision(const Collider& collider) const;
 };
 
 class ModuleCollision : public Module
@@ -38,7 +40,7 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 
-	Collider* AddCollider(Point3d* position, Point3d* dimensions, ColliderType type, Entity* parent);
+	Collider* AddCollider(const Point3d& position, const Point3d& dimensions, ColliderType type, Entity* parent);
 
 	void DebugDraw();
 

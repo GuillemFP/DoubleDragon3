@@ -8,7 +8,7 @@
 #define MODULESCENE_STAGE3 "ModuleScene_Stage3"
 #define SCENE_SECTION_STAGE3 "Config.Scenes.Stage3"
 
-#define ENTITY_PLAYER1 "Config.Entities.Player1"
+#define ENTITY_SAMURAI "Config.Entities.Samurai"
 #define ENTITY_STORESIGN "Config.Entities.StoreSign"
 
 struct SDL_Texture;

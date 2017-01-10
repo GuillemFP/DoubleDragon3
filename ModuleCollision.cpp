@@ -46,11 +46,14 @@ update_status ModuleCollision::Update()
 	{
 		for (std::list<Collider*>::iterator jt = creatures.begin(); jt != creatures.end(); ++jt)
 		{
-			if ((*it)->type != (*jt)->type)
+			if (ColliderMatrix[(*it)->type][(*jt)->type])
 			{
 				if ((*it)->active && (*jt)->active)
 				{
-					(*jt)->parent->HasCollided((*it));
+					if ((*it)->CheckCollision(**jt))
+					{
+						(*jt)->parent->HasCollided((*it));
+					}
 				}
 			}
 		}
@@ -65,7 +68,7 @@ void ModuleCollision::DebugDraw()
 	{
 		if ((*it)->active)
 		{
-			SDL_Rect collider_rect = { (*it)->position->x,(*it)->position->y,(*it)->dimensions->x,(*it)->dimensions->y };
+			SDL_Rect collider_rect = { (*it)->position.x,(*it)->position.y,(*it)->dimensions.x,(*it)->dimensions.y };
 			App->renderer->DrawQuad(collider_rect, 255, 0, 0, 80);
 		}	
 	}
@@ -74,13 +77,13 @@ void ModuleCollision::DebugDraw()
 	{
 		if ((*it)->active)
 		{
-			SDL_Rect collider_rect = { (*it)->position->x,(*it)->position->y,(*it)->dimensions->x,(*it)->dimensions->y };
+			SDL_Rect collider_rect = { (*it)->position.x,(*it)->position.y,(*it)->dimensions.x,(*it)->dimensions.y };
 			App->renderer->DrawQuad(collider_rect, 0, 0, 255, 80);
 		}
 	}
 }
 
-Collider* ModuleCollision::AddCollider(Point3d* position, Point3d* dimensions, ColliderType type, Entity* parent)
+Collider* ModuleCollision::AddCollider(const Point3d& position, const Point3d& dimensions, ColliderType type, Entity* parent)
 {
 	Collider* ret = new Collider(position, dimensions, type, parent);
 
@@ -92,24 +95,11 @@ Collider* ModuleCollision::AddCollider(Point3d* position, Point3d* dimensions, C
 	return ret;
 }
 
-bool Collider::CheckCollision(Collider& collider) const
+bool Collider::CheckCollision(const Collider& collider) const
 {
 	bool ret = true;
 
-	if (collider.position->x < position->x && collider.position->x + collider.dimensions->x < position->x)
-		ret = false;
-	else if (position->x < collider.position->x && position->x + dimensions->x < collider.position->x)
-		ret = false;
-	else if (collider.position->y < position->y && collider.position->y + collider.dimensions->y < position->y)
-		ret = false;
-	else if (position->y < collider.position->y && position->y + dimensions->y < collider.position->y)
-		ret = false;
-	else if (collider.position->z < position->z && collider.position->z + collider.dimensions->z < position->z)
-		ret = false;
-	else if (position->z < collider.position->z && position->z + dimensions->z < collider.position->z)
-		ret = false;
-
-	/*if (collider.position.x < position.x && collider.position.x + collider.dimensions.x < position.x)
+	if (collider.position.x < position.x && collider.position.x + collider.dimensions.x < position.x)
 		ret = false;
 	else if (position.x < collider.position.x && position.x + dimensions.x < collider.position.x)
 		ret = false;
@@ -120,7 +110,7 @@ bool Collider::CheckCollision(Collider& collider) const
 	else if (collider.position.z < position.z && collider.position.z + collider.dimensions.z < position.z)
 		ret = false;
 	else if (position.z < collider.position.z && position.z + dimensions.z < collider.position.z)
-		ret = false;*/
+		ret = false;
 
 	return ret;
 }

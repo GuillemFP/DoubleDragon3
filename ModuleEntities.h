@@ -35,14 +35,18 @@ public:
 	unsigned int GetSound(int num_table) const { return sounds[num_table]; }
 	int GetNumberPlayers() const { return num_players; }
 	int GetNumberCoins() const { return coins; }
+	Player* GetNearestPlayer(Entity* entity) const;
+
 	void ResetCoins() { coins = initial_coins; }
 	void SpendCoin() { --coins; }
 
 	Player* GetPlayerByNumber(int player_num) const;
 	int NumberActivePlayers() const;
+	float DistanceBetweenEntities(const Entity* first, const Entity* second) const;
 
 public:
 	SDL_Texture* players = nullptr;
+	SDL_Texture* enemies = nullptr;
 	SDL_Texture* faces = nullptr;
 	SDL_Texture* signals = nullptr;
 

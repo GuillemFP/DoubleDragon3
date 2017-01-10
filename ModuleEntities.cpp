@@ -4,6 +4,7 @@
 #include "ModuleEntities.h"
 #include "ModuleUI.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Room.h"
 #include "Object.h"
 #include "JsonHandler.h"
@@ -35,6 +36,7 @@ bool ModuleEntities::Start()
 		initial_coins = App->parser->GetInt("Coins");
 
 		players = App->textures->Load(App->parser->GetString("PlayerTexture"));
+		enemies = App->textures->Load(App->parser->GetString("EnemiesTexture"));
 		faces = App->textures->Load(App->parser->GetString("PlayerFaces"));
 		signals = App->textures->Load(App->parser->GetString("SceneSignals"));
 
@@ -65,6 +67,8 @@ bool ModuleEntities::CleanUp()
 	RELEASE_ARRAY(sounds);
 
 	App->textures->Unload(players);
+	App->textures->Unload(enemies);
+	App->textures->Unload(faces);
 	App->textures->Unload(signals);
 
 	RELEASE(stage_timer);
@@ -91,6 +95,7 @@ Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, c
 			LOG("Unable to create more players");
 		break;
 	case Entity::ENEMY:
+		ret = new Enemy(name, stage, parent);
 		break;
 	case Entity::OBJECT:
 		ret = new Object(texture, name, stage, parent);
@@ -103,6 +108,31 @@ Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, c
 
 	if (ret != nullptr)
 		entities.push_back(ret);
+
+	return ret;
+}
+
+Player* ModuleEntities::GetNearestPlayer(Entity* entity) const
+{
+	Player* ret = nullptr;
+
+	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
+	{
+		if ((*it)->type == Entity::Type::PLAYER)
+		{
+			Player* player = (Player*)(*it);
+			if (player->active)
+			{
+				if (ret == nullptr)
+					ret = player;
+				else
+				{
+					if (DistanceBetweenEntities(entity, (*it)) < DistanceBetweenEntities(entity, (Entity*)ret))
+						ret = player;
+				}
+			}
+		}
+	}
 
 	return ret;
 }
@@ -177,4 +207,14 @@ int ModuleEntities::NumberActivePlayers() const
 			++ret;
 	}
 	return ret;
+}
+
+float ModuleEntities::DistanceBetweenEntities(const Entity* first, const Entity* second) const
+{
+	float ret = 0.0f;
+
+	ret += first->position.x * first->position.x - second->position.x * second->position.x;
+	ret += first->position.z * first->position.z - second->position.z * second->position.z;
+
+	return sqrt(ret);
 }

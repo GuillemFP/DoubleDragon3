@@ -2,6 +2,7 @@
 #define MODULESTAGES_H
 
 #include "Module.h"
+#include "Point.h"
 
 #define MODULESTAGES "ModuleStages"
 
@@ -19,6 +20,7 @@ public:
 	virtual bool InsideScene_HighBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }
 
 	virtual bool InPlataform(int x, int z) const { return false; }
+	virtual bool InPlataform(iPoint point) const { return InPlataform(point.x, point.y); }
 
 public:
 	int plataform_height = 0;

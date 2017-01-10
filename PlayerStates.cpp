@@ -207,9 +207,10 @@ Player_JumpState::Player_JumpState(Player* player, const char* jump_frame, const
 	App->parser->GetPoint(speed, "JumpSpeed");
 	gravity = App->parser->GetFloat("Gravity");
 
-	App->parser->GetRect(kick_rect, "AerialKickRect");
+	App->parser->GetRect(jump_collider, "JumpCollider");
+	App->parser->GetRect(aerialkick_collider, "AerialKickCollider");
+	App->parser->GetRect(attack_collider, "AerialKickAttackCollider");
 	kick_damage = App->parser->GetInt("AerialKickDamage");
-	App->parser->GetPoint(jumpkick_coll_dimensions, "AerialKickCollidorDimensions");
 }
 
 PlayerState* Player_JumpState::HandleInput()
@@ -221,17 +222,8 @@ PlayerState* Player_JumpState::HandleInput()
 		App->audio->PlayFx(player->sound_attack);
 		attacking = true;
 		player->entity_rect = jumpkick_rect;
-		player->attack_collider->damage = kick_damage;
-
-		player->attack_position.z = player->position.z;
-		player->attack_dimensions.x = kick_rect.w;
-		player->attack_dimensions.y = kick_rect.h;
-		player->attack_dimensions.z = player->dimensions.z;
-
-		player->attack_collider->active = true;
-
-		player->collider_dimensions.x = jumpkick_coll_dimensions.x;
-		player->collider_dimensions.y = jumpkick_coll_dimensions.y;
+		player->SetAttackDamage(kick_damage);
+		player->EnableAttackCollider();
 	}
 
 	return this;
@@ -275,21 +267,13 @@ update_status Player_JumpState::Update()
 		break;
 	}
 	
-	player->collider_position = player->position;
 	if (attacking)
 	{
-		if (player->inverted_texture)
-		{
-			player->attack_position.x = player->position.x + player->dimensions.x - kick_rect.x - kick_rect.w;
-			player->collider_position.x += player->dimensions.x - jumpkick_coll_dimensions.x;
-		}
-		else
-			player->attack_position.x = player->position.x + kick_rect.x;
+		player->SetCollider(aerialkick_collider);
+		player->SetAttackCollider(attack_collider);
 	}
 	else
-		if (player->inverted_texture)
-			player->collider_position.x += player->dimensions.x - player->entity_rect.w;
-	player->attack_position.y = player->position.y + kick_rect.y;
+		player->SetCollider(jump_collider);
 
 	time++;
 
@@ -321,7 +305,7 @@ void Player_JumpState::OnExit()
 	if (attacking == true)
 	{
 		attacking = false;
-		player->attack_collider->active = false;
+		player->DisableAttackCollider();
 	}
 }
 
@@ -411,9 +395,6 @@ void Player_JumpState::SetJumpParameters()
 		}
 	}
 
-	player->collider_dimensions.x = jump_rect.w;
-	player->collider_dimensions.y = jump_rect.h;
-
 	player->entity_rect = jump_rect;
 }
 
@@ -439,33 +420,25 @@ PlayerState* Player_AttackState::HandleInput()
 	{
 		attacking = true;
 		App->audio->PlayFx(player->sound_attack);
-		player->attack_collider->attack_type = player->attack_cmd;
+		player->SetAttackType(player->attack_cmd);
 		switch (player->attack_cmd)
 		{
 		case Creature::Attack::PUNCH:
 			current_animation = &punch;
-			player->attack_collider->damage = punch_damage;
+			player->SetAttackDamage(punch_damage);
 			attack_frame = punch_frame;
 			attack_rect = &punch_rect;
 			break;
 		case Creature::Attack::KICK:
 			current_animation = &kick;
-			player->attack_collider->damage = kick_damage;
+			player->SetAttackDamage(kick_damage);
 			attack_frame = kick_frame;
 			attack_rect = &kick_rect;
 			break;
 		default:
 			break;
 		}
-		if (player->inverted_texture == false)
-			player->attack_position.x = player->position.x + attack_rect->x;
-		if (player->inverted_texture == true)
-			player->attack_position.x = player->position.x + player->dimensions.x - attack_rect->x - attack_rect->w;
-		player->attack_position.y = player->position.y + attack_rect->y;
-		player->attack_position.z = player->position.z;
-		player->attack_dimensions.x = attack_rect->w;
-		player->attack_dimensions.y = attack_rect->h;
-		player->attack_dimensions.z = player->dimensions.z;
+		player->SetAttackCollider(*attack_rect);
 	}
 
 	return this;
@@ -474,10 +447,10 @@ PlayerState* Player_AttackState::HandleInput()
 update_status Player_AttackState::Update()
 {
 	player->entity_rect = current_animation->GetCurrentFrame();
-	if (current_animation->GetCurrentFrameNumber() == attack_frame && player->attack_collider->active == false)
-		player->attack_collider->active = true;
-	else if (current_animation->GetCurrentFrameNumber() != attack_frame && player->attack_collider->active == true)
-		player->attack_collider->active = false;
+	if (current_animation->GetCurrentFrameNumber() == attack_frame && player->AttackColliderIsActive() == false)
+		player->EnableAttackCollider();
+	else if (current_animation->GetCurrentFrameNumber() != attack_frame && player->AttackColliderIsActive() == true)
+		player->DisableAttackCollider();
 	if (current_animation->Finished() == true)
 		OnExit();
 
@@ -487,7 +460,7 @@ update_status Player_AttackState::Update()
 void Player_AttackState::OnExit()
 {
 	attacking = false;
-	player->attack_collider->active = false;
+	player->DisableAttackCollider();
 
 	current_animation->Reset();
 	player->current_state = player->idle;
@@ -501,13 +474,6 @@ Player_DamageState::Player_DamageState(Player* player, const char* high_frame, c
 	float time = App->parser->GetFloat("Time_DamageState");
 
 	in_damaged_state = new Timer((Uint32)(time * 1000.0f));
-}
-
-PlayerState* Player_DamageState::HandleInput()
-{
-	in_damaged_state->Start();
-
-	return this;
 }
 
 update_status Player_DamageState::Update()
@@ -525,7 +491,7 @@ void Player_DamageState::OnExit()
 	in_damaged_state->Stop();
 	player->current_state = player->idle;
 	player->entity_rect = player->idle->initial_rect;
-	player->collider->active = true;
+	player->EnableCollider();
 }
 
 Player_FallState::Player_FallState(Player* player, const char* falling_frame, const char* fallen_frame, const char* rising_frame) : PlayerState(player)
@@ -537,7 +503,7 @@ Player_FallState::Player_FallState(Player* player, const char* falling_frame, co
 	gravity = App->parser->GetFloat("Gravity");
 
 	fallen_time = App->parser->GetFloat("Fallen_Time");
-	fallen_x_shift = App->parser->GetInt("FallenXShift");
+	App->parser->GetPoint(fallen_shift, "FallenShift");
 	rising_time = App->parser->GetFloat("Rising_Time");
 
 	states_timer = new Timer();
@@ -554,12 +520,7 @@ PlayerState* Player_FallState::HandleInput()
 	case Player_FallState::LYING:
 		if (states_timer->GetState() == TimerState::OFF)
 		{
-			App->renderer->bCenterCamera = false;
-			final_x = player->position.x;
-			if (player->inverted_texture == false)
-				player->position.x = final_x - fallen_x_shift;
-			else
-				player->position.x = final_x + fallen_x_shift;
+			player->shifted_draw = fallen_shift;
 			states_timer->SetMaxTime((Uint32)(fallen_time*1000.0f));
 			states_timer->Start();
 		}
@@ -567,8 +528,7 @@ PlayerState* Player_FallState::HandleInput()
 	case Player_FallState::RISING:
 		if (states_timer->GetState() == TimerState::OFF)
 		{
-			App->renderer->bCenterCamera = true;
-			player->position.x = final_x;
+			player->ResetShift();
 			states_timer->SetMaxTime((Uint32)(rising_time*1000.0f));
 			states_timer->Start();
 		}
@@ -593,7 +553,6 @@ update_status Player_FallState::Update()
 		switch (fall_direction)
 		{
 		case Creature::XDirection::LEFT:
-			player->inverted_texture = false;
 			if (player->stage->InsideScene_LeftBorder(player->position, player->dimensions))
 			{
 				current_position.x += fall_direction*speed.x;
@@ -601,7 +560,6 @@ update_status Player_FallState::Update()
 			}
 			break;
 		case Creature::XDirection::RIGHT:
-			player->inverted_texture = true;
 			if (player->stage->InsideScene_RightBorder(player->position, player->dimensions, player->in_plataform))
 			{
 				current_position.x += fall_direction*speed.x;
@@ -644,13 +602,12 @@ update_status Player_FallState::Update()
 			else if (player->dead == false)
 			{
 				states_timer->DoubleMaxTime();
-				player->dead = true;
+				player->Dying();
 			}
 			else
 			{
-				player->position.x = final_x;
 				OnExit();
-				player->collider->active = false;
+				player->DisableCollider();
 				player->active = false;
 			}
 		}
@@ -662,6 +619,7 @@ update_status Player_FallState::Update()
 		{
 			states_timer->Stop();
 			OnExit();
+			player->Rising();
 		}
 		else
 			player->entity_rect = rising_rect;
@@ -677,8 +635,10 @@ void Player_FallState::OnExit()
 	time = 0;
 	state = FALLING;
 	states_timer->Stop();
+	player->ResetShift();
 	player->current_state = player->idle;
-	player->collider->active = true;
+	player->idle->current_rect = player->idle->initial_rect;
+	player->EnableCollider();
 }
 
 void Player_FallState::SetFallParameters()

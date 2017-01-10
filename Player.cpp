@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleAudio.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleEntities.h"
@@ -19,11 +20,14 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		App->parser->GetRect(face, "Face");
 		damage_treshold = App->parser->GetInt("MaxAccumulatedDamage");
 
-		blink_ratio = App->parser->GetFloat("BlinkRatio");
 		blink_time_alive = App->parser->GetFloat("BlinkTimeAlive");
+		blink_ratio = App->parser->GetFloat("BlinkRatio");
 
 		sound_attack = App->entities->GetSound(App->parser->GetInt("Sound_Attack"));
 		sound_jump = App->entities->GetSound(App->parser->GetInt("Sound_Jump"));
+		sound_hit = App->entities->GetSound(App->parser->GetInt("Sound_Damaged"));
+		sound_falling = App->entities->GetSound(App->parser->GetInt("Sound_Falling"));
+		sound_dying = App->entities->GetSound(App->parser->GetInt("Sound_Dying"));
 
 		moving = new Player_MoveState(this, "Move_Animation", "MoveUp_Animation");
 		idle = new Player_StandState(this, "Static_Frame");
@@ -43,13 +47,12 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 			dimensions.x = idle->initial_rect.w;
 			dimensions.y = idle->initial_rect.h;
 
-			collider_dimensions = dimensions;
-
 			immunity_after_attack->SetMaxTime((Uint32)(immunity_seconds * 1000.0f));
+			blink->SetMaxTime(((Uint32)(blink_ratio*1000.0f)));
 		}
 
-		collider = App->collision->AddCollider(&collider_position, &collider_dimensions, ColliderType::PLAYER, this);
-		attack_collider = App->collision->AddCollider(&attack_position, &attack_dimensions, ColliderType::PLAYER_ATTACK, this);
+		collider = App->collision->AddCollider(position, dimensions, ColliderType::PLAYER, this);
+		attack_collider = App->collision->AddCollider({ 0,0,0 }, { 0,0,0 }, ColliderType::PLAYER_ATTACK, this);
 		attack_collider->active = false;
 	}
 
@@ -72,6 +75,7 @@ void Player::Revive()
 	reviving = true;
 	active = true;
 	collider->active = false;
+	blinking = true;
 	health = initial_health;
 	accumulated_damage = 0;
 	reviving_timer->Start();
@@ -80,9 +84,41 @@ void Player::Revive()
 	idle->current_rect = idle->initial_rect;
 }
 
+void Player::Rising()
+{
+	collider->active = false;
+	rising = true;
+	blinking = true;
+	accumulated_damage = 0;
+	reviving_timer->Start();
+	blink->Reset();
+}
+
 update_status Player::PreUpdate()
 {
-	HandleInput();
+	jump = false;
+	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::JUMP))
+		jump = true;
+
+	xmovement = XDirection::XIDLE;
+	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_LEFT))
+		xmovement = XDirection::LEFT;
+	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_RIGHT))
+		xmovement = XDirection::RIGHT;
+
+	zmovement = ZDirection::YIDLE;
+	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_UP))
+		zmovement = ZDirection::UP;
+	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_DOWN))
+		zmovement = ZDirection::DOWN;
+
+	attack_cmd = Attack::NOATTACK;
+	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::PUNCH))
+		attack_cmd = Attack::PUNCH;
+	else if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::KICK))
+		attack_cmd = Attack::KICK;
+
+	current_state = current_state->HandleInput();
 
 	return UPDATE_CONTINUE;
 }
@@ -99,6 +135,17 @@ update_status Player::Update()
 		reviving = false;
 		dead = false;
 		collider->active = true;
+		draw = true;
+		blinking = false;
+	}
+
+	if (rising && reviving_timer->MaxTimeReached())
+	{
+		reviving_timer->Stop();
+		rising = false;
+		collider->active = true;
+		draw = true;
+		blinking = false;
 	}
 
 	return ret;
@@ -128,19 +175,30 @@ void Player::HasCollided(Collider* with)
 
 		if (fall == false)
 		{
+			App->audio->PlayFx(sound_hit);
 			collider->active = false;
 			current_state->OnExit();
 			current_state = damaging;
+			damaging->in_damaged_state->Start();
 			damaging->SetFrame(with->attack_type);
 		}
 		else
 		{
+			App->audio->PlayFx(sound_falling);
+			if (health == 0)
+				App->audio->PlayFx(sound_dying);
 			collider->active = false;
 
-			if (collider->position->x < with->position->x)
+			if (position.x < with->parent->position.x)
+			{
+				inverted_texture = false;
 				falling->InitFall(Creature::XDirection::LEFT);
+			}
 			else
+			{
+				inverted_texture = true;
 				falling->InitFall(Creature::XDirection::RIGHT);
+			}
 
 			current_state->OnExit();
 			current_state = falling;
@@ -149,31 +207,4 @@ void Player::HasCollided(Collider* with)
 
 		immunity_after_attack->Reset();
 	}
-}
-
-void Player::HandleInput()
-{
-	jump = false;
-	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::JUMP))
-		jump = true;
-
-	xmovement = XDirection::XIDLE;
-	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_LEFT))
-		xmovement = XDirection::LEFT;
-	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_RIGHT))
-		xmovement = XDirection::RIGHT;
-		
-	zmovement = ZDirection::YIDLE;
-	if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_UP))
-		zmovement = ZDirection::UP;
-	else if (App->input->GetPlayerOutput(number_player, PlayerOutput::GO_DOWN))
-		zmovement = ZDirection::DOWN;
-
-	attack_cmd = Attack::NOATTACK;
-	if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::PUNCH))
-		attack_cmd = Attack::PUNCH;
-	else if (App->input->GetPlayerOutput_KeyDown(number_player, PlayerOutput::KICK))
-		attack_cmd = Attack::KICK;
-
-	current_state = current_state->HandleInput();
 }
