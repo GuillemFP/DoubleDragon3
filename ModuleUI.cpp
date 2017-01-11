@@ -156,8 +156,8 @@ update_status ModuleUI::Update()
 				else
 					PrintStrings(i, first_lines, string_noplayer);
 			}
-			/*else
-				PrintStrings(iPLAYERS_IN_UI - 1, first_lines, string_noplayer);*/
+			else
+				PrintStrings(iPLAYERS_IN_UI - 1, first_lines, string_noplayer);
 		}
 		IntToString(App->entities->stage_timer->GetCounterInS(), iNUMBER_LENGTH, number_string);
 		App->fonts->BlitFromRight(name_font, time_number, number_string);

@@ -4,7 +4,6 @@
 #define MODULE_UI "ModuleUI"
 #define UI_SECTION "Config.Modules.UI"
 
-//#include <vector>
 #include "Module.h"
 #include "Point.h"
 
@@ -32,7 +31,6 @@ private:
 	void PrintStrings(int player, bool first_lines, const char** string_array);
 
 private:
-	//std::vector<Player*> players;
 	iPoint* health_pos;
 	int* health_fonts;
 	iPoint* name_pos;

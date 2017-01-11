@@ -306,38 +306,6 @@ bool JSONParser::GetIntArray(const char* name, int* int_array)
 	return ret;
 }
 
-//bool JSONParser::GetIntArray(const char* name, int* int_array)
-//{
-//	bool ret = true;
-//	JSON_Array* box_array;
-//	int count = 0;
-//
-//	int x0, x1, y0, y1;
-//
-//	ret = LoadArrayInObject(name);
-//
-//	for (int i = 0; i < json_array_get_count(loaded_array);)
-//	{
-//		box_array = json_array_get_array(loaded_array, i);
-//		x0 = json_array_get_number(box_array, 0);
-//		x1 = json_array_get_number(box_array, 1);
-//		y0 = json_array_get_number(box_array, 2);
-//		y1 = json_array_get_number(box_array, 3);
-//		if (count >= x0 && count <= x1)
-//		{
-//			float slope = ((float)(y1 - y0)) / ((float)(x1 - x0));
-//			int_array[count] = y0 + (int)(slope * (count - x0));
-//			count++;
-//		}
-//		else
-//		{
-//			i++;
-//		}
-//	}
-//
-//	return ret;
-//}
-
 const char* JSONParser::GetString(const char* name)
 {
 	const char* ret = nullptr;
