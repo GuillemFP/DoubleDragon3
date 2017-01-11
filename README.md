@@ -5,9 +5,21 @@ This is my tribute to Double Dragon 3: The Rosetta Stone, released for Sega Gene
 ## PROJECT INFORMATION
 
 Full project at github: https://github.com/GuillemFP/DoubleDragon3
+
+Project webpage: https://guillemfp.github.io/DoubleDragon3/
+
 *Author*: Guillem Ferré
+
 Contact: guillemferre@gmail.com
+
 License: GNU GENERAL PUBLIC LICENSE
+
+## Gameplay video
+
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=a2NPkU1kFZY" frameborder="0" allowfullscreen></iframe>
+You can also see it directly on [youtube](https://www.youtube.com/watch?v=a2NPkU1kFZY).
+
+Currently the game only features the first part of Stage 3, so only on type of enemy is present and there is no boss. Also, the store has not been included, so the playable characters don't have their full set of movements.
 
 ## Commands
 
@@ -22,7 +34,7 @@ The game supports up to two players. Each player can jump, punch, kick and perfo
 * **JUMP:** (Player 1: K / Player 2: V)
 * **KICK:** (Player 1: L / Player 2: B)
 
-The controls can be changed in the file "config.json".
+The controls can be changed in the file "config.json", as well as other parameters that alter the gameplay.
 
 ## Debug mode
 Pressing F12 one can access debug mode, where others functions are availabe:
@@ -37,3 +49,7 @@ Pressing F12 one can access debug mode, where others functions are availabe:
 Currently there is only the first part of one stage. Only one type of enemy is accessible. Around the area up to 9 enemies will spawn. 
 When all of them are defeated, the wooden door will open. The game will end when a player steps inside.
 You can also lose if you spend all the initial 25 coins using continues or playing with other players.
+
+## Acknowledgements
+
+In this project I have used [parson](https://github.com/kgabis/parson) to handle the json document provided.
