@@ -33,12 +33,12 @@ public:
 	bool GetBool(const char* name);
 	bool GetBoolMandatory(const char* name);
 
-	int GetIntFromArray(int index_array);
-	const char* GetStringFromArray(int index_array);
-	bool GetRectFromArray(SDL_Rect& rect, int index_array);
-	bool GetPointFromArray(iPoint& point, int index_array);
-	int GetIntFromArrayInArray(int array_element, int index_array);
-	const char* GetStringFromArrayInArray(int array_element, int index_array);
+	int GetIntFromArray(size_t index_array);
+	const char* GetStringFromArray(size_t index_array);
+	bool GetRectFromArray(SDL_Rect& rect, size_t index_array);
+	bool GetPointFromArray(iPoint& point, size_t index_array);
+	int GetIntFromArrayInArray(size_t array_element, size_t index_array);
+	const char* GetStringFromArrayInArray(size_t array_element, size_t index_array);
 
 private:
 	bool ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array);

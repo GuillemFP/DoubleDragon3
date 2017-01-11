@@ -222,34 +222,36 @@ bool JSONParser::GetAnimation(Animation& anim, const char* name)
 			if (json_object_has_value_of_type(animation, ANIMATION_SPEED, JSONNumber))
 				anim.speed = (float)json_object_get_number(animation, ANIMATION_SPEED);
 			if (json_object_has_value_of_type(animation, ANIMATION_LOOP, JSONBoolean))
-				anim.bloop = json_object_get_boolean(animation, ANIMATION_LOOP);
+				anim.bloop = (json_object_get_boolean(animation, ANIMATION_LOOP) > 0 ? true : false);
 			else
 				anim.bloop = true;
 			if (json_object_has_value_of_type(animation, ANIMATION_FRAMES, JSONNumber))
 				iframes = (int)json_object_get_number(animation, ANIMATION_FRAMES);
 			if (json_object_has_value_of_type(animation, ANIMATION_SPRITES, JSONArray))
+			{
 				sprites = json_object_get_array(animation, ANIMATION_SPRITES);
 
-			if (json_array_get_count(sprites) == iframes)
-			{
-				for (int i = 0; i < iframes; i++)
+				if (json_array_get_count(sprites) == iframes)
 				{
-					rect_array = json_array_get_array(sprites, i);
-					ret = ret && ArrayToRect(rect, rect_array);
-					anim.frames.push_back(rect);
+					for (int i = 0; i < iframes; i++)
+					{
+						rect_array = json_array_get_array(sprites, i);
+						ret = ret && ArrayToRect(rect, rect_array);
+						anim.frames.push_back(rect);
+					}
+					if (ret == false)
+					{
+						LOG("JSONParser: Error retrieving one or more rectangle array from %s.", name);
+						ret = false;
+						bparsing_success = false;
+					}
 				}
-				if (ret == false)
+				else
 				{
-					LOG("JSONParser: Error retrieving one or more rectangle array from %s.", name);
-					ret = false;
+					LOG("JSONParser: Sprites array %s has incorrect number of elements.", name);
 					bparsing_success = false;
+					ret = false;
 				}
-			}
-			else
-			{
-				LOG("JSONParser: Sprites array %s has incorrect number of elements.", name);
-				bparsing_success = false;
-				ret = false;
 			}
 		}
 		else
@@ -279,14 +281,14 @@ bool JSONParser::GetIntArray(const char* name, int* int_array)
 
 	ret = LoadArrayInObject(name);
 
-	for (int i = 0; i < json_array_get_count(loaded_array) - 1;)
+	for (size_t i = 0; i < json_array_get_count(loaded_array) - 1;)
 	{
 		box_array = json_array_get_array(loaded_array, i);
-		x0 = json_array_get_number(box_array, 0);
-		y0 = json_array_get_number(box_array, 1);
+		x0 = (int) json_array_get_number(box_array, 0);
+		y0 = (int) json_array_get_number(box_array, 1);
 		box_array = json_array_get_array(loaded_array, i + 1);
-		x1 = json_array_get_number(box_array, 0);
-		y1 = json_array_get_number(box_array, 1);
+		x1 = (int) json_array_get_number(box_array, 0);
+		y1 = (int) json_array_get_number(box_array, 1);
 		if (count >= x0 && count <= x1)
 		{
 			float slope = 1.0f;
@@ -418,7 +420,7 @@ bool JSONParser::GetBool(const char * name)
 	if (loaded_object != nullptr)
 	{
 		if (json_object_dothas_value_of_type(loaded_object, name, JSONBoolean))
-			ret = json_object_dotget_boolean(loaded_object, name);
+			ret = (json_object_dotget_boolean(loaded_object, name) > 0 ? true : false);
 	}
 
 	return ret;
@@ -432,7 +434,7 @@ bool JSONParser::GetBoolMandatory(const char * name)
 	{
 		if (json_object_dothas_value_of_type(loaded_object, name, JSONBoolean))
 		{
-			ret = json_object_dotget_boolean(loaded_object, name);
+			ret = (json_object_dotget_boolean(loaded_object, name) > 0 ? true : false);
 		}
 		else
 		{
@@ -449,7 +451,7 @@ bool JSONParser::GetBoolMandatory(const char * name)
 	return ret;
 }
 
-int JSONParser::GetIntFromArray(int index_array)
+int JSONParser::GetIntFromArray(size_t index_array)
 {
 	int ret = NULL;
 
@@ -457,7 +459,7 @@ int JSONParser::GetIntFromArray(int index_array)
 	{
 		if (index_array < json_array_get_count(loaded_array))
 		{
-			ret = json_array_get_number(loaded_array, index_array);
+			ret = (int) json_array_get_number(loaded_array, index_array);
 		}
 		else
 		{
@@ -474,7 +476,7 @@ int JSONParser::GetIntFromArray(int index_array)
 	return ret;
 }
 
-const char * JSONParser::GetStringFromArray(int index_array)
+const char * JSONParser::GetStringFromArray(size_t index_array)
 {
 	const char* ret = nullptr;
 
@@ -499,7 +501,7 @@ const char * JSONParser::GetStringFromArray(int index_array)
 	return ret;
 }
 
-bool JSONParser::GetRectFromArray(SDL_Rect& rect, int index_array)
+bool JSONParser::GetRectFromArray(SDL_Rect& rect, size_t index_array)
 {
 	bool ret = false;
 
@@ -528,7 +530,7 @@ bool JSONParser::GetRectFromArray(SDL_Rect& rect, int index_array)
 	return ret;
 }
 
-bool JSONParser::GetPointFromArray(iPoint& point, int index_array)
+bool JSONParser::GetPointFromArray(iPoint& point, size_t index_array)
 {
 	bool ret = false;
 
@@ -557,7 +559,7 @@ bool JSONParser::GetPointFromArray(iPoint& point, int index_array)
 	return ret;
 }
 
-int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
+int JSONParser::GetIntFromArrayInArray(size_t array_element, size_t index_array)
 {
 	int ret = NULL;
 
@@ -568,7 +570,7 @@ int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
 			JSON_Array* in_array = json_array_get_array(loaded_array, array_element);
 			if (index_array < json_array_get_count(in_array))
 			{
-				ret = json_array_get_number(in_array, index_array);
+				ret = (int) json_array_get_number(in_array, index_array);
 			}
 			else
 			{
@@ -591,7 +593,7 @@ int JSONParser::GetIntFromArrayInArray(int array_element, int index_array)
 	return ret;
 }
 
-const char* JSONParser::GetStringFromArrayInArray(int array_element, int index_array)
+const char* JSONParser::GetStringFromArrayInArray(size_t array_element, size_t index_array)
 {
 	const char* ret = nullptr;
 
@@ -631,10 +633,10 @@ bool JSONParser::ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array)
 
 	if (json_array_get_count(rect_array) == 4)
 	{
-		rect.x = json_array_get_number(rect_array, 0);
-		rect.y = json_array_get_number(rect_array, 1);
-		rect.w = json_array_get_number(rect_array, 2);
-		rect.h = json_array_get_number(rect_array, 3);
+		rect.x = (int)json_array_get_number(rect_array, 0);
+		rect.y = (int)json_array_get_number(rect_array, 1);
+		rect.w = (int)json_array_get_number(rect_array, 2);
+		rect.h = (int)json_array_get_number(rect_array, 3);
 		ret = true;
 	}
 
@@ -647,8 +649,8 @@ bool JSONParser::ArrayToPoint(iPoint& point, JSON_Array* point_array)
 
 	if (json_array_get_count(point_array) == 2)
 	{
-		point.x = json_array_get_number(point_array, 0);
-		point.y = json_array_get_number(point_array, 1);
+		point.x = (int)json_array_get_number(point_array, 0);
+		point.y = (int)json_array_get_number(point_array, 1);
 		ret = true;
 	}
 
@@ -661,8 +663,8 @@ bool JSONParser::ArrayToPoint(fPoint& point, JSON_Array* point_array)
 
 	if (json_array_get_count(point_array) == 2)
 	{
-		point.x = json_array_get_number(point_array, 0);
-		point.y = json_array_get_number(point_array, 1);
+		point.x = (float) json_array_get_number(point_array, 0);
+		point.y = (float) json_array_get_number(point_array, 1);
 		ret = true;
 	}
 
@@ -675,9 +677,9 @@ bool JSONParser::ArrayToPoint3d(Point3d& point, JSON_Array* point_array)
 
 	if (json_array_get_count(point_array) == 3)
 	{
-		point.x = json_array_get_number(point_array, 0);
-		point.y = json_array_get_number(point_array, 1);
-		point.z = json_array_get_number(point_array, 2);
+		point.x = (int) json_array_get_number(point_array, 0);
+		point.y = (int) json_array_get_number(point_array, 1);
+		point.z = (int) json_array_get_number(point_array, 2);
 		ret = true;
 	}
 

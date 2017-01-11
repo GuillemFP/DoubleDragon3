@@ -188,11 +188,11 @@ void ModuleUI::IntToString(int number, int final_length, char* string)
 {
 	int intlength = GetLength(number);
 
+	int j = 0;
 	for (int i = 0; i < final_length - intlength; i++)
-		string[i] = '0';
-	if (intlength <= 4)
-		sprintf(&string[final_length - intlength], "%d", number);
-	
+		j += sprintf_s(string + j, 4 - j, "%c",'0');
+	sprintf_s(string + j, 4 - j, "%d", number);
+
 }
 
 void ModuleUI::PrintStrings(int player, bool first_lines, const char** string_array)

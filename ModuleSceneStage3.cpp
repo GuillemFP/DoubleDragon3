@@ -105,6 +105,9 @@ bool ModuleSceneStage3::Start()
 				new_enemy->SetPosition(start_positions[i].x, start_positions[i].y);
 			}
 
+			door = (Object*)App->entities->CreateEntity(Entity::OBJECT, background, door_string, this, outside);
+			door->Disable();
+
 			spawn_clock->SetMaxTime((Uint32)(spawn_time*1000.0f));
 			spawn_clock->Start();
 		}
@@ -115,9 +118,6 @@ bool ModuleSceneStage3::Start()
 	current_room = outside;
 
 	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_STORESIGN, this, outside);
-
-	door = (Object*) App->entities->CreateEntity(Entity::OBJECT, background, door_string, this, outside);
-	door->Disable();
 
 	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER1, this, current_room);
 	player_one->SetPosition(player1_initialpos.x, player1_initialpos.y);
