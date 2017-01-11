@@ -3,8 +3,11 @@
 
 #include "Module.h"
 #include "Point.h"
+#include <vector>
 
 #define MODULESTAGES "ModuleStages"
+
+class Timer;
 
 class ModuleStages : public Module
 {
@@ -25,8 +28,14 @@ public:
 
 public:
 	int plataform_height = 0;
+	int enemies_killed = 0;
+	int enemies_stage = 0;
+	int max_number_enemies = 0;
+	int current_enemies = 0;
 
-private:
+protected:
+	std::vector<iPoint> spawn_points;
+	Timer* spawn_clock;
 	bool game_over = false;
 };
 

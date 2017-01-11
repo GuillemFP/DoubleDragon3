@@ -75,6 +75,23 @@ update_status ModuleDebug::Update()
 		if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 			bdebug_positions = !bdebug_positions;
 
+		if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
+		{
+			bdebug_god = !bdebug_god;
+			int number_players = App->entities->GetNumberPlayers();
+			for (int i = 0; i < number_players; i++)
+			{
+				Player* player = App->entities->GetPlayerByNumber(i);
+				if (bdebug_god == true)
+					player->immunity_after_attack->SetMaxTime(0);
+				else
+				{
+					player->immunity_after_attack->SetMaxTime((Uint32)(player->immunity_seconds * 1000.0f));
+					player->immunity_after_attack->Start();
+				}
+			}
+		}
+
 		if (bdebug_colliders)
 		{
 			App->collision->DebugDraw();
@@ -113,6 +130,11 @@ update_status ModuleDebug::Update()
 		}
 		else
 			App->fonts->Blit(unactivated_font, fkey_positions[2], fkey_strings[2], 0.0f);
+
+		if (bdebug_god)
+			App->fonts->Blit(activated_font, fkey_positions[3], fkey_strings[3], 0.0f);
+		else
+			App->fonts->Blit(unactivated_font, fkey_positions[3], fkey_strings[3], 0.0f);
 	}
 
 	return UPDATE_CONTINUE;

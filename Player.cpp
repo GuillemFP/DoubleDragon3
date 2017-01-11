@@ -21,7 +21,7 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		ispeed = App->parser->GetInt("Speed");
 		dimensions.z = App->parser->GetInt("Depth");
 		initial_health = abs(App->parser->GetInt("Health"));
-		float immunity_seconds = App->parser->GetFloat("ImmunityAfterAttack");
+		immunity_seconds = App->parser->GetFloat("ImmunityAfterAttack");
 		App->parser->GetRect(face, "Face");
 		damage_treshold = App->parser->GetInt("MaxAccumulatedDamage");
 		iMAX_ASSIGNED_ENEMIES = App->parser->GetInt("MaxEngagedEnemies");

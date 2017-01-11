@@ -30,6 +30,16 @@ public:
 	}
 	~Room() {}
 
+	int GetNumberOfEnemies() const
+	{
+		int ret = 0;
+		for (std::list<Entity*>::const_iterator it = contains.begin(); it != contains.end(); ++it)
+		{
+			if ((*it)->type == Entity::ENEMY)
+				++ret;
+		}
+		return ret;
+	}
 };
 
 #endif // !ROOM_H

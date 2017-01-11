@@ -629,6 +629,7 @@ update_status Enemy_FallState::Update()
 				enemy->Disable();
 				enemy->ChangeParent(nullptr);
 				enemy->Delete();
+				enemy->stage->enemies_killed++;
 			}
 		}
 		else

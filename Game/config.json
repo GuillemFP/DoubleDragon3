@@ -72,9 +72,9 @@
 			"TextLines2" : ["cont -", "inue ?", "press" , "start"]
 		},
 		"Debug" : {
-			"FunctionKeyNumber" : 3,
-			"FunctionKeys" : ["f1-colliders","f2-camera","f3-position"],
-			"FunctionPositions" : [ [0,0],[104,0],[184,0] ],
+			"FunctionKeyNumber" : 4,
+			"FunctionKeys" : ["f1-colliders","f2-camera","f3-position","f4-godmode" ],
+			"FunctionPositions" : [ [0,0],[104,0],[184,0],[0,8] ],
 			"Letter_Init" : [8,48],
 			"Number_Init" : [48,48],
 			"XIncrement" : 48,
@@ -194,11 +194,12 @@
 			"MusicPath" : "assets/mus_in-japan.ogg",
 			"MusicFade" : 0,
 			"Entity_Scenario_Outside" : "Config.Entities.Japan_Outside",
-			"Entity_Scenario_Details_Num" : 5,
+			"Entity_Scenario_Details_Num" : 4,
 			"Entity_Scenario_Details_1" : [
 				"Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
-				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"
+				"Config.Entities.Japan_Outside.Bamboo4"
 			],
+			"Entity_Scenario_Door" : "Config.Entities.Japan_Outside.Door",
 			"Dimensions" : [1280, 224],
 			"Borders_zmin" : [ [0, 212], [96, 212], [128, 165], [470, 165], [471, 212], [1280, 212] ],
 			"Borders_xmin" : [ [0, 128], [165, 128], [211, 96], [212, 0], [224, 0] ],
@@ -207,7 +208,14 @@
 			"Plataform_Max" : [1280, 212],
 			"PlataformHeight" : 20,
 			"Player1_InitialPos" : [50, 220],
-			"Timer" : 180.0
+			"Timer" : 180.0,
+			"NumberOfEnemies" : 9,
+			"StartingEnemies" : 3,
+			"MaxEnemies" : 4,
+			"StartingEnemiesPositions" : [ [350, 220], [360, 170], [400, 200] ],
+			"NumberSpawnPoints" : 3,
+			"SpawnPoints" : [ [150, 180], [670, 216], [1150, 216] ],
+			"SpawnTime" : 20
 		}
 	},
 	"Entities" : {
@@ -373,7 +381,7 @@
 			"DamageLow_Shift" : [0,27],
 			"Falling_Frame" : [272,803,48,61],
 			"Fallen_Frame" : [328,843,56,21],
-			"Fallen_Time" : 2,
+			"Fallen_Time" : 1.5,
 			"FallenShift" : [-15,67],
 			"Rising_Frame" : [231,803,31,61],
 			"RisingShift" : [0,27],
@@ -410,7 +418,7 @@
 					[8,794,35,70],[49,794,67,70],[8,794,35,70],[8,696,29,88]
 				]
 			},
-			"PunchDamage" : 260,
+			"PunchDamage" : 15,
 			"PunchDamageFrame" : 1,
 			"PunchRect" : [39, 16, 28, 17],
 			"PunchAnimationColliders" : [ [6,6,29,64], [7,10,36, 60], [6,6,29,64], [0,24,29,64] ],

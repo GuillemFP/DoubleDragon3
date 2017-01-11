@@ -70,6 +70,8 @@ public:
 	int assigned_enemies = 0;
 	int iMAX_ASSIGNED_ENEMIES = 3;
 
+	float immunity_seconds = 0.0f;
+
 private:
 	int x_range = 20;
 	iPoint* fixed_slot_positions = nullptr;

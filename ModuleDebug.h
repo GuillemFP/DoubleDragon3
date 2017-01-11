@@ -23,6 +23,7 @@ private:
 	bool bdebug_camera = false;
 	bool bdebug_colliders = false;
 	bool bdebug_positions = false;
+	bool bdebug_god = false;
 
 	char* number_string;
 

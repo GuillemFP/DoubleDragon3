@@ -227,7 +227,6 @@ int Enemy::DistanceToTarget() const
 	int ret = 0;
 
 	if (current_target != nullptr)
-		//ret = (int)App->entities->Distance2D(position.x, position.z, current_target->position.x, current_target->position.z);
 		ret = abs(position.x - current_target->position.x);
 
 	return ret;

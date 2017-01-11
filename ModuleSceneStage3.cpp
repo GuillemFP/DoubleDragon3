@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Room.h"
+#include "Object.h"
 #include "JsonHandler.h"
 #include "ModuleUI.h"
 #include <list>
@@ -29,6 +30,9 @@ bool ModuleSceneStage3::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	iPoint player1_initialpos = { 0,0 };
+	const char* door_string;
+
+	spawn_clock = new Timer();
 
 	if (App->parser->LoadObject(SCENE_SECTION_STAGE3))
 	{
@@ -37,11 +41,12 @@ bool ModuleSceneStage3::Start()
 		const char* music_string = App->parser->GetString("MusicPath");
 
 		const char* scenario = App->parser->GetString("Entity_Scenario_Outside");
-		scenario_detail_num = App->parser->GetInt("Entity_Scenario_Details_Num");
+		int scenario_detail_num = App->parser->GetInt("Entity_Scenario_Details_Num");
 		App->parser->LoadArrayInObject("Entity_Scenario_Details_1");
 		std::list<const char*> details;
 		for (int i = 0; i < scenario_detail_num; i++)
 			details.push_back(App->parser->GetStringFromArray(i));
+		door_string = App->parser->GetString("Entity_Scenario_Door");
 
 		iPoint back_dimensions;
 		App->parser->GetPoint(back_dimensions, "Dimensions");
@@ -59,7 +64,26 @@ bool ModuleSceneStage3::Start()
 
 		App->parser->GetPoint(player1_initialpos, "Player1_InitialPos");
 
+		enemies_stage = App->parser->GetInt("NumberOfEnemies");
+		enemies_killed = 0;
+		max_number_enemies = App->parser->GetInt("MaxEnemies");
+		current_enemies = App->parser->GetInt("StartingEnemies");
+		iPoint* start_positions = new iPoint[current_enemies];
+		App->parser->LoadArrayInObject("StartingEnemiesPositions");
+		for (int i = 0; i < current_enemies; i++)
+			App->parser->GetPointFromArray(start_positions[i], i);
+
 		float time = App->parser->GetFloat("Timer");
+
+		float spawn_time = App->parser->GetFloat("SpawnTime");
+		int num_spawn_points = App->parser->GetInt("NumberSpawnPoints");
+		App->parser->LoadArrayInObject("SpawnPoints");
+		for (int i = 0; i < num_spawn_points; i++)
+		{
+			iPoint spawn; 
+			App->parser->GetPointFromArray(spawn, i);
+			spawn_points.push_back(spawn);
+		}
 
 		ret = App->parser->UnloadObject();
 
@@ -72,6 +96,15 @@ bool ModuleSceneStage3::Start()
 
 			for (std::list<const char*>::iterator it = details.begin(); it != details.end(); ++it)
 				App->entities->CreateEntity(Entity::OBJECT, background, *it, this, outside);
+
+			for (int i = 0; i < current_enemies; i++)
+			{
+				Enemy* new_enemy = (Enemy*) App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, outside);
+				new_enemy->SetPosition(start_positions[i].x, start_positions[i].y);
+			}
+
+			spawn_clock->SetMaxTime((Uint32)(spawn_time*1000.0f));
+			spawn_clock->Start();
 		}
 
 		App->entities->stage_timer->SetMaxTime((Uint32)(time*1000.0f));
@@ -79,19 +112,13 @@ bool ModuleSceneStage3::Start()
 
 	current_room = outside;
 
-	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_STORESIGN, this, current_room);
+	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_STORESIGN, this, outside);
+
+	door = (Object*) App->entities->CreateEntity(Entity::OBJECT, background, door_string, this, outside);
+	door->Disable();
 
 	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER1, this, current_room);
 	player_one->SetPosition(player1_initialpos.x, player1_initialpos.y);
-
-	Enemy* test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
-	test_enemy->SetPosition(200, 220);
-	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
-	test_enemy->SetPosition(300, 180);
-	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
-	test_enemy->SetPosition(350, 180);
-	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
-	test_enemy->SetPosition(350, 220);
 
 	App->user_interface->Enable();
 
@@ -107,6 +134,10 @@ bool ModuleSceneStage3::CleanUp()
 	RELEASE_ARRAY(borders_xmax);
 	RELEASE_ARRAY(borders_xmin);
 	RELEASE_ARRAY(borders_zmin);
+
+	RELEASE(spawn_clock);
+
+	spawn_points.clear();
 
 	current_room->Disable();
 	current_room->Delete();
@@ -129,7 +160,36 @@ update_status ModuleSceneStage3::Update()
 {
 	ModuleStages::Update();
 
+	if (enemies_killed >= enemies_stage)
+		door->Enable();
+
+	SpawnEnemies();
+
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneStage3::SpawnEnemies()
+{
+	if (spawn_clock->MaxTimeReached())
+	{
+		spawn_clock->Reset();
+		current_enemies = current_room->GetNumberOfEnemies();
+		if (enemies_killed < enemies_stage && current_enemies < max_number_enemies)
+		{
+			int spawnable_enemies = max_number_enemies - current_enemies;
+			for (std::vector<iPoint>::iterator it = spawn_points.begin(); it != spawn_points.end(); ++it)
+			{
+				if ((*it).x < abs(App->renderer->camera.x / App->window->GetScreenSize()) || (*it).x > abs(App->renderer->camera.x) + App->window->GetScreenWidth())
+				{
+					Enemy* new_enemy = (Enemy*) App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, outside);
+					new_enemy->SetPosition((*it).x, (*it).y);
+					--spawnable_enemies;
+					if (spawnable_enemies == 0)
+						break;
+				}
+			}
+		}
+	}
 }
 
 bool ModuleSceneStage3::InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform) const

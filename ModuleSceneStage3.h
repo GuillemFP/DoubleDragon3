@@ -14,6 +14,7 @@
 struct SDL_Texture;
 class Player;
 class Room;
+class Object;
 class Creature;
 class Timer;
 
@@ -27,6 +28,8 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
+
+	void SpawnEnemies();
 
 	bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
 	bool InsideScene_RightBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const;
@@ -51,13 +54,14 @@ private:
 	Room* inside = nullptr;
 	Room* current_room = nullptr;
 
+	Object* door = nullptr;
+
 	int* borders_xmin = nullptr;
 	int* borders_xmax = nullptr;
 	int* borders_zmin = nullptr;
 	int* borders_zmin_in_plataform = nullptr;
 	int borders_zmax = 0;
-
-	int scenario_detail_num = 0;
+	
 };
 
 

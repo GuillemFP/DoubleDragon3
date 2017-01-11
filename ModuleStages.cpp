@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "ModuleWindow.h"
+#include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleEntities.h"
 #include "ModuleFadeToBlack.h"
@@ -59,6 +61,8 @@ update_status ModuleStages::Update()
 				}
 			}
 		}
+
+
 	}
 
 	return UPDATE_CONTINUE;

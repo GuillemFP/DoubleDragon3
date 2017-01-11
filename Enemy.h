@@ -45,7 +45,7 @@ public:
 	Player* current_target = nullptr;
 	XDirection target_xdirection;
 	ZDirection target_zdirection;
-	iPoint* final_destination = nullptr;
+	iPoint* final_destination = &destination;
 	Timer* logic_timer = nullptr;
 	Timer* attack_timer = nullptr;
 
