@@ -1,11 +1,11 @@
 # Double Dragon 3: The Rosetta Stone
 
-This is my tribute to Double Dragon 3: The Rosetta Stone, released for Sega Genesis in 1993. 
+This is my tribute to Double Dragon 3: The Rosetta Stone, released for Sega Genesis in 1993.
 
 ## PROJECT INFORMATION
 
 Full project at github: https://github.com/GuillemFP/DoubleDragon3
-*Author*: Guillem Ferré
+*Author*: Guillem FerrÃ©
 Contact: guillemferre@gmail.com
 License: GNU GENERAL PUBLIC LICENSE
 
@@ -27,10 +27,10 @@ The controls can be changed in the file "config.json".
 ## Debug mode
 Pressing F12 one can access debug mode, where others functions are availabe:
 
-F1: Show colliders: Player and enemy colliders are shown in red, while attacks are shown in blue. Green colliders are used for functionalities.
-F2: Debug camera: User can move camera around with the arrow keys of the numerical keyboard.
-F3: Positions: Print players positions (x,y,z).
-F4: God mode: Player is immune to enemy colisions.
+* F1: Show colliders: Player and enemy colliders are shown in red, while attacks are shown in blue. Green colliders are used for functionalities.
+* F2: Debug camera: User can move camera around with the arrow keys of the numerical keyboard.
+* F3: Positions: Print players positions (x,y,z).
+* F4: God mode: Player is immune to enemy colisions.
 
 ## How to finish the game:
 
