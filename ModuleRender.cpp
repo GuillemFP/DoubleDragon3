@@ -177,11 +177,30 @@ void ModuleRender::CameraInsideScene(int room_x, int room_width, int room_y)
 {
 	if (bCenterCamera)
 	{
-		int num_players = App->entities->GetNumberActivePlayers();
-		if (num_players <= 1)
+		int active_players = App->entities->GetNumberActivePlayers();
+		int num_players = App->entities->GetNumberPlayers();
+		if (active_players == 0)
 		{
 			Player* player_one = App->entities->GetPlayerByNumber(0);
-			int center_player = player_one->position.x + player_one->dimensions.x / 2;
+			int center_player = center_player = player_one->position.x + player_one->dimensions.x / 2;
+			if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
+				camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+			else if (center_player*iSCREENSIZE + camera.x >(int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
+				camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+		}
+		else if (active_players == 1)
+		{
+			Player* player_one;
+			int center_player = 0;
+			for (int i = 0; i < num_players; i++)
+			{
+				player_one = App->entities->GetPlayerByNumber(i);
+				if (player_one->active == true)
+				{
+					center_player = player_one->position.x + player_one->dimensions.x / 2;
+					break;
+				}
+			}
 			if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
 				camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
 			else if (center_player*iSCREENSIZE + camera.x >(int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
@@ -193,9 +212,10 @@ void ModuleRender::CameraInsideScene(int room_x, int room_width, int room_y)
 			for (int i = 0; i < num_players; i++)
 			{
 				Player* player = App->entities->GetPlayerByNumber(i);
-				center_player += player->position.x + player->dimensions.x / 2;
+				if (player->active == true)
+					center_player += player->position.x + player->dimensions.x / 2;
 			}
-			center_player /= num_players;
+			center_player /= active_players;
 			camera.x = (iSCREENWIDTH / 2 - center_player)*iSCREENSIZE;
 		}
 

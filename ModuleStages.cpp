@@ -49,10 +49,13 @@ update_status ModuleStages::Update()
 			Player* player = App->entities->GetPlayerByNumber(i);
 			if (player->active == false && App->entities->GetNumberCoins() > 0)
 			{
-				if (App->input->GetPlayerOutput_KeyDown(i + 1, PlayerOutput::START))
+				if (App->entities->GetNumberActivePlayers() != 0)
 				{
 					Player* active_player = App->entities->GetAnActivePlayer();
 					player->SetPosition(active_player->position.x, active_player->position.z);
+				}
+				if (App->input->GetPlayerOutput_KeyDown(i + 1, PlayerOutput::START))
+				{
 					player->Revive();
 					App->entities->SpendCoin();
 					if (no_active)
