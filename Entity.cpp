@@ -55,6 +55,8 @@ bool Entity::Enable()
 	{
 		if (has_timer == true)
 			timer->Start();
+		if (collider != nullptr)
+			collider->active = true;
 		active = true;
 		return true;
 	}

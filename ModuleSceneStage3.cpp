@@ -58,7 +58,7 @@ bool ModuleSceneStage3::Start()
 		borders_xmin = new int[back_dimensions.y + 1];
 		borders_xmax = new int[back_dimensions.y + 1];
 		App->parser->GetIntArray("Borders_zmin", borders_zmin);
-		borders_zmax = back_dimensions.y;
+		borders_zmax = App->parser->GetInt("Borders_zmax");
 		App->parser->GetIntArray("Borders_xmin", borders_xmin);
 		App->parser->GetIntArray("Borders_xmax", borders_xmax);
 
@@ -174,7 +174,7 @@ void ModuleSceneStage3::SpawnEnemies()
 	{
 		spawn_clock->Reset();
 		current_enemies = current_room->GetNumberOfEnemies();
-		if (enemies_killed < enemies_stage && current_enemies < max_number_enemies)
+		if (enemies_killed + current_enemies < enemies_stage && current_enemies < max_number_enemies)
 		{
 			int spawnable_enemies = max_number_enemies - current_enemies;
 			for (std::vector<iPoint>::iterator it = spawn_points.begin(); it != spawn_points.end(); ++it)

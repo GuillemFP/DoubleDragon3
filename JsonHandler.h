@@ -2,6 +2,7 @@
 #define JSONHANDLER_H
 
 #include "Point.h"
+#include "Globals.h"
 
 typedef struct json_object_t JSON_Object;
 typedef struct json_array_t  JSON_Array;
@@ -21,6 +22,7 @@ public:
 
 	bool GetRect(SDL_Rect& rect, const char* name);
 	bool GetPoint(iPoint& point, const char* name);
+	bool GetPoint3D(Point3d& point, const char* name);
 	bool GetPoint(fPoint& point, const char* name);
 	bool GetAnimation(Animation& anim, const char* name);
 	bool GetIntArray(const char* name, int* int_array);
@@ -42,6 +44,7 @@ private:
 	bool ArrayToRect(SDL_Rect& rect, JSON_Array* rect_array);
 	bool ArrayToPoint(iPoint& point, JSON_Array* point_array);
 	bool ArrayToPoint(fPoint& point, JSON_Array* point_array);
+	bool ArrayToPoint3d(Point3d& point, JSON_Array* point_array);
 
 private:
 	JSON_Object* root_object = nullptr;

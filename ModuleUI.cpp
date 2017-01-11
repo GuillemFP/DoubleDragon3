@@ -184,7 +184,7 @@ int ModuleUI::GetLength(int number)
 	return length;
 }
 
-void ModuleUI::IntToString(int number, int final_length, char* string)
+void ModuleUI::IntToString(int number, int final_length, char* string) 
 {
 	int intlength = GetLength(number);
 

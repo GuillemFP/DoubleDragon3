@@ -10,9 +10,9 @@
 
 class Entity;
 
-enum ColliderType { PLAYER = 0, ENEMY, PLAYER_ATTACK, ENEMY_ATTACK };
+enum ColliderType { PLAYER = 0, ENEMY, PLAYER_ATTACK, ENEMY_ATTACK, ACTIVATION };
 
-const bool ColliderMatrix[4][4] = { { false,false,false,true },{ false,false,true,false },{ false,true,false,false },{ true,false,false,false } };
+const bool ColliderMatrix[5][5] = { { false,false,false,true, true },{ false,false,true,false, false },{ false,true,false,false, false },{ true,false,false,false, false }, {true, false,false,false,false } };
 
 struct Collider
 {
@@ -42,11 +42,12 @@ public:
 
 	Collider* AddCollider(const Point3d& position, const Point3d& dimensions, ColliderType type, Entity* parent);
 
-	void DebugDraw();
+	void DebugDraw() const;
 
 private:
 	std::list<Collider*> creatures;
 	std::list<Collider*> attacks;
+	std::list<Collider*> activations;
 
 };
 

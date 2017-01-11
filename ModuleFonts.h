@@ -37,20 +37,20 @@ public:
 
 	int Load(const char* order, int char_width, int font_height, const iPoint& font_origin);
 
-	bool BlitScreenXCentered(int id_font, int y, const char* string) { return BlitScreenXCentered(id_font, y, string, fDEFAULT_SPEED); }
-	bool BlitScreenXCentered(int id_font, int y, const char* string, float speed);
+	bool BlitScreenXCentered(int id_font, int y, const char* string) const { return BlitScreenXCentered(id_font, y, string, fDEFAULT_SPEED); }
+	bool BlitScreenXCentered(int id_font, int y, const char* string, float speed) const;
 
-	bool BlitScreenCentered(int id_font, const char* string) { return BlitScreenCentered(id_font, string, fDEFAULT_SPEED); }
-	bool BlitScreenCentered(int id_font, const char* string, float speed);
+	bool BlitScreenCentered(int id_font, const char* string) const { return BlitScreenCentered(id_font, string, fDEFAULT_SPEED); }
+	bool BlitScreenCentered(int id_font, const char* string, float speed) const;
 
-	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string) { return BlitFromXCenter(id_font, center_origin, string, fDEFAULT_SPEED); }
-	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string, float speed);
+	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string) const { return BlitFromXCenter(id_font, center_origin, string, fDEFAULT_SPEED); }
+	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string, float speed) const;
 
-	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string) { return BlitFromRight(id_font, right_origin, string, fDEFAULT_SPEED); }
-	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string, float speed);
+	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string) const { return BlitFromRight(id_font, right_origin, string, fDEFAULT_SPEED); }
+	bool BlitFromRight(int id_font, const iPoint& right_origin, const char* string, float speed) const;
 
-	bool Blit(int id_font, const iPoint& origin, const char* string) { return Blit(id_font, origin, string, fDEFAULT_SPEED); }
-	bool Blit(int id_font, const iPoint& origin, const char* string, float speed);
+	bool Blit(int id_font, const iPoint& origin, const char* string) const { return Blit(id_font, origin, string, fDEFAULT_SPEED); }
+	bool Blit(int id_font, const iPoint& origin, const char* string, float speed) const;
 
 	void FillTextLine(TextLine* line, int num_line);
 

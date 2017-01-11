@@ -68,7 +68,7 @@ int ModuleFonts::Load(const char * order, int char_width, int font_height, const
 	return num_fonts++;
 }
 
-bool ModuleFonts::BlitScreenXCentered(int id_font, int y, const char * string, float speed)
+bool ModuleFonts::BlitScreenXCentered(int id_font, int y, const char * string, float speed) const
 {
 	iPoint origin;
 
@@ -78,7 +78,7 @@ bool ModuleFonts::BlitScreenXCentered(int id_font, int y, const char * string, f
 	return Blit(id_font, origin, string, speed);
 }
 
-bool ModuleFonts::BlitScreenCentered(int id_font, const char * string, float speed)
+bool ModuleFonts::BlitScreenCentered(int id_font, const char * string, float speed) const
 {
 	iPoint origin;
 
@@ -88,7 +88,7 @@ bool ModuleFonts::BlitScreenCentered(int id_font, const char * string, float spe
 	return Blit(id_font, origin, string, speed);
 }
 
-bool ModuleFonts::BlitFromXCenter(int id_font, const iPoint & center_origin, const char * string, float speed)
+bool ModuleFonts::BlitFromXCenter(int id_font, const iPoint & center_origin, const char * string, float speed) const
 {
 	iPoint left_origin = center_origin;
 	left_origin.x -= strlen(string)*fonts[id_font]->char_width/2;
@@ -96,7 +96,7 @@ bool ModuleFonts::BlitFromXCenter(int id_font, const iPoint & center_origin, con
 	return Blit(id_font, left_origin, string, speed);
 }
 
-bool ModuleFonts::BlitFromRight(int id_font, const iPoint & right_origin, const char * string, float speed)
+bool ModuleFonts::BlitFromRight(int id_font, const iPoint & right_origin, const char * string, float speed) const
 {
 	iPoint left_origin = right_origin;
 	left_origin.x -= strlen(string)*fonts[id_font]->char_width;
@@ -104,7 +104,7 @@ bool ModuleFonts::BlitFromRight(int id_font, const iPoint & right_origin, const 
 	return Blit(id_font, left_origin, string, speed);
 }
 
-bool ModuleFonts::Blit(int id_font, const iPoint& origin, const char* string, float speed)
+bool ModuleFonts::Blit(int id_font, const iPoint& origin, const char* string, float speed) const
 {
 	bool ret = true;
 	Font* font;

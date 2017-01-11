@@ -194,25 +194,26 @@
 			"MusicPath" : "assets/mus_in-japan.ogg",
 			"MusicFade" : 0,
 			"Entity_Scenario_Outside" : "Config.Entities.Japan_Outside",
-			"Entity_Scenario_Details_Num" : 4,
+			"Entity_Scenario_Details_Num" : 7,
 			"Entity_Scenario_Details_1" : [
 				"Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
-				"Config.Entities.Japan_Outside.Bamboo4"
+				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Spear1", "Config.Entities.Japan_Outside.Spear2", "Config.Entities.Japan_Outside.Spear3"
 			],
 			"Entity_Scenario_Door" : "Config.Entities.Japan_Outside.Door",
 			"Dimensions" : [1280, 224],
 			"Borders_zmin" : [ [0, 212], [96, 212], [128, 165], [470, 165], [471, 212], [1280, 212] ],
+			"Borders_zmax" : 223,
 			"Borders_xmin" : [ [0, 128], [165, 128], [211, 96], [212, 0], [224, 0] ],
 			"Borders_xmax" : [ [0, 470], [211, 470], [212, 1280], [224, 1280] ],
 			"Plataform_Min" : [470, 165],
 			"Plataform_Max" : [1280, 212],
 			"PlataformHeight" : 20,
-			"Player1_InitialPos" : [50, 220],
+			"Player1_InitialPos" : [80, 220],
 			"Timer" : 180.0,
 			"NumberOfEnemies" : 9,
 			"StartingEnemies" : 3,
 			"MaxEnemies" : 4,
-			"StartingEnemiesPositions" : [ [350, 220], [360, 170], [400, 200] ],
+			"StartingEnemiesPositions" : [ [300, 170], [350, 220], [400, 200] ],
 			"NumberSpawnPoints" : 3,
 			"SpawnPoints" : [ [150, 180], [670, 216], [1150, 216] ],
 			"SpawnTime" : 20
@@ -251,6 +252,7 @@
 			},
 			"Door" : {
 				"Animated" : true,
+				"AnimationStops" : true,
 				"Animation" : {
 					"Speed" : 0.04,
 					"Loop" : false,
@@ -260,7 +262,83 @@
 					]
 				},
 				"Rectangle" : [1032 ,265, 120, 96],
-				"RelativePosition" : [1132, 48]
+				"RelativePosition" : [1132, 48],
+				"HasActivation" : true,
+				"OnlyTriggerOnce" : true,
+				"ActivationColliderPosition" : [1100, 144, 162],
+				"ActivationColliderDimensions" : [180, 40, 40]
+			},
+			"Spear1" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.15,
+					"Frames" : 11,
+					"Sprites" : [
+						[816 ,446, 8, 8], [816 ,456, 8, 8], [832 ,456, 8, 8], [848 ,448, 16, 16], [872 ,432, 32, 32], [912 ,417, 48, 48],
+						[872 ,432, 32, 32], [848 ,448, 16, 16], [832 ,456, 8, 8], [816 ,456, 8, 8], [816 ,446, 8, 8]
+					]
+				},
+				"Rectangle" : [816 ,446, 8, 8],
+				"RelativePosition" : [648, 88],
+				"HasDifferentHeight" : true,
+				"Height" : 50,
+				"HasActivation" : true,
+				"AnimationStops" : true,
+				"InPlataform" : true,
+				"ActivationColliderPosition" : [635, 142, 162],
+				"ActivationColliderDimensions" : [60, 40, 40],
+				"HasAttack" : true,
+				"TrapDamage" : 15,
+				"MinFrameDamage" : 4,
+				"MaxFrameDamage" : 8
+			},
+			"Spear2" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.15,
+					"Frames" : 11,
+					"Sprites" : [
+						[816 ,446, 8, 8], [816 ,456, 8, 8], [832 ,456, 8, 8], [848 ,448, 16, 16], [872 ,432, 32, 32], [912 ,417, 48, 48],
+						[872 ,432, 32, 32], [848 ,448, 16, 16], [832 ,456, 8, 8], [816 ,456, 8, 8], [816 ,446, 8, 8]
+					]
+				},
+				"Rectangle" : [816 ,446, 8, 8],
+				"RelativePosition" : [737, 88],
+				"HasDifferentHeight" : true,
+				"Height" : 50,
+				"HasActivation" : true,
+				"AnimationStops" : true,
+				"InPlataform" : true,
+				"ActivationColliderPosition" : [724, 142, 162],
+				"ActivationColliderDimensions" : [60, 40, 40],
+				"HasAttack" : true,
+				"TrapDamage" : 15,
+				"MinFrameDamage" : 4,
+				"MaxFrameDamage" : 8
+			},
+			"Spear3" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.15,
+					"Frames" : 11,
+					"Sprites" : [
+						[816 ,446, 8, 8], [816 ,456, 8, 8], [832 ,456, 8, 8], [848 ,448, 16, 16], [872 ,432, 32, 32], [912 ,417, 48, 48],
+						[872 ,432, 32, 32], [848 ,448, 16, 16], [832 ,456, 8, 8], [816 ,456, 8, 8], [816 ,446, 8, 8]
+					]
+				},
+				"Rectangle" : [816 ,446, 8, 8],
+				"RelativePosition" : [968, 88],
+				"HasDifferentHeight" : true,
+				"Height" : 50,
+				"HasActivation" : true,
+				"AnimationStops" : true,
+				"InPlataform" : true,
+				"ActivationColliderPosition" : [955, 142, 162],
+				"ActivationColliderDimensions" : [60, 40, 40],
+				"HasAttack" : true,
+				"TrapDamage" : 15,
+				"MinFrameDamage" : 4,
+				"MaxFrameDamage" : 8
 			}
 		},
 		"StoreSign" : {

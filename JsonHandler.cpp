@@ -139,6 +139,39 @@ bool JSONParser::GetPoint(iPoint& point, const char * name)
 	return ret;
 }
 
+bool JSONParser::GetPoint3D(Point3d & point, const char * name)
+{
+	bool ret = false;
+
+	JSON_Array* loaded_array;
+
+	if (loaded_object != nullptr)
+	{
+		if (json_object_dothas_value_of_type(loaded_object, name, JSONArray))
+		{
+			loaded_array = json_object_get_array(loaded_object, name);
+			ret = ArrayToPoint3d(point, loaded_array);
+			if (ret == false)
+			{
+				LOG("JSONParser: Point array %s has incorrect number of elements.", name);
+				bparsing_success = false;
+			}
+		}
+		else
+		{
+			LOG("JSONParser: Point name %s not found.", name);
+			bparsing_success = false;
+		}
+	}
+	else
+	{
+		LOG("JSONParser: No section loaded. Point %s cannot load.", name);
+		bparsing_success = false;
+	}
+
+	return ret;
+}
+
 bool JSONParser::GetPoint(fPoint& point, const char * name)
 {
 	bool ret = false;
@@ -630,6 +663,21 @@ bool JSONParser::ArrayToPoint(fPoint& point, JSON_Array* point_array)
 	{
 		point.x = json_array_get_number(point_array, 0);
 		point.y = json_array_get_number(point_array, 1);
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool JSONParser::ArrayToPoint3d(Point3d& point, JSON_Array* point_array)
+{
+	bool ret = false;
+
+	if (json_array_get_count(point_array) == 3)
+	{
+		point.x = json_array_get_number(point_array, 0);
+		point.y = json_array_get_number(point_array, 1);
+		point.z = json_array_get_number(point_array, 2);
 		ret = true;
 	}
 
