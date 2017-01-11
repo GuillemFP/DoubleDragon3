@@ -12,6 +12,7 @@ public:
 	ModuleStages(const char* name, bool active) : Module(name, active) {}
 	~ModuleStages() {}
 
+	virtual bool CleanUp();
 	virtual update_status Update();
 
 	virtual bool InsideScene_LeftBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }
@@ -20,10 +21,13 @@ public:
 	virtual bool InsideScene_HighBorder(const Point3d& positions, const Point3d& dimensions, bool in_plataform = false) const { return true; }
 
 	virtual bool InPlataform(int x, int z) const { return false; }
-	virtual bool InPlataform(iPoint point) const { return InPlataform(point.x, point.y); }
+	virtual bool InPlataform(const iPoint& point) const { return InPlataform(point.x, point.y); }
 
 public:
 	int plataform_height = 0;
+
+private:
+	bool game_over = false;
 };
 
 #endif // !MODULESTAGES_H

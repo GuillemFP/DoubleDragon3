@@ -14,6 +14,9 @@ class Player_AttackState;
 class Player_DamageState;
 class Player_FallState;
 
+class Enemy;
+class Object;
+
 class Player : public Creature
 {
 public:
@@ -22,16 +25,25 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 
-	void Revive();
-	void Rising();
+	void UpdateSlots();
+	iPoint* GetSlotPosition(int num_slot) const;
+	int GetCloserSlot(Enemy* enemy);
+	void FreeSlot(int num);
+	void FreeAllSlots() { memset(free_slots, true, iMAX_ASSIGNED_ENEMIES); }
+	bool EnemyInsideRange(int x, int z) const;
+	bool hasFreeSlots() const { return (assigned_enemies < iMAX_ASSIGNED_ENEMIES); }
 
 	void HasCollided(Collider* with);
 
+	void Revive();
+	void Rising();
+	void SetPosition(int x, int z);
+
 public:
-	bool running = false;
 	int number_player = 1;
 	const char* name;
 	int initial_health = 250;
+	Object* sign = nullptr;
 
 	unsigned int sound_attack = 0;
 	unsigned int sound_jump = 0;
@@ -54,6 +66,17 @@ public:
 	float blink_time_alive = 0.0f;
 	bool reviving = false;
 	bool rising = false;
+
+	int assigned_enemies = 0;
+	int iMAX_ASSIGNED_ENEMIES = 3;
+
+private:
+	int x_range = 20;
+	iPoint* fixed_slot_positions = nullptr;
+	iPoint** slots = nullptr;
+	bool* free_slots = nullptr;
+	Timer* slot_change;
+	int counter_changes = 0;
 };
 
 #endif // PLAYER_H

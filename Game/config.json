@@ -41,14 +41,15 @@
 		"Fonts" : {
 			"DefaultBlitSpeed" : 0,
 			"TexturePath" : "assets/fonts.png",
-			"NumFonts" : 6,
+			"NumFonts" : 7,
 			"Fonts" : [
 				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 0],
 				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 8],
 				[" 0123456789abcdefghijklmnopqrstuvwxyz?!\"#$%&'()*+,-./", 8, 8, 0, 16],
 				[" 0123456789timecns:", 8, 15, 0, 24],
 				["0123456789", 16, 24, 0, 40],
-				["0123456789", 16, 24, 0, 64]
+				["0123456789", 16, 24, 0, 64],
+				[" aegmorv", 16, 16, 0, 88]
 			]
 		},
 		"UI" : {
@@ -112,7 +113,9 @@
 				"SubtitleRect" : [0, 386, 320, 62],
 				"CameraSpeed" : 5,
 				"TransitionTime" : 0.5,
-				"FadeTime" : 1
+				"FadeTime" : 1,
+				"MusicPath" : "assets/mus_rosetta-stone.ogg",
+				"MusicFade" : 0
 			}
 		},
 		"PreStage" : {
@@ -196,7 +199,7 @@
 				"Config.Entities.Japan_Outside.Bamboo1", "Config.Entities.Japan_Outside.Bamboo2", "Config.Entities.Japan_Outside.Bamboo3", 
 				"Config.Entities.Japan_Outside.Bamboo4", "Config.Entities.Japan_Outside.Door"
 			],
-			"Dimensions" : [1280, 223],
+			"Dimensions" : [1280, 224],
 			"Borders_zmin" : [ [0, 212], [96, 212], [128, 165], [470, 165], [471, 212], [1280, 212] ],
 			"Borders_xmin" : [ [0, 128], [165, 128], [211, 96], [212, 0], [224, 0] ],
 			"Borders_xmax" : [ [0, 470], [211, 470], [212, 1280], [224, 1280] ],
@@ -268,6 +271,8 @@
 			"Name" : "billy",
 			"Speed" : 1,
 			"Depth" : 5,
+			"MaxEngagedEnemies" : 3,
+			"SlotPositionChangeTime" : 2.0,
 			"ImmunityAfterAttack" : 1.0,
 			"BlinkRatio" : 0.1,
 			"BlinkTimeAlive" : 3.0,
@@ -324,7 +329,7 @@
 			"JumpCollider" : [0,0,31,48],
 			"AerialKickCollider" : [0,0,27, 42],
 			"AerialKickAttackCollider" : [20, 16, 26, 17],
-			"AerialKickDamage" : 30,
+			"AerialKickDamage" : 25,
 			"Punch_Animation" : {
 				"Speed" : 0.15,
 				"Frames" : 4,
@@ -332,7 +337,7 @@
 					[8,80,26,63],[40,80,39,63],[8,80,26,63],[8,0,26,63]
 				]
 			},
-			"PunchDamage" : 20,
+			"PunchDamage" : 15,
 			"PunchDamageFrame" : 1,
 			"PunchRect" : [23, 5, 16, 16],
 			"Kick_Animation" : {
@@ -342,7 +347,7 @@
 					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
 				]
 			},
-			"KickDamage" : 25,
+			"KickDamage" : 20,
 			"KickDamageFrame" : 1,
 			"KickRect" : [16, 19, 22, 18]
 		},
@@ -351,10 +356,13 @@
 			"Depth" : 5,
 			"ImmunityAfterAttack" : 1.0,
 			"BlinkRatio" : 0.1,
-			"Health" : 80,
-			"LogicTime" : 0.5,
-			"AttackRange" : 10,
-			"SightRange" : 120,
+			"Health" : 90,
+			"LogicTime" : 0.3,
+			"AttackTime" : 0.3,
+			"AttackRange" : 5,
+			"SightRange" : 400,
+			"EngageDistance" : 200,
+			"CloseCombatDistance" : 100,
 			"MaxAccumulatedDamage" : 50,
 			"Sound_Jump" : 1,
 			"Sound_Dying" : 4,
@@ -394,7 +402,7 @@
 			"JumpCollider" : [5,10,27,50],
 			"AerialKickCollider" : [7,7,46, 42],
 			"AerialKickAttackCollider" : [19, 31, 34, 18],
-			"AerialKickDamage" : 30,
+			"AerialKickDamage" : 15,
 			"Attack_Animation" : {
 				"Speed" : 0.15,
 				"Frames" : 4,
@@ -402,7 +410,7 @@
 					[8,794,35,70],[49,794,67,70],[8,794,35,70],[8,696,29,88]
 				]
 			},
-			"PunchDamage" : 20,
+			"PunchDamage" : 260,
 			"PunchDamageFrame" : 1,
 			"PunchRect" : [39, 16, 28, 17],
 			"PunchAnimationColliders" : [ [6,6,29,64], [7,10,36, 60], [6,6,29,64], [0,24,29,64] ],

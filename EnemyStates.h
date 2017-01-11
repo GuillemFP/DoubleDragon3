@@ -94,7 +94,7 @@ class Enemy_AttackState : public EnemyState
 {
 public:
 	Enemy_AttackState(Enemy* enemy, const char* punch_animation, const char* kick_animation = nullptr);
-	~Enemy_AttackState() { RELEASE_ARRAY(animation_colliders); }
+	~Enemy_AttackState() { RELEASE_ARRAY(animation_colliders); RELEASE_ARRAY(shift_frames); }
 	EnemyState* Logic();
 	update_status Update();
 	void OnExit();
@@ -163,7 +163,7 @@ private:
 
 public:
 	Enemy_FallState(Enemy* player, const char* falling_frame, const char* fallen_frame, const char* rising_frame);
-	~Enemy_FallState() {}
+	~Enemy_FallState() { RELEASE(states_timer); }
 	EnemyState* Logic();
 	update_status Update();
 	void OnExit();

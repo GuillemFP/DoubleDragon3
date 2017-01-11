@@ -40,6 +40,9 @@ public:
 	bool BlitScreenXCentered(int id_font, int y, const char* string) { return BlitScreenXCentered(id_font, y, string, fDEFAULT_SPEED); }
 	bool BlitScreenXCentered(int id_font, int y, const char* string, float speed);
 
+	bool BlitScreenCentered(int id_font, const char* string) { return BlitScreenCentered(id_font, string, fDEFAULT_SPEED); }
+	bool BlitScreenCentered(int id_font, const char* string, float speed);
+
 	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string) { return BlitFromXCenter(id_font, center_origin, string, fDEFAULT_SPEED); }
 	bool BlitFromXCenter(int id_font, const iPoint& center_origin, const char* string, float speed);
 

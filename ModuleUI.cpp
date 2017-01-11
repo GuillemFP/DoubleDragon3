@@ -107,8 +107,6 @@ bool ModuleUI::CleanUp()
 
 	LOG("Freeing user interface");
 
-	//players.clear();
-
 	RELEASE_ARRAY(number_string);
 	RELEASE(timer);
 
@@ -192,7 +190,8 @@ void ModuleUI::IntToString(int number, int final_length, char* string)
 
 	for (int i = 0; i < final_length - intlength; i++)
 		string[i] = '0';
-	sprintf(&string[final_length - intlength], "%d", number);
+	if (intlength <= 4)
+		sprintf(&string[final_length - intlength], "%d", number);
 	
 }
 

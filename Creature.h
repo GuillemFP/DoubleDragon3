@@ -49,6 +49,7 @@ public:
 	ZDirection zmovement = YIDLE;
 	Attack attack_cmd = NOATTACK;
 	bool jump = false;
+	bool running = false;
 	int ispeed;
 
 	bool in_plataform = false;

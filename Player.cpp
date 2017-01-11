@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "ModuleWindow.h"
 #include "ModuleAudio.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
@@ -6,10 +7,14 @@
 #include "ModuleCollision.h"
 #include "PlayerStates.h"
 #include "Player.h"
+#include "Enemy.h"
+#include "Object.h"
 #include "JsonHandler.h"
 
 Player::Player(int number_player, const char* name, ModuleStages* stage, Entity* parent) : Creature(Entity::Type::PLAYER, App->entities->players, stage, parent, true), number_player(number_player)
 {
+	slot_change = new Timer();
+
 	if (App->parser->LoadObject(name))
 	{
 		this->name = App->parser->GetString("Name");
@@ -19,9 +24,11 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		float immunity_seconds = App->parser->GetFloat("ImmunityAfterAttack");
 		App->parser->GetRect(face, "Face");
 		damage_treshold = App->parser->GetInt("MaxAccumulatedDamage");
+		iMAX_ASSIGNED_ENEMIES = App->parser->GetInt("MaxEngagedEnemies");
 
 		blink_time_alive = App->parser->GetFloat("BlinkTimeAlive");
 		blink_ratio = App->parser->GetFloat("BlinkRatio");
+		float slot_time = App->parser->GetFloat("SlotPositionChangeTime");
 
 		sound_attack = App->entities->GetSound(App->parser->GetInt("Sound_Attack"));
 		sound_jump = App->entities->GetSound(App->parser->GetInt("Sound_Jump"));
@@ -49,6 +56,7 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 
 			immunity_after_attack->SetMaxTime((Uint32)(immunity_seconds * 1000.0f));
 			blink->SetMaxTime(((Uint32)(blink_ratio*1000.0f)));
+			slot_change->SetMaxTime(((Uint32)(slot_time*1000.0f)));
 		}
 
 		collider = App->collision->AddCollider(position, dimensions, ColliderType::PLAYER, this);
@@ -56,42 +64,39 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 		attack_collider->active = false;
 	}
 
+	slots = new iPoint*[iMAX_ASSIGNED_ENEMIES];
+	free_slots = new bool[iMAX_ASSIGNED_ENEMIES];
+	memset(free_slots, true, iMAX_ASSIGNED_ENEMIES);
+	fixed_slot_positions = new iPoint[4];
+	for (int i = 0; i < iMAX_ASSIGNED_ENEMIES; i++)
+	{
+		slots[i] = &(fixed_slot_positions[i%4]);
+	}
+
 	reviving_timer = new Timer((Uint32)(blink_time_alive*1000.0f));
+	
+	
+	sign = (Object*)App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_PLAYER1_SIGN, stage, this);
+
 	immunity_after_attack->Start();
+	slot_change->Start();
 }
 
 Player::~Player()
 {
+	RELEASE(reviving_timer);
+
 	RELEASE(moving);
 	RELEASE(idle);
 	RELEASE(jumping);
 	RELEASE(attacking);
 	RELEASE(damaging);
 	RELEASE(falling);
-}
 
-void Player::Revive()
-{
-	reviving = true;
-	active = true;
-	collider->active = false;
-	blinking = true;
-	health = initial_health;
-	accumulated_damage = 0;
-	reviving_timer->Start();
-	blink->Reset();
-	current_state = idle;
-	idle->current_rect = idle->initial_rect;
-}
-
-void Player::Rising()
-{
-	collider->active = false;
-	rising = true;
-	blinking = true;
-	accumulated_damage = 0;
-	reviving_timer->Start();
-	blink->Reset();
+	RELEASE_ARRAY(fixed_slot_positions);
+	RELEASE_ARRAY(free_slots);
+	RELEASE_ARRAY(slots);
+	RELEASE(slot_change);
 }
 
 update_status Player::PreUpdate()
@@ -147,6 +152,8 @@ update_status Player::Update()
 		draw = true;
 		blinking = false;
 	}
+
+	UpdateSlots();
 
 	return ret;
 }
@@ -207,4 +214,123 @@ void Player::HasCollided(Collider* with)
 
 		immunity_after_attack->Reset();
 	}
+}
+
+void Player::UpdateSlots()
+{
+	fixed_slot_positions[0].x = position.x + dimensions.x / 2 + x_range;
+	fixed_slot_positions[0].y = position.z - dimensions.z / 2;
+	fixed_slot_positions[1].x = position.x + dimensions.x / 2 + x_range;
+	fixed_slot_positions[1].y = position.z + dimensions.z / 2;
+	fixed_slot_positions[2].x = position.x - dimensions.x / 2 - x_range;
+	fixed_slot_positions[2].y = position.z + dimensions.z / 2;
+	fixed_slot_positions[3].x = position.x - dimensions.x / 2 - x_range;
+	fixed_slot_positions[3].y = position.z - dimensions.z / 2;
+
+	if (slot_change->MaxTimeReached())
+	{
+		slot_change->Reset();
+		++counter_changes;
+		counter_changes = counter_changes % 4;
+		for (int i = 0; i < iMAX_ASSIGNED_ENEMIES; i++)
+		{
+			slots[i] = &(fixed_slot_positions[(counter_changes + i) % 4]);
+		}
+	}
+}
+
+iPoint* Player::GetSlotPosition(int num_slot) const
+{ 
+	if (num_slot > 0 && num_slot <= iMAX_ASSIGNED_ENEMIES)
+	{
+		return slots[num_slot - 1];
+	}
+
+	return nullptr;
+}
+
+int Player::GetCloserSlot(Enemy* enemy)
+{
+	int ret = 0;
+	float current_distance = App->window->GetScreenWidth();
+
+	for (int i = 0; i < iMAX_ASSIGNED_ENEMIES; i++)
+	{
+		if (free_slots[i])
+		{
+			float slot_distance = App->entities->Distance2D(enemy->position.x, enemy->position.z, position.x, position.z);
+			if (current_distance > slot_distance)
+			{
+				current_distance = slot_distance;
+				ret = i+1;
+			}
+		}
+	}
+
+	if (ret != 0)
+	{
+		free_slots[ret-1] = false;
+		++assigned_enemies;
+	}
+
+	return ret;
+}
+
+void Player::FreeSlot(int num)
+{
+	if (num - 1 < iMAX_ASSIGNED_ENEMIES)
+	{
+		if (free_slots[num - 1] == false)
+		{
+			free_slots[num - 1] = true;
+			--assigned_enemies;
+		}
+	}
+}
+
+bool Player::EnemyInsideRange(int x, int z) const
+{
+	bool ret = true;
+
+	if (x < position.x - x_range)
+		ret = false;
+	else if (x > position.x + dimensions.x + x_range)
+		ret = false;
+	else if (z < position.z - dimensions.z / 2)
+		ret = false;
+	else if (z > position.z + dimensions.z / 2)
+		ret = false;
+
+	return ret;
+}
+
+void Player::Revive()
+{
+	reviving = true;
+	active = true;
+	collider->active = false;
+	blinking = true;
+	health = initial_health;
+	accumulated_damage = 0;
+	reviving_timer->Start();
+	blink->Reset();
+	current_state = idle;
+	idle->current_rect = idle->initial_rect;
+	sign->Enable();
+}
+
+void Player::Rising()
+{
+	collider->active = false;
+	rising = true;
+	blinking = true;
+	accumulated_damage = 0;
+	reviving_timer->Start();
+	blink->Reset();
+}
+
+void Player::SetPosition(int x, int z)
+{
+	sign->position.z = position.z;
+	Creature::SetPosition(x, z);
 }

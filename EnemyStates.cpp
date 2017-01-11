@@ -16,33 +16,7 @@ Enemy_StandState::Enemy_StandState(Enemy* enemy, const char * staticframe) : Ene
 
 EnemyState * Enemy_StandState::Logic()
 {
-	EnemyState* ret = this;
-
-	enemy->current_target = App->entities->GetNearestPlayer(enemy);
-	if (enemy->current_target != nullptr)
-	{
-		enemy->target_xdirection = enemy->RelativeDirectionXTo(enemy->current_target);
-		switch (enemy->target_xdirection)
-		{
-		case Creature::XDirection::LEFT:
-			enemy->inverted_texture = true;
-			break;
-		case Creature::XDirection::RIGHT:
-			enemy->inverted_texture = false;
-			break;
-		}
-		enemy->target_zdirection = enemy->RelativeDirectionZTo(enemy->current_target);
-		if (enemy->TargetWithinAttackRange())
-			ret = enemy->attacking;
-		else if (enemy->TargetWithinSightRange())
-		{
-			enemy->SetDestination();
-			ret = enemy->moving;
-			enemy->logic_timer->Reset();
-		}
-	}
-
-	return ret;
+	return enemy->moving->Logic();
 }
 
 update_status Enemy_StandState::Update()
@@ -70,41 +44,70 @@ EnemyState * Enemy_MoveState::Logic()
 {
 	EnemyState* ret = this;
 
-	if (enemy->logic_timer->MaxTimeReached())
+	if (enemy->current_target != nullptr)
 	{
-		enemy->logic_timer->Reset();
-		enemy->current_target = App->entities->GetNearestPlayer(enemy);
-		if (enemy->current_target != nullptr)
+		enemy->target_xdirection = enemy->RelativeDirectionXTo(enemy->current_target);
+		switch (enemy->target_xdirection)
 		{
-			enemy->target_xdirection = enemy->RelativeDirectionXTo(enemy->current_target);
-			switch (enemy->target_xdirection)
-			{
-			case Creature::XDirection::LEFT:
-				enemy->inverted_texture = true;
-				break;
-			case Creature::XDirection::RIGHT:
-				enemy->inverted_texture = false;
-				break;
-			}
-			enemy->target_zdirection = enemy->RelativeDirectionZTo(enemy->current_target);
-			if (enemy->TargetWithinAttackRange())
-				ret = enemy->attacking;
-			else if (enemy->TargetWithinSightRange())
-				enemy->SetDestination();
-			else
-				ret = enemy->idle;
+		case Creature::XDirection::LEFT:
+			enemy->inverted_texture = true;
+			break;
+		case Creature::XDirection::RIGHT:
+			enemy->inverted_texture = false;
+			break;
 		}
-		else
-			ret = enemy->idle;
+		enemy->target_zdirection = enemy->RelativeDirectionZTo(enemy->current_target);
 	}
+
+	if (enemy->logic_timer->MaxTimeReached() || enemy->logic_timer->GetState() == TimerState::OFF)
+	{
+		enemy->running = false;
+		enemy->logic_timer->Reset();
+		enemy->current_target = App->entities->GetTargetPlayer(enemy);
+		Enemy::TargetState current_state = enemy->GetCurrentTargetState();
+		switch (current_state)
+		{
+		case Enemy::CLOSE:
+			if (enemy->SetSlot() == true)
+			{
+				if (enemy->AttackChoice() == true)
+					ret = enemy->attacking;
+			}
+			else
+				enemy->SetDestinationInClose();
+			break;
+		case Enemy::ENGAGED:
+			if (enemy->current_target->hasFreeSlots())
+				enemy->SetDestinationOnPlayer();
+			else
+				enemy->SetDestinationInEngage();
+			break;
+		case Enemy::DETECTED:
+			enemy->keeping_distance = false;
+			enemy->running = true;
+			enemy->SetDestinationOnPlayer();
+			break;
+		case Enemy::FAR:
+			ret = enemy->idle;
+			break;
+		case Enemy::TARGETLESS:
+			ret = enemy->idle;
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (enemy->current_target == nullptr)
+		ret = enemy->idle;
 
 	return ret;
 }
 
 update_status Enemy_MoveState::Update()
 {
-	Creature::XDirection xdirection = enemy->RelativeDirectionXTo(enemy->final_destination.x);
-	Creature::ZDirection zdirection = enemy->RelativeDirectionZTo(enemy->final_destination.y);
+	Creature::XDirection xdirection = enemy->RelativeDirectionXTo(enemy->final_destination->x);
+	Creature::ZDirection zdirection = enemy->RelativeDirectionZTo(enemy->final_destination->y);
 	bool jumping = false;
 
 	switch (zdirection)
@@ -118,7 +121,7 @@ update_status Enemy_MoveState::Update()
 			enemy->position.z -= enemy->ispeed;
 			enemy->position.y -= enemy->ispeed;
 		}
-		else if (enemy->in_plataform == false && enemy->stage->InPlataform(enemy->final_destination) == true)
+		else if (enemy->in_plataform == false && enemy->stage->InPlataform(*(enemy->final_destination)) == true)
 			jumping = true;
 		else if (enemy->in_plataform == false && enemy->current_target->in_plataform == true)
 			jumping = true;
@@ -132,7 +135,7 @@ update_status Enemy_MoveState::Update()
 			enemy->position.z += enemy->ispeed;
 			enemy->position.y += enemy->ispeed;
 		}
-		else if (enemy->in_plataform == true && enemy->stage->InPlataform(enemy->final_destination) == false)
+		else if (enemy->in_plataform == true && enemy->stage->InPlataform(*(enemy->final_destination)) == false)
 			jumping = true;
 		else if (enemy->in_plataform == true && enemy->current_target->in_plataform == false)
 			jumping = true;
@@ -142,19 +145,39 @@ update_status Enemy_MoveState::Update()
 	switch (xdirection)
 	{
 	case Creature::LEFT:
-		enemy->inverted_texture = true;
 		if (enemy->stage->InsideScene_LeftBorder(enemy->position, enemy->dimensions, enemy->in_plataform))
+		{
 			enemy->position.x -= enemy->ispeed;
-		else if (enemy->in_plataform == true && enemy->stage->InPlataform(enemy->final_destination) == false)
+			if (enemy->running)
+			{
+				if (enemy->stage->InsideScene_LeftBorder(enemy->position, enemy->dimensions, enemy->in_plataform))
+					enemy->position.x -= enemy->ispeed;
+				else if (enemy->in_plataform == true && enemy->stage->InPlataform(*(enemy->final_destination)) == false)
+					jumping = true;
+				else if (enemy->in_plataform == true && enemy->current_target->in_plataform == false)
+					jumping = true;
+			}
+		}
+		else if (enemy->in_plataform == true && enemy->stage->InPlataform(*(enemy->final_destination)) == false)
 			jumping = true;
 		else if (enemy->in_plataform == true && enemy->current_target->in_plataform == false)
 			jumping = true;
 		break;
 	case Creature::RIGHT:
-		enemy->inverted_texture = false;
 		if (enemy->stage->InsideScene_RightBorder(enemy->position, enemy->dimensions, enemy->in_plataform))
+		{
 			enemy->position.x += enemy->ispeed;
-		else if (enemy->in_plataform == false && enemy->stage->InPlataform(enemy->final_destination) == true)
+			if (enemy->running)
+			{
+				if (enemy->stage->InsideScene_RightBorder(enemy->position, enemy->dimensions, enemy->in_plataform))
+					enemy->position.x += enemy->ispeed;
+				else if (enemy->in_plataform == false && enemy->stage->InPlataform(*(enemy->final_destination)) == true)
+					jumping = true;
+				else if (enemy->in_plataform == false && enemy->current_target->in_plataform == true)
+					jumping = true;
+			}
+		}
+		else if (enemy->in_plataform == false && enemy->stage->InPlataform(*(enemy->final_destination)) == true)
 			jumping = true;
 		else if (enemy->in_plataform == false && enemy->current_target->in_plataform == true)
 			jumping = true;
@@ -202,7 +225,7 @@ EnemyState* Enemy_JumpState::Logic()
 		SetJumpParameters();
 	else if (attacking == false)
 	{
-		if (enemy->TargetWithinAttackRange())
+		if (enemy->TargetWithinAttackRange() && enemy->current_target->ColliderIsActive())
 		{
 			attacking = true;
 			enemy->entity_rect = jumpkick_rect;
@@ -506,7 +529,10 @@ EnemyState * Enemy_FallState::Logic()
 	{
 	case Enemy_FallState::FALLING:
 		if (time == 0)
+		{
+			enemy->FreeSlot();
 			SetFallParameters();
+		}
 		break;
 	case Enemy_FallState::LYING:
 		if (states_timer->GetState() == TimerState::OFF)

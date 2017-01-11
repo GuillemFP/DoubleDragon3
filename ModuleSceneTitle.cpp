@@ -90,6 +90,8 @@ bool ModuleSceneTitle::Start()
 			fspeed_title = -(float)speed;
 			ispeed_camera = abs(App->parser->GetInt("CameraSpeed")) * App->window->GetScreenSize();
 			ffade_time = abs(App->parser->GetFloat("TransitionTime"));
+			float music_fade = App->parser->GetFloat("MusicFade");
+			const char* music_string = App->parser->GetString("MusicPath");
 			ret = App->parser->UnloadObject();
 
 			if (ret == true)
@@ -98,6 +100,8 @@ bool ModuleSceneTitle::Start()
 				ipos_background = { 0,0 };
 				ipos_title = { (ifinalpos_cam * speed + (App->window->GetScreenWidth() - rect_title.w) / 2), 0 };
 				ifinalpos_cam *= App->window->GetScreenSize();
+				if (App->audio->isPlayingMusic() == false)
+					App->audio->PlayMusic(music_string, music_fade);
 			}
 		}
 		else
@@ -150,7 +154,7 @@ bool ModuleSceneTitle::CleanUp()
 		current_state = TITLE;
 		break;
 	case TITLE:
-		current_state = LOGO1;
+		current_state = TITLE_SCROLL;
 		break;
 	}
 

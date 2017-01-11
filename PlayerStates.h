@@ -153,7 +153,7 @@ private:
 
 public:
 	Player_FallState(Player* player, const char* falling_frame, const char* fallen_frame, const char* rising_frame);
-	~Player_FallState() {}
+	~Player_FallState() { RELEASE(states_timer); }
 	PlayerState* HandleInput();
 	update_status Update();
 	void OnExit();

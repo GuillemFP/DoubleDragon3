@@ -4,7 +4,17 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleUI.h"
 #include "ModuleStages.h"
+#include "ModuleFonts.h"
+#include "ModuleAudio.h"
 #include "Player.h"
+
+bool ModuleStages::CleanUp()
+{
+	game_over = false;
+	App->entities->continue_timer->Stop();
+
+	return true;
+}
 
 update_status ModuleStages::Update()
 {
@@ -12,33 +22,43 @@ update_status ModuleStages::Update()
 	if (App->entities->NumberActivePlayers() == 0)
 	{
 		App->entities->continue_timer->Start();
-		if (App->entities->continue_timer->MaxTimeReached())
+		if (game_over == false && App->entities->continue_timer->MaxTimeReached())
 		{
-			App->fade->FadeToBlack((Module*)App->scene_title, this);
-			App->entities->continue_timer->Stop();
 			App->user_interface->Disable();
+			App->entities->continue_timer->Reset();
+			game_over = true;
+		} 
+		else if (game_over == true && (App->entities->continue_timer->MaxTimeReached() || App->input->GetPlayerOutput_KeyDown(1, PlayerOutput::START)) )
+		{
+			App->entities->continue_timer->Stop();
+			App->fade->FadeToBlack((Module*)App->scene_title, this);
+			if (App->audio->isPlayingMusic() == true)
+				App->audio->StopMusic();
 		}
+		if (game_over == true)
+			App->fonts->BlitScreenCentered(6, "game over");
 		no_active = true;
 	}
 	int num_players = App->entities->GetNumberPlayers();
-	for (int i = 0; i < num_players; i++)
+	if (game_over == false)
 	{
-		Player* player = App->entities->GetPlayerByNumber(i);
-		if (player->active == false && App->entities->GetNumberCoins() > 0)
+		for (int i = 0; i < num_players; i++)
 		{
-			//if (App->input->GetPlayerOutput_KeyDown(i, PlayerOutput::START))
-			if (App->input->GetKey(SDL_SCANCODE_RETURN))
+			Player* player = App->entities->GetPlayerByNumber(i);
+			if (player->active == false && App->entities->GetNumberCoins() > 0)
 			{
-				player->Revive();
-				App->entities->SpendCoin();
-				if (no_active)
+				if (App->input->GetPlayerOutput_KeyDown(i + 1, PlayerOutput::START))
 				{
-					App->entities->continue_timer->Stop();
-					App->entities->stage_timer->Reset();
+					player->Revive();
+					App->entities->SpendCoin();
+					if (no_active)
+					{
+						App->entities->continue_timer->Stop();
+						App->entities->stage_timer->Reset();
+					}
 				}
 			}
 		}
-
 	}
 
 	return UPDATE_CONTINUE;

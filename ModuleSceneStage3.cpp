@@ -10,8 +10,8 @@
 #include "Enemy.h"
 #include "Room.h"
 #include "JsonHandler.h"
-
 #include "ModuleUI.h"
+#include <list>
 
 ModuleSceneStage3::ModuleSceneStage3(bool active) : ModuleStages(MODULESCENE_STAGE3, active)
 {
@@ -37,13 +37,11 @@ bool ModuleSceneStage3::Start()
 		const char* music_string = App->parser->GetString("MusicPath");
 
 		const char* scenario = App->parser->GetString("Entity_Scenario_Outside");
-		int scenario_detail_num = App->parser->GetInt("Entity_Scenario_Details_Num");
+		scenario_detail_num = App->parser->GetInt("Entity_Scenario_Details_Num");
 		App->parser->LoadArrayInObject("Entity_Scenario_Details_1");
-		const char** details = new const char*[scenario_detail_num];
+		std::list<const char*> details;
 		for (int i = 0; i < scenario_detail_num; i++)
-		{
-			details[i] = App->parser->GetStringFromArray(i);
-		}
+			details.push_back(App->parser->GetStringFromArray(i));
 
 		iPoint back_dimensions;
 		App->parser->GetPoint(back_dimensions, "Dimensions");
@@ -72,10 +70,8 @@ bool ModuleSceneStage3::Start()
 
 			outside = (Room*)App->entities->CreateEntity(Entity::ROOM, background, scenario, this);
 
-			for (int i = 0; i < scenario_detail_num; i++)
-			{
-				App->entities->CreateEntity(Entity::OBJECT, background, details[i], this, outside);
-			}
+			for (std::list<const char*>::iterator it = details.begin(); it != details.end(); ++it)
+				App->entities->CreateEntity(Entity::OBJECT, background, *it, this, outside);
 		}
 
 		App->entities->stage_timer->SetMaxTime((Uint32)(time*1000.0f));
@@ -90,10 +86,12 @@ bool ModuleSceneStage3::Start()
 
 	Enemy* test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
 	test_enemy->SetPosition(200, 220);
-	/*test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
-	test_enemy->SetPosition(300, 180);*/
-
-	App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_PLAYER1_SIGN, this, player_one);
+	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
+	test_enemy->SetPosition(300, 180);
+	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
+	test_enemy->SetPosition(350, 180);
+	test_enemy = (Enemy*)App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, current_room);
+	test_enemy->SetPosition(350, 220);
 
 	App->user_interface->Enable();
 
@@ -106,10 +104,16 @@ bool ModuleSceneStage3::CleanUp()
 {
 	LOG("Unloading Stage3 scene");
 
+	RELEASE_ARRAY(borders_xmax);
+	RELEASE_ARRAY(borders_xmin);
+	RELEASE_ARRAY(borders_zmin);
+
 	current_room->Disable();
 	current_room->Delete();
 
 	App->textures->Unload(background);
+
+	ModuleStages::CleanUp();
 
 	return true;
 }

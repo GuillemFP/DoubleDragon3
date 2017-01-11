@@ -74,8 +74,6 @@ bool Entity::Disable()
 	for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end() && ret == true; ++it)
 		ret = (*it)->Disable();
 
-	contains.clear();
-
 	return ret;
 }
 
@@ -94,6 +92,8 @@ bool Entity::Delete()
 		for (std::list<Entity*>::iterator it = contains.begin(); it != contains.end() && ret == true; ++it)
 			ret = (*it)->Delete();
 	}
+
+	contains.clear();
 
 	return ret;
 }

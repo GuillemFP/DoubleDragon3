@@ -11,6 +11,7 @@
 Enemy::Enemy(const char* name, ModuleStages* stage, Entity* parent) : Creature(Entity::Type::ENEMY, App->entities->enemies, stage, parent, true)
 {
 	logic_timer = new Timer();
+	attack_timer = new Timer();
 
 	inverted_texture = true;
 
@@ -23,8 +24,11 @@ Enemy::Enemy(const char* name, ModuleStages* stage, Entity* parent) : Creature(E
 		damage_treshold = App->parser->GetInt("MaxAccumulatedDamage");
 		
 		float logic_time = App->parser->GetFloat("LogicTime");
+		fattack_time = App->parser->GetFloat("AttackTime");
 		attack_range = App->parser->GetInt("AttackRange");
 		sight_range = App->parser->GetInt("SightRange");
+		engage_range = App->parser->GetInt("EngageDistance");
+		closecombate_range = App->parser->GetInt("CloseCombatDistance");
 		
 		blink_ratio = App->parser->GetFloat("BlinkRatio");
 
@@ -51,19 +55,30 @@ Enemy::Enemy(const char* name, ModuleStages* stage, Entity* parent) : Creature(E
 
 			logic_timer->SetMaxTime((Uint32)(logic_time*1000.0f));
 			blink->SetMaxTime(((Uint32)(blink_ratio*1000.0f)));
+			attack_timer->SetMaxTime((Uint32)(fattack_time*1000.0f));
 		}
 
 		collider = App->collision->AddCollider(position, dimensions, ColliderType::ENEMY, this);
 		attack_collider = App->collision->AddCollider({ 0,0,0 }, { 0,0,0 }, ColliderType::ENEMY_ATTACK, this);
 		attack_collider->active = false;
-
-		logic_timer->Start();
 	}
 	immunity_after_attack->Start();
+	attack_timer->Start();
+
+	current_target = App->entities->GetPlayerByNumber(0);
 }
 
 Enemy::~Enemy()
 {
+	RELEASE(moving);
+	RELEASE(idle);
+	RELEASE(jumping);
+	RELEASE(attacking);
+	RELEASE(damaging);
+	RELEASE(falling);
+
+	RELEASE(attack_timer);
+	RELEASE(logic_timer);
 }
 
 update_status Enemy::PreUpdate()
@@ -76,6 +91,9 @@ update_status Enemy::PreUpdate()
 update_status Enemy::Update()
 {
 	current_state->Update();
+
+	if (GetCurrentTargetState() != TargetState::CLOSE)
+		FreeSlot();
 
 	return UPDATE_CONTINUE;
 }
@@ -136,6 +154,23 @@ void Enemy::HasCollided(Collider * with)
 	}
 }
 
+bool Enemy::AttackChoice() const
+{
+	bool ret = false;
+
+	if (TargetWithinAttackRange() == true)
+	{
+		if (attack_timer->MaxTimeReached() == true)
+		{
+			ret = true;
+			attack_timer->Stop();
+			attack_timer->Start((Uint32)(fattack_time*1000.0f*(current_target->assigned_enemies + 1)));
+		}
+	}
+
+	return ret;
+}
+
 bool Enemy::TargetWithinAttackRange() const
 {
 	bool ret = true;
@@ -167,44 +202,127 @@ bool Enemy::TargetWithinAttackRange() const
 	return ret;
 }
 
-bool Enemy::TargetWithinSightRange() const
+Enemy::TargetState Enemy::GetCurrentTargetState() const
 {
-	if (abs(current_target->position.x - position.x) < sight_range)
-		return true;
-	else
-		return false;
-}
+	TargetState ret = TARGETLESS;
 
-void Enemy::SetDestination()
-{
-	final_destination.x = current_target->position.x;
-	switch (target_xdirection)
+	if (current_target != nullptr)
 	{
-	case Creature::LEFT:
-		if (position.x - final_destination.x > current_target->dimensions.x + attack_range)
-			final_destination.x += current_target->dimensions.x + attack_range;
-		break;
-	case Creature::XIDLE:
-		break;
-	case Creature::RIGHT:
-		if (final_destination.x - position.x > dimensions.x + attack_range)
-			final_destination.x -= dimensions.x + attack_range;
-		break;
+		int distance_to_target = DistanceToTarget();
+		if (distance_to_target < closecombate_range)
+			ret = CLOSE;
+		else if (distance_to_target < engage_range)
+			ret = ENGAGED;
+		else if (distance_to_target < sight_range)
+			ret = DETECTED;
+		else
+			ret = FAR;
 	}
 
-	final_destination.y = current_target->position.z;
-	switch (target_zdirection)
+	return ret;
+}
+
+int Enemy::DistanceToTarget() const
+{
+	int ret = 0;
+
+	if (current_target != nullptr)
+		//ret = (int)App->entities->Distance2D(position.x, position.z, current_target->position.x, current_target->position.z);
+		ret = abs(position.x - current_target->position.x);
+
+	return ret;
+}
+
+bool Enemy::SetSlot()
+{
+	bool ret = false;
+
+	if (current_target != nullptr)
 	{
-	case Creature::UP:
-		if (position.z - final_destination.y > current_target->dimensions.z)
-			final_destination.y += current_target->dimensions.z;
-		break;
-	case Creature::YIDLE:
-		break;
-	case Creature::DOWN:
-		if (final_destination.y - position.z > dimensions.z)
-			final_destination.y -= dimensions.z;
-		break;
+		if (player_slot == 0)
+			player_slot = current_target->GetCloserSlot(this);
+		if (player_slot != 0)
+		{
+			iPoint* slot = current_target->GetSlotPosition(player_slot);
+			if (slot != nullptr)
+			{
+				final_destination = slot;
+				ret = true;
+			}			
+		}
+	}
+
+	return ret;
+}
+
+void Enemy::FreeSlot()
+{
+	if (current_target != nullptr)
+	{
+		if (player_slot > 0)
+		{
+			current_target->FreeSlot(player_slot);
+			player_slot = 0;
+		}
+	}
+}
+
+void Enemy::SetDestinationOnPlayer()
+{
+	if (current_target != nullptr)
+	{
+		destination.x = current_target->position.x;
+		destination.y = current_target->position.z;
+		final_destination = &destination;
+	}
+}
+
+void Enemy::SetDestinationInClose()
+{
+	if (current_target != nullptr)
+	{
+		switch (target_xdirection)
+		{
+		case Creature::LEFT:
+			destination.x = current_target->position.x + engage_range + closecombate_range / 2;
+			destination.y = current_target->position.z;
+			break;
+		case Creature::XIDLE:
+		case Creature::RIGHT:
+			destination.x = current_target->position.x - engage_range - closecombate_range / 2;
+			destination.y = current_target->position.z;
+			break;
+		default:
+			break;
+		}
+
+		keeping_distance = true;
+		final_destination = &destination;
+	}
+}
+
+void Enemy::SetDestinationInEngage()
+{
+	if (current_target != nullptr)
+	{
+		if (keeping_distance == false)
+		{
+			switch (target_xdirection)
+			{
+			case Creature::LEFT:
+				destination.x = current_target->position.x + closecombate_range / 2;
+				destination.y = current_target->position.z;
+				break;
+			case Creature::XIDLE:
+			case Creature::RIGHT:
+				destination.x = current_target->position.x - closecombate_range / 2;
+				destination.y = current_target->position.z;
+				break;
+			default:
+				break;
+			}
+			final_destination = &destination;
+		}
 	}
 }
 
@@ -212,9 +330,9 @@ bool Enemy::DestinationReached() const
 {
 	bool ret = true;
 
-	if (final_destination.x != position.x)
+	if (final_destination->x != position.x)
 		ret = false;
-	else if (final_destination.y != position.z)
+	else if (final_destination->y != position.z)
 		ret = false;
 
 	return ret;

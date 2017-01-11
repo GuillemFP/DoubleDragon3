@@ -21,6 +21,8 @@ class Enemy_FallState;
 class Enemy : public Creature
 {
 public:
+	enum TargetState { CLOSE, ENGAGED, DETECTED, FAR, TARGETLESS };
+
 	Enemy(const char* name, ModuleStages* stage, Entity* parent);
 	~Enemy();
 	update_status PreUpdate();
@@ -28,17 +30,24 @@ public:
 
 	void HasCollided(Collider* with);
 
-	bool TargetWithinSightRange() const;
+	TargetState GetCurrentTargetState() const;
+	int DistanceToTarget() const;
+	bool SetSlot();
+	void FreeSlot();
+	bool AttackChoice() const;
 	bool TargetWithinAttackRange() const;
-	void SetDestination();
+	void SetDestinationOnPlayer();
+	void SetDestinationInClose();
+	void SetDestinationInEngage();
 	bool DestinationReached() const;
 
 public:
 	Player* current_target = nullptr;
 	XDirection target_xdirection;
 	ZDirection target_zdirection;
-	iPoint final_destination = { 0,0 };
+	iPoint* final_destination = nullptr;
 	Timer* logic_timer = nullptr;
+	Timer* attack_timer = nullptr;
 
 	unsigned int sound_jump = 0;
 	unsigned int sound_dying = 0;
@@ -54,6 +63,15 @@ public:
 
 	int attack_range = 0;
 	int sight_range = 0;
+	int engage_range = 0;
+	int closecombate_range = 0;
+
+	bool keeping_distance = false;
+
+private:
+	int player_slot = 0;
+	iPoint destination = { 0,0 };
+	float fattack_time = 0.0f;
 };
 
 

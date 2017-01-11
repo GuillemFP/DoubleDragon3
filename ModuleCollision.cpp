@@ -11,6 +11,12 @@ ModuleCollision::ModuleCollision() : Module(MODULE_COLLISION)
 
 ModuleCollision::~ModuleCollision()
 {
+	for (std::list<Collider*>::iterator it = creatures.begin(); it != creatures.end();)
+		RELEASE(*it);
+
+	for (std::list<Collider*>::iterator it = attacks.begin(); it != attacks.end();)
+		RELEASE(*it);
+
 }
 
 update_status ModuleCollision::PreUpdate()

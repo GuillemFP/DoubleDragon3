@@ -78,6 +78,16 @@ bool ModuleFonts::BlitScreenXCentered(int id_font, int y, const char * string, f
 	return Blit(id_font, origin, string, speed);
 }
 
+bool ModuleFonts::BlitScreenCentered(int id_font, const char * string, float speed)
+{
+	iPoint origin;
+
+	origin.x = App->window->GetScreenWidth() / 2 - strlen(string)*fonts[id_font]->char_width / 2;
+	origin.y = App->window->GetScreenHeight() / 2;
+
+	return Blit(id_font, origin, string, speed);
+}
+
 bool ModuleFonts::BlitFromXCenter(int id_font, const iPoint & center_origin, const char * string, float speed)
 {
 	iPoint left_origin = center_origin;

@@ -56,6 +56,8 @@ private:
 	int* borders_zmin = nullptr;
 	int* borders_zmin_in_plataform = nullptr;
 	int borders_zmax = 0;
+
+	int scenario_detail_num = 0;
 };
 
 

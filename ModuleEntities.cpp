@@ -12,10 +12,14 @@
 
 ModuleEntities::ModuleEntities() : Module(MODULE_ENTITIES)
 {
+	continue_timer = new Timer();
+	stage_timer = new Timer();
 }
 
 ModuleEntities::~ModuleEntities()
 {
+	RELEASE(stage_timer);
+	RELEASE(continue_timer);
 }
 
 bool ModuleEntities::Start()
@@ -46,12 +50,10 @@ bool ModuleEntities::Start()
 
 		if (ret == true)
 		{
-			continue_timer = new Timer((Uint32)(continue_time*1000.0f));
+			continue_timer->SetMaxTime((Uint32)(continue_time*1000.0f));
 			coins = initial_coins;
 		}
 	}
-
-	stage_timer = new Timer();
 
 	return ret;
 }
@@ -71,70 +73,7 @@ bool ModuleEntities::CleanUp()
 	App->textures->Unload(faces);
 	App->textures->Unload(signals);
 
-	RELEASE(stage_timer);
-	RELEASE(continue_timer);
-
 	return true;
-}
-
-Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent)
-{
-	static_assert(Entity::Type::UNKNOWN == 4, "code needs update");
-	Entity* ret = nullptr;
-	switch (type)
-	{
-	case Entity::ROOM:
-		ret = new Room(texture, name, stage);
-		break;
-	case Entity::PLAYER:
-		if (num_players < iMAX_PLAYERS)
-		{
-			ret = new Player(++num_players, name, stage, parent);
-		}
-		else
-			LOG("Unable to create more players");
-		break;
-	case Entity::ENEMY:
-		ret = new Enemy(name, stage, parent);
-		break;
-	case Entity::OBJECT:
-		ret = new Object(texture, name, stage, parent);
-		break;
-	case Entity::UNKNOWN:
-		break;
-	default:
-		break;
-	}
-
-	if (ret != nullptr)
-		entities.push_back(ret);
-
-	return ret;
-}
-
-Player* ModuleEntities::GetNearestPlayer(Entity* entity) const
-{
-	Player* ret = nullptr;
-
-	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
-	{
-		if ((*it)->type == Entity::Type::PLAYER)
-		{
-			Player* player = (Player*)(*it);
-			if (player->active)
-			{
-				if (ret == nullptr)
-					ret = player;
-				else
-				{
-					if (DistanceBetweenEntities(entity, (*it)) < DistanceBetweenEntities(entity, (Entity*)ret))
-						ret = player;
-				}
-			}
-		}
-	}
-
-	return ret;
 }
 
 update_status ModuleEntities::PreUpdate()
@@ -178,6 +117,74 @@ update_status ModuleEntities::Update()
 	return ret;
 }
 
+Entity * ModuleEntities::CreateEntity(Entity::Type type, SDL_Texture* texture, const char* name, ModuleStages* stage, Entity* parent)
+{
+	static_assert(Entity::Type::UNKNOWN == 4, "code needs update");
+	Entity* ret = nullptr;
+	switch (type)
+	{
+	case Entity::ROOM:
+		ret = new Room(texture, name, stage);
+		break;
+	case Entity::PLAYER:
+		if (num_players < iMAX_PLAYERS)
+		{
+			ret = new Player(++num_players, name, stage, parent);
+		}
+		else
+			LOG("Unable to create more players");
+		break;
+	case Entity::ENEMY:
+		ret = new Enemy(name, stage, parent);
+		break;
+	case Entity::OBJECT:
+		ret = new Object(texture, name, stage, parent);
+		break;
+	case Entity::UNKNOWN:
+		break;
+	default:
+		break;
+	}
+
+	if (ret != nullptr)
+		entities.push_back(ret);
+
+	return ret;
+}
+
+Player* ModuleEntities::GetTargetPlayer(Entity* entity) const
+{
+	Player* ret = nullptr;
+
+	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
+	{
+		if ((*it)->type == Entity::Type::PLAYER)
+		{
+			Player* player = (Player*)(*it);
+			if (player->active)
+			{
+				if (ret == nullptr)
+					ret = player;
+				else
+				{
+					if (DistanceBetweenEntities(entity, (*it)) < DistanceBetweenEntities(entity, (Entity*)ret))
+					{
+						if (player->assigned_enemies - ret->assigned_enemies < 2)
+							ret = player;
+					}
+					else
+					{
+						if (ret->assigned_enemies - player->assigned_enemies >= 2)
+							ret = player;
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 Player* ModuleEntities::GetPlayerByNumber(int player_num) const
 {
 	if (player_num < num_players)
@@ -211,10 +218,15 @@ int ModuleEntities::NumberActivePlayers() const
 
 float ModuleEntities::DistanceBetweenEntities(const Entity* first, const Entity* second) const
 {
+	return sqrt(Distance2D(first->position.x,first->position.z, second->position.x, second->position.z));
+}
+
+float ModuleEntities::Distance2D(int x1, int z1, int x2, int z2) const
+{
 	float ret = 0.0f;
 
-	ret += first->position.x * first->position.x - second->position.x * second->position.x;
-	ret += first->position.z * first->position.z - second->position.z * second->position.z;
+	ret += (x2 - x1)*(x2 - x1);
+	ret += (z2 - z1)*(z2 - z1);
 
 	return sqrt(ret);
 }

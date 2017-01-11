@@ -217,7 +217,7 @@ PlayerState* Player_JumpState::HandleInput()
 {
 	if (time == 0)
 		SetJumpParameters();
-	else if (attacking == false && player->attack_cmd == Creature::Attack::KICK)
+	if (attacking == false && player->attack_cmd == Creature::Attack::KICK)
 	{
 		App->audio->PlayFx(player->sound_attack);
 		attacking = true;
