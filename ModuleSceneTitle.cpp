@@ -4,6 +4,7 @@
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
 #include "ModuleAudio.h"
+#include "ModuleFonts.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTitle.h"
 #include "ModuleEntities.h"
@@ -115,6 +116,9 @@ bool ModuleSceneTitle::Start()
 			App->parser->GetRect(rect_title, "TitleRect");
 			App->parser->GetRect(rect_subtitle, "SubtitleRect");
 			ffade_time = abs(App->parser->GetFloat("FadeTime"));
+			y_text = App->parser->GetInt("PositionYText");
+			font_text = App->parser->GetInt("FontText");
+			string_text = App->parser->GetString("StringTextTitle");
 			ret = App->parser->UnloadObject();
 			
 			if (ret == true)
@@ -190,6 +194,7 @@ update_status ModuleSceneTitle::Update()
 		App->renderer->Blit(texture, ipos_background, &rect_back);
 		App->renderer->Blit(texture, ipos_title, &rect_title);
 		App->renderer->Blit(texture, ipos_subtitle, &rect_subtitle);
+		App->fonts->BlitScreenXCentered(font_text, y_text, string_text);
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)
 			App->fade->FadeToBlack((Module*)App->scene_prestage, this);
 		break;

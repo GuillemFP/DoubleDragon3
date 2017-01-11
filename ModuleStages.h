@@ -31,7 +31,8 @@ public:
 	int enemies_killed = 0;
 	int enemies_stage = 0;
 	int max_number_enemies = 0;
-	int current_enemies = 0;
+
+	bool transition = false;
 
 protected:
 	std::vector<iPoint> spawn_points;

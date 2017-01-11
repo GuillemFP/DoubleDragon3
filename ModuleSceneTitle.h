@@ -42,6 +42,10 @@ private:
 	SDL_Rect rect_title = { 0,0,0,0 };
 	SDL_Rect rect_subtitle = { 0,0,0,0 };
 
+	int y_text = 0;
+	int font_text = 0;
+	const char* string_text;
+
 	iPoint ipos_background = { 0,0 };
 	iPoint ipos_title = { 0,0 };
 	iPoint ipos_subtitle = { 0,0 };

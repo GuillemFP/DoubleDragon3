@@ -125,6 +125,8 @@ public:
 	Animation object_anim;
 	Collider* attack_collider = nullptr;
 
+	bool triggered = false;
+
 private:
 	bool has_animation = false;
 	bool animation_active = false;
@@ -132,7 +134,6 @@ private:
 	bool animation_stops = false;
 
 	bool only_one = false;
-	bool triggered = false;
 
 	bool has_attack = false;
 	int min_frame_damage = 0;

@@ -68,8 +68,8 @@ bool Application::Init()
 			ret = (*it)->Start();
 	}
 
-	fade->FadeToBlack(scene_stage3, ffade_time);
-	//fade->FadeToBlack(scene_title, ffade_time);
+	//fade->FadeToBlack(scene_stage3, ffade_time);
+	fade->FadeToBlack(scene_title, ffade_time);
 
 	return ret;
 }

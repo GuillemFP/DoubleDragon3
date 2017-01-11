@@ -28,6 +28,8 @@ bool ModuleSceneStage3::Start()
 
 	LOG("Loading Stage3 scene");
 
+	transition = false;
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	iPoint player1_initialpos = { 0,0 };
 	const char* door_string;
@@ -67,10 +69,10 @@ bool ModuleSceneStage3::Start()
 		enemies_stage = App->parser->GetInt("NumberOfEnemies");
 		enemies_killed = 0;
 		max_number_enemies = App->parser->GetInt("MaxEnemies");
-		current_enemies = App->parser->GetInt("StartingEnemies");
-		iPoint* start_positions = new iPoint[current_enemies];
+		int initial_enemies = App->parser->GetInt("StartingEnemies");
+		iPoint* start_positions = new iPoint[initial_enemies];
 		App->parser->LoadArrayInObject("StartingEnemiesPositions");
-		for (int i = 0; i < current_enemies; i++)
+		for (int i = 0; i < initial_enemies; i++)
 			App->parser->GetPointFromArray(start_positions[i], i);
 
 		float time = App->parser->GetFloat("Timer");
@@ -97,7 +99,7 @@ bool ModuleSceneStage3::Start()
 			for (std::list<const char*>::iterator it = details.begin(); it != details.end(); ++it)
 				App->entities->CreateEntity(Entity::OBJECT, background, *it, this, outside);
 
-			for (int i = 0; i < current_enemies; i++)
+			for (int i = 0; i < initial_enemies; i++)
 			{
 				Enemy* new_enemy = (Enemy*) App->entities->CreateEntity(Entity::ENEMY, nullptr, ENTITY_SAMURAI, this, outside);
 				new_enemy->SetPosition(start_positions[i].x, start_positions[i].y);
@@ -160,8 +162,21 @@ update_status ModuleSceneStage3::Update()
 {
 	ModuleStages::Update();
 
-	if (enemies_killed >= enemies_stage)
-		door->Enable();
+	if (current_room == outside)
+	{
+		if (enemies_killed >= enemies_stage)
+			door->Enable();
+
+		if (door->triggered)
+			outside->EnableCollider();
+
+		if (transition == true)
+		{
+			App->fade->FadeToBlack((Module*)App->scene_title, this);
+			App->audio->StopMusic();
+			App->user_interface->Disable();
+		}
+	}
 
 	SpawnEnemies();
 
@@ -173,7 +188,7 @@ void ModuleSceneStage3::SpawnEnemies()
 	if (spawn_clock->MaxTimeReached())
 	{
 		spawn_clock->Reset();
-		current_enemies = current_room->GetNumberOfEnemies();
+		int current_enemies = current_room->GetNumberOfEnemies();
 		if (enemies_killed + current_enemies < enemies_stage && current_enemies < max_number_enemies)
 		{
 			int spawnable_enemies = max_number_enemies - current_enemies;

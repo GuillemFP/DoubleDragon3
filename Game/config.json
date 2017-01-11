@@ -111,6 +111,9 @@
 				"TitleRect" : [0, 224, 320, 162],
 				"TitleSpeed" : 2,
 				"SubtitleRect" : [0, 386, 320, 62],
+				"StringTextTitle" : "press start to play",
+				"PositionYText" : 200,
+				"FontText" : 0,
 				"CameraSpeed" : 5,
 				"TransitionTime" : 0.5,
 				"FadeTime" : 1,
@@ -215,7 +218,7 @@
 			"MaxEnemies" : 4,
 			"StartingEnemiesPositions" : [ [300, 170], [350, 220], [400, 200] ],
 			"NumberSpawnPoints" : 3,
-			"SpawnPoints" : [ [150, 180], [670, 216], [1150, 216] ],
+			"SpawnPoints" : [ [1050, 216], [600, 216], [150, 180] ],
 			"SpawnTime" : 20
 		}
 	},
@@ -234,6 +237,9 @@
 		"Japan_Outside" : {
 			"Rectangle" : [8 ,8, 1280, 224],
 			"Position" : [0, 0],
+			"HasTransition" : true,
+			"TransitionColliderPosition" : [1152, 48, 164],
+			"TransitionColliderDimensions" : [80, 96, 3],
 			"Bamboo1" : {
 				"Rectangle" : [640 ,416, 48, 48],
 				"RelativePosition" : [192, 176]

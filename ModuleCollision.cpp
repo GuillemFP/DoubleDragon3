@@ -57,9 +57,7 @@ update_status ModuleCollision::Update()
 				if ((*it)->active && (*jt)->active)
 				{
 					if ((*it)->CheckCollision(**jt))
-					{
 						(*jt)->parent->HasCollided((*it));
-					}
 				}
 			}
 		}
@@ -74,9 +72,7 @@ update_status ModuleCollision::Update()
 				if ((*it)->active && (*jt)->active)
 				{
 					if ((*it)->CheckCollision(**jt))
-					{
 						(*jt)->parent->HasCollided((*it));
-					}
 				}
 			}
 		}
@@ -123,7 +119,7 @@ Collider* ModuleCollision::AddCollider(const Point3d& position, const Point3d& d
 		creatures.push_back(ret);
 	else if (type == PLAYER_ATTACK || type == ENEMY_ATTACK)
 		attacks.push_back(ret);
-	else
+	else if (type == ACTIVATION)
 		activations.push_back(ret);
 
 	return ret;

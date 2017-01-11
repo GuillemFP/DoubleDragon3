@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Entity.h"
+#include "ModuleCollision.h"
 #include "JsonHandler.h"
 #include "Point.h"
 #include "Creature.h"
@@ -18,6 +19,17 @@ public:
 			App->parser->GetRect(entity_rect, "Rectangle");
 			App->parser->GetPoint(back_position, "Position");		
 
+			has_transition = App->parser->GetBool("HasTransition");
+			if (has_transition)
+			{
+				Point3d collider_pos;
+				Point3d collider_dimensions;
+				App->parser->GetPoint3D(collider_pos, "TransitionColliderPosition");
+				App->parser->GetPoint3D(collider_dimensions, "TransitionColliderDimensions");
+				collider = App->collision->AddCollider(collider_pos, collider_dimensions, ColliderType::ACTIVATION, this);
+				collider->active = false;
+			}
+
 			if (App->parser->UnloadObject())
 			{
 				position.x = back_position.x;
@@ -26,6 +38,8 @@ public:
 				dimensions.x = entity_rect.w;
 				dimensions.y = entity_rect.h;
 			}
+
+
 		}
 	}
 	~Room() {}
@@ -40,6 +54,15 @@ public:
 		}
 		return ret;
 	}
+
+	void HasCollided(Collider* with)
+	{
+		if (stage->transition == false)
+			stage->transition = true;
+	}
+
+public:
+	bool has_transition = false;
 };
 
 #endif // !ROOM_H

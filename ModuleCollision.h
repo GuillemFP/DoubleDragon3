@@ -12,7 +12,8 @@ class Entity;
 
 enum ColliderType { PLAYER = 0, ENEMY, PLAYER_ATTACK, ENEMY_ATTACK, ACTIVATION };
 
-const bool ColliderMatrix[5][5] = { { false,false,false,true, true },{ false,false,true,false, false },{ false,true,false,false, false },{ true,false,false,false, false }, {true, false,false,false,false } };
+const bool ColliderMatrix[5][5] = { { false,false,false,true,true },{ false,false,true,false,false },{ false,true,false,false,false },
+									{ true,false,false,false,false }, {true,false,false,false,false }};
 
 struct Collider
 {
