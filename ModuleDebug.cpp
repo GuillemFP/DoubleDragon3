@@ -6,12 +6,13 @@
 #include "ModuleCollision.h"
 #include "ModuleUI.h"
 #include "ModuleDebug.h"
+#include "ModuleWindow.h"
 #include "JsonHandler.h"
 #include "Player.h"
 
 ModuleDebug::ModuleDebug() : Module(MODULE_DEBUG)
 {
-	number_string = new char[4];
+	number_string = new char[5];
 }
 
 ModuleDebug::~ModuleDebug()
@@ -112,19 +113,25 @@ update_status ModuleDebug::Update()
 		{
 			int num_players = App->user_interface->GetNumberOfUIs();
 			num_players = (num_players > 2) ? 2 : num_players;
+			int shift = 0;
 			for (int i = 0; i < num_players; i++)
 			{
 				Player* player = App->entities->GetPlayerByNumber(i);
-				App->fonts->Blit(activated_font, position_letter, "x", 0.0f);
-				App->fonts->Blit(activated_font, {position_letter.x + x_increment, position_letter.y}, "y", 0.0f);
-				App->fonts->Blit(activated_font, { position_letter.x + 2 * x_increment, position_letter.y }, "z", 0.0f);
+				if (player->active)
+				{
+					App->fonts->Blit(activated_font, { position_letter.x + shift, position_letter.y }, "x", 0.0f);
+					App->fonts->Blit(activated_font, { position_letter.x + x_increment + shift, position_letter.y }, "y", 0.0f);
+					App->fonts->Blit(activated_font, { position_letter.x + 2 * x_increment + shift, position_letter.y }, "z", 0.0f);
 
-				App->user_interface->IntToString(player->position.x, number_string);
-				App->fonts->BlitFromRight(activated_font, position_number, number_string);
-				App->user_interface->IntToString(player->position.y, number_string);
-				App->fonts->BlitFromRight(activated_font, { position_number.x + x_increment, position_number.y }, number_string);
-				App->user_interface->IntToString(player->position.z, number_string);
-				App->fonts->BlitFromRight(activated_font, { position_number.x + 2 * x_increment, position_number.y }, number_string);
+					App->user_interface->IntToString(player->position.x, number_string);
+					App->fonts->BlitFromRight(activated_font, { position_number.x + shift, position_number.y }, number_string);
+					App->user_interface->IntToString(player->position.y, number_string);
+					App->fonts->BlitFromRight(activated_font, { position_number.x + x_increment + shift, position_number.y }, number_string);
+					App->user_interface->IntToString(player->position.z, number_string);
+					App->fonts->BlitFromRight(activated_font, { position_number.x + 2 * x_increment + shift, position_number.y }, number_string);
+					
+				}
+				shift += App->window->GetScreenWidth() / 2;
 			}
 			App->fonts->Blit(activated_font, fkey_positions[2], fkey_strings[2], 0.0f);
 		}

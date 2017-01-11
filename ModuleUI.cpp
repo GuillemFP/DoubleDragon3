@@ -94,7 +94,7 @@ bool ModuleUI::Start()
 		}
 	}
 
-	number_string = new char[4];
+	number_string = new char[5];
 
 	timer->Start();
 
@@ -196,10 +196,13 @@ void ModuleUI::IntToString(int number, int final_length, char* string)
 {
 	int intlength = GetLength(number);
 
-	int j = 0;
-	for (int i = 0; i < final_length - intlength; i++)
-		j += sprintf_s(string + j, 4 - j, "%c",'0');
-	sprintf_s(string + j, 4 - j, "%d", number);
+	if (final_length < 5)
+	{
+		int j = 0;
+		for (int i = 0; i < final_length - intlength; i++)
+			j += sprintf_s(string + j, 5 - j, "%c", '0');
+		sprintf_s(string + j, 5 - j, "%d", number);
+	}
 
 }
 
