@@ -9,7 +9,7 @@
 #define MODULE_ENTITIES "ModuleEntities"
 #define ENTITY_SECTION "Config.Entities.Globals"
 #define ENTITY_PLAYER1 "Config.Entities.Player1"
-#define ENTITY_PLAYER1_SIGN "Config.Entities.Player1.PlayerSign"
+#define ENTITY_PLAYER2 "Config.Entities.Player2"
 
 struct SDL_Texture;
 class Player;
@@ -40,8 +40,9 @@ public:
 	void SpendCoin() { --coins; }
 
 	Player* GetPlayerByNumber(int player_num) const;
+	Player* GetAnActivePlayer() const;
 	int GetNumberPlayers() const { return num_players; }
-	int NumberActivePlayers() const;
+	int GetNumberActivePlayers() const;
 	float DistanceBetweenEntities(const Entity* first, const Entity* second) const;
 	float Distance2D(int x1, int z1, int x2, int z2) const;
 

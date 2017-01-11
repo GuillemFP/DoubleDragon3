@@ -131,7 +131,7 @@ update_status ModuleUI::Update()
 		first_lines = !first_lines;
 	}
 
-	if (App->entities->NumberActivePlayers() == 0)
+	if (App->entities->GetNumberActivePlayers() == 0)
 	{
 		PrintStrings(0, first_lines, string_deadplayer);
 		for (int i = 1; i < iPLAYERS_IN_UI; i++)
@@ -149,8 +149,16 @@ update_status ModuleUI::Update()
 				if (player->active)
 				{
 					IntToString(player->health, iNUMBER_LENGTH, number_string);
-					App->fonts->BlitFromRight(health_fonts[i], health_pos[i], number_string);
-					App->fonts->BlitFromRight(name_font, name_pos[i], player->name);
+					if (i % 2 == 0)
+					{
+						App->fonts->BlitFromRight(health_fonts[i], health_pos[i], number_string);
+						App->fonts->BlitFromRight(name_font, name_pos[i], player->name);
+					}
+					else
+					{
+						App->fonts->Blit(health_fonts[i], health_pos[i], number_string);
+						App->fonts->Blit(name_font, name_pos[i], player->name);
+					}
 					App->renderer->Blit(App->entities->faces, face_pos[i], &(player->face), 0.0f);
 				}
 				else

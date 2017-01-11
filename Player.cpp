@@ -45,6 +45,8 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 
 		current_state = idle;
 
+		const char* player_sign_entity = App->parser->GetString("PlayerSignEntity");
+
 		if (App->parser->UnloadObject() == true)
 		{
 			health = initial_health;
@@ -58,6 +60,8 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 			blink->SetMaxTime(((Uint32)(blink_ratio*1000.0f)));
 			slot_change->SetMaxTime(((Uint32)(slot_time*1000.0f)));
 		}
+
+		sign = (Object*)App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, player_sign_entity, stage, this);
 
 		collider = App->collision->AddCollider(position, dimensions, ColliderType::PLAYER, this);
 		attack_collider = App->collision->AddCollider({ 0,0,0 }, { 0,0,0 }, ColliderType::PLAYER_ATTACK, this);
@@ -74,9 +78,6 @@ Player::Player(int number_player, const char* name, ModuleStages* stage, Entity*
 	}
 
 	reviving_timer = new Timer((Uint32)(blink_time_alive*1000.0f));
-	
-	
-	sign = (Object*)App->entities->CreateEntity(Entity::OBJECT, App->entities->signals, ENTITY_PLAYER1_SIGN, stage, this);
 
 	immunity_after_attack->Start();
 	slot_change->Start();

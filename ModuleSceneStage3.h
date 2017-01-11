@@ -49,6 +49,7 @@ private:
 	iPoint plataform_max = { 0,0 };
 
 	Player* player_one = nullptr;
+	Player* player_two = nullptr;
 	
 	Room* outside = nullptr;
 	Room* inside = nullptr;

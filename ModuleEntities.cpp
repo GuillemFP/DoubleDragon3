@@ -205,7 +205,23 @@ Player* ModuleEntities::GetPlayerByNumber(int player_num) const
 	return nullptr;
 }
 
-int ModuleEntities::NumberActivePlayers() const
+Player* ModuleEntities::GetAnActivePlayer() const
+{
+	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)
+	{
+		if ((*it)->type == Entity::Type::PLAYER)
+		{
+			if ((*it)->active == true)
+			{
+				return (Player*)(*it);
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+int ModuleEntities::GetNumberActivePlayers() const
 {
 	int ret = 0;
 	for (std::list<Entity*>::const_iterator it = entities.begin(); it != entities.end(); ++it)

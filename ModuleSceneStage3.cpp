@@ -32,6 +32,7 @@ bool ModuleSceneStage3::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	iPoint player1_initialpos = { 0,0 };
+	iPoint player2_initialpos = { 0,0 };
 	const char* door_string;
 
 	spawn_clock = new Timer();
@@ -65,6 +66,7 @@ bool ModuleSceneStage3::Start()
 		App->parser->GetIntArray("Borders_xmax", borders_xmax);
 
 		App->parser->GetPoint(player1_initialpos, "Player1_InitialPos");
+		App->parser->GetPoint(player2_initialpos, "Player2_InitialPos");
 
 		enemies_stage = App->parser->GetInt("NumberOfEnemies");
 		enemies_killed = 0;
@@ -121,6 +123,9 @@ bool ModuleSceneStage3::Start()
 
 	player_one = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER1, this, current_room);
 	player_one->SetPosition(player1_initialpos.x, player1_initialpos.y);
+	player_two = (Player*) App->entities->CreateEntity(Entity::PLAYER, nullptr, ENTITY_PLAYER2, this, current_room);
+	player_two->SetPosition(player2_initialpos.x, player2_initialpos.y);
+	player_two->Disable();
 
 	App->user_interface->Enable();
 
@@ -153,7 +158,7 @@ bool ModuleSceneStage3::CleanUp()
 
 update_status ModuleSceneStage3::PreUpdate()
 {
-	App->renderer->CameraInsideScene(player_one->position.x + player_one->dimensions.x / 2, current_room->position.x, current_room->dimensions.x, current_room->position.y);
+	App->renderer->CameraInsideScene(current_room->position.x, current_room->dimensions.x, current_room->position.y);
 
 	return UPDATE_CONTINUE;
 }

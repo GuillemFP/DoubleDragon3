@@ -21,7 +21,7 @@ bool ModuleStages::CleanUp()
 update_status ModuleStages::Update()
 {
 	bool no_active = false;
-	if (App->entities->NumberActivePlayers() == 0)
+	if (App->entities->GetNumberActivePlayers() == 0)
 	{
 		App->entities->continue_timer->Start();
 		if (game_over == false && App->entities->continue_timer->MaxTimeReached())
@@ -51,6 +51,8 @@ update_status ModuleStages::Update()
 			{
 				if (App->input->GetPlayerOutput_KeyDown(i + 1, PlayerOutput::START))
 				{
+					Player* active_player = App->entities->GetAnActivePlayer();
+					player->SetPosition(active_player->position.x, active_player->position.z);
 					player->Revive();
 					App->entities->SpendCoin();
 					if (no_active)

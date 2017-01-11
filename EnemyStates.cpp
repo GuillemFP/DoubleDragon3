@@ -63,7 +63,10 @@ EnemyState * Enemy_MoveState::Logic()
 	{
 		enemy->running = false;
 		enemy->logic_timer->Reset();
+		Player* previous_target = enemy->current_target;
 		enemy->current_target = App->entities->GetTargetPlayer(enemy);
+		if (enemy->current_target != previous_target && previous_target != nullptr)
+			enemy->FreeSlot();
 		Enemy::TargetState current_state = enemy->GetCurrentTargetState();
 		switch (current_state)
 		{

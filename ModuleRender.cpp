@@ -4,6 +4,8 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleFonts.h"
+#include "ModuleEntities.h"
+#include "Player.h"
 #include "SDL/include/SDL.h"
 #include "JsonHandler.h"
 
@@ -171,14 +173,31 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	return ret;
 }
 
-void ModuleRender::CameraInsideScene(int center_player, int room_x, int room_width, int room_y)
+void ModuleRender::CameraInsideScene(int room_x, int room_width, int room_y)
 {
 	if (bCenterCamera)
 	{
-		if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
-			camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
-		else if (center_player*iSCREENSIZE + camera.x >(int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
-			camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+		int num_players = App->entities->GetNumberActivePlayers();
+		if (num_players <= 1)
+		{
+			Player* player_one = App->entities->GetPlayerByNumber(0);
+			int center_player = player_one->position.x + player_one->dimensions.x / 2;
+			if (center_player*iSCREENSIZE + camera.x < (int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH * iSCREENSIZE))
+				camera.x = ((int)((1.0f - fCAMERA_MARGIN) * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+			else if (center_player*iSCREENSIZE + camera.x >(int)(fCAMERA_MARGIN * iSCREENWIDTH * iSCREENSIZE))
+				camera.x = ((int)(fCAMERA_MARGIN * iSCREENWIDTH) - center_player)*iSCREENSIZE;
+		}
+		else
+		{
+			int center_player = 0;
+			for (int i = 0; i < num_players; i++)
+			{
+				Player* player = App->entities->GetPlayerByNumber(i);
+				center_player += player->position.x + player->dimensions.x / 2;
+			}
+			center_player /= num_players;
+			camera.x = (iSCREENWIDTH / 2 - center_player)*iSCREENSIZE;
+		}
 
 		if (camera.x < (room_x - room_width) * iSCREENSIZE + camera.w)
 			camera.x = (room_x - room_width) * iSCREENSIZE + camera.w;

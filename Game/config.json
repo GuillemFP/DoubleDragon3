@@ -15,8 +15,8 @@
 			"NumberPlayers" : 2,
 			"NumKeysPlayer" : 8,
 			"KeysPlayer" : [
-				["Up", "Down", "Left", "Right", "Return", "A", "S", "D"],
-				["Y", "H", "G", "J", "K", "I", "O", "P"]
+				["Up", "Down", "Left", "Right", "Return", "J", "K", "L"],
+				["W", "S", "A", "D", "Space", "C", "V", "B"]
 			]
 		},
 		"Window" : {
@@ -59,7 +59,7 @@
 			"Health_Font" : [4, 5],
 			"Name_RelPos" : [ [-64, 40], [64, 40] ],
 			"Name_Font" : 0,
-			"Face_RelPos" : [ [-64, 16], [64, 16] ],
+			"Face_RelPos" : [ [-64, 16], [32, 16] ],
 			"TimeName" : "time",
 			"TimeName_RelPos" : [-32, 24],
 			"TimeNumber_RelPos" : [32, 24],
@@ -212,6 +212,7 @@
 			"Plataform_Max" : [1280, 212],
 			"PlataformHeight" : 20,
 			"Player1_InitialPos" : [80, 220],
+			"Player2_InitialPos" : [130, 185],
 			"Timer" : 180.0,
 			"NumberOfEnemies" : 9,
 			"StartingEnemies" : 3,
@@ -226,7 +227,7 @@
 		"Globals" : {
 			"NumberOfSounds" : 5,
 			"Sounds" : [ "assets/player_attack.wav", "assets/fall_sound.wav", "assets/player_hit.wav", "assets/player_hit_hard.wav", "assets/death.wav" ],
-			"MaxPlayers" : 1,
+			"MaxPlayers" : 2,
 			"PlayerTexture" : "assets/char_billyjimmy.png",
 			"EnemiesTexture" : "assets/enemies.png",
 			"PlayerFaces" : "assets/faces.png",
@@ -376,6 +377,7 @@
 			"Sound_Damaged" : 2,
 			"Sound_Falling" : 3,
 			"Sound_Dying" : 4,
+			"PlayerSignEntity" : "Config.Entities.Player1.PlayerSign",
 			"PlayerSign" : {
 				"Animated" : true,
 				"Animation" : {
@@ -437,6 +439,91 @@
 				"Frames" : 4,
 				"Sprites" : [
 					[88,80,26,63],[120,80,38,63],[88,80,26,63],[8,0,26,63]
+				]
+			},
+			"KickDamage" : 20,
+			"KickDamageFrame" : 1,
+			"KickRect" : [16, 19, 22, 18]
+		},
+		"Player2" : {
+			"Name" : "jimmy",
+			"Speed" : 1,
+			"Depth" : 5,
+			"MaxEngagedEnemies" : 3,
+			"SlotPositionChangeTime" : 2.0,
+			"ImmunityAfterAttack" : 1.0,
+			"BlinkRatio" : 0.1,
+			"BlinkTimeAlive" : 3.0,
+			"Health" : 250,
+			"MaxAccumulatedDamage" : 50,
+			"Face" : [0, 128, 32, 32],
+			"Sound_Jump" : 1,
+			"Sound_Attack" : 0,
+			"Sound_Damaged" : 2,
+			"Sound_Falling" : 3,
+			"Sound_Dying" : 4,
+			"PlayerSignEntity" : "Config.Entities.Player2.PlayerSign",
+			"PlayerSign" : {
+				"Animated" : true,
+				"Animation" : {
+					"Speed" : 0.1,
+					"Frames" : 2,
+					"Sprites" : [
+						[32,93,16,32],[48,93,16,32]
+					]
+				},
+				"Timer" : true,
+				"MaxTime" : 5.0,
+				"Rectangle" : [32,93,16,32],
+				"RelativePosition" : [4, -39]
+			},
+			"Static_Frame" : [8,464,26,63],
+			"DamageHigh_Frame" : [8,856,26,63],
+			"DamageLow_Frame" : [40,856,26,63],
+			"Falling_Frame" : [72,872,46,47],
+			"Fallen_Frame" : [128,895,61,24],
+			"Fallen_Time" : 2,
+			"FallenShift" : [-15,39],
+			"Rising_Frame" : [200,856,26,63],
+			"Rising_Time" : 0.5,
+			"Time_DamageState" : 0.5, 
+			"Move_Animation" : {
+				"Speed" : 0.08,
+				"Frames" : 4,
+				"Sprites" : [
+					[8,464,26,63],[48,464,26,63],[80,464,26,63],[113,464,26,63]
+				]
+			},
+			"MoveUp_Animation" : {
+				"Speed" : 0.08,
+				"Frames" : 4,
+				"Sprites" : [
+					[152,464,21,63],[184,464,21,63],[216,464,21,63],[248,464,21,63]
+				]
+			}, 
+			"JumpFrame" : [248, 559, 31, 48],
+			"AerialKickFrame" : [288, 565, 46, 42],
+			"JumpSpeed" : [1.4, 3],
+			"Gravity" : 0.08,
+			"JumpCollider" : [0,0,31,48],
+			"AerialKickCollider" : [0,0,27, 42],
+			"AerialKickAttackCollider" : [20, 16, 26, 17],
+			"AerialKickDamage" : 25,
+			"Punch_Animation" : {
+				"Speed" : 0.15,
+				"Frames" : 4,
+				"Sprites" : [
+					[8,544,26,63],[40,544,39,63],[8,544,26,63],[8,464,26,63]
+				]
+			},
+			"PunchDamage" : 15,
+			"PunchDamageFrame" : 1,
+			"PunchRect" : [23, 5, 16, 16],
+			"Kick_Animation" : {
+				"Speed" : 0.15,
+				"Frames" : 4,
+				"Sprites" : [
+					[88,544,26,63],[120,544,38,63],[88,544,26,63],[8,464,26,63]
 				]
 			},
 			"KickDamage" : 20,

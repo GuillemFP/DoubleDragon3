@@ -33,7 +33,7 @@ public:
 	bool Blit(SDL_Texture* texture, const iPoint& position, SDL_Rect* section, float speed, bool inverse = false);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 
-	void CameraInsideScene(int player_x, int x_min, int x_max, int room_y);
+	void CameraInsideScene(int x_min, int x_max, int room_y);
 
 	void DebugCamera();
 
