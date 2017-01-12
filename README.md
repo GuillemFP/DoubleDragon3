@@ -8,7 +8,7 @@ Full project at github: [https://github.com/GuillemFP/DoubleDragon3](https://git
 
 Project webpage: [https://guillemfp.github.io/DoubleDragon3/](https://guillemfp.github.io/DoubleDragon3/)  
 
-Current release: [https://github.com/GuillemFP/DoubleDragon3/releases/tag/1.0](https://github.com/GuillemFP/DoubleDragon3/releases/tag/1.0)  
+Latest release (1.0): [https://github.com/GuillemFP/DoubleDragon3/releases/download/1.0/DoubleDragon3.zip](https://github.com/GuillemFP/DoubleDragon3/releases/download/1.0/DoubleDragon3.zip)  
 
 *Author*: Guillem Ferré
 
@@ -18,7 +18,7 @@ License: GNU GENERAL PUBLIC LICENSE
 
 ## Gameplay video
 
-<iframe width="560" height="315" src="(https://www.youtube.com/watch?v=v-EPVxW6f4s)" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/v-EPVxW6f4s" frameborder="0" allowfullscreen></iframe>
 You can watch it directly on [youtube](https://www.youtube.com/watch?v=v-EPVxW6f4s).
 
 Currently the game only features the first part of Stage 3, so only on type of enemy is present and there is no boss. Also, the store has not been included, so the playable characters don't have their full set of movements. Apart from that, the movement of the characters and enemies is fully implemented.
