@@ -18,8 +18,8 @@ License: GNU GENERAL PUBLIC LICENSE
 
 ## Gameplay video
 
-<iframe width="560" height="315" src="(https://www.youtube.com/watch?v=a2NPkU1kFZY)" frameborder="0" allowfullscreen></iframe>
-You can watch it directly on [youtube](https://www.youtube.com/watch?v=a2NPkU1kFZY).
+<iframe width="560" height="315" src="(https://www.youtube.com/watch?v=v-EPVxW6f4s)" frameborder="0" allowfullscreen></iframe>
+You can watch it directly on [youtube](https://www.youtube.com/watch?v=v-EPVxW6f4s).
 
 Currently the game only features the first part of Stage 3, so only on type of enemy is present and there is no boss. Also, the store has not been included, so the playable characters don't have their full set of movements. Apart from that, the movement of the characters and enemies is fully implemented.
 
