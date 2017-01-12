@@ -4,9 +4,11 @@ This is my tribute to Double Dragon 3: The Rosetta Stone, released for Sega Gene
 
 ## PROJECT INFORMATION
 
-Full project at github: https://github.com/GuillemFP/DoubleDragon3
+Full project at github: [https://github.com/GuillemFP/DoubleDragon3](https://github.com/GuillemFP/DoubleDragon3) 
 
-Project webpage: https://guillemfp.github.io/DoubleDragon3/
+Project webpage: [https://guillemfp.github.io/DoubleDragon3/](https://guillemfp.github.io/DoubleDragon3/)  
+
+Current release: [https://github.com/GuillemFP/DoubleDragon3/releases/tag/1.0](https://github.com/GuillemFP/DoubleDragon3/releases/tag/1.0)  
 
 *Author*: Guillem Ferré
 
@@ -16,9 +18,10 @@ License: GNU GENERAL PUBLIC LICENSE
 
 ## Gameplay video
 
+<iframe width="560" height="315" src="(https://www.youtube.com/watch?v=a2NPkU1kFZY)" frameborder="0" allowfullscreen></iframe>
 You can watch it directly on [youtube](https://www.youtube.com/watch?v=a2NPkU1kFZY).
 
-Currently the game only features the first part of Stage 3, so only on type of enemy is present and there is no boss. Also, the store has not been included, so the playable characters don't have their full set of movements.
+Currently the game only features the first part of Stage 3, so only on type of enemy is present and there is no boss. Also, the store has not been included, so the playable characters don't have their full set of movements. Apart from that, the movement of the characters and enemies is fully implemented.
 
 ## Commands
 
@@ -33,7 +36,7 @@ The game supports up to two players. Each player can jump, punch, kick and perfo
 * **JUMP:** (Player 1: K / Player 2: V)
 * **KICK:** (Player 1: L / Player 2: B)
 
-The controls can be changed in the file "config.json", as well as other parameters that alter the gameplay.
+The controls can be changed in the file "config.json", as well as other parameters that change the gameplay.
 
 ## Debug mode
 Pressing F12 one can access debug mode, where others functions are availabe:
