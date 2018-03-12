@@ -9,6 +9,7 @@
 #include "ModuleFonts.h"
 #include "ModuleAudio.h"
 #include "Player.h"
+#include "PlayerStates.h"
 
 bool ModuleStages::CleanUp()
 {
@@ -21,6 +22,26 @@ bool ModuleStages::CleanUp()
 update_status ModuleStages::Update()
 {
 	bool no_active = false;
+	int num_players = App->entities->GetNumberPlayers();
+	if (App->entities->stage_timer->MaxTimeReached())
+	{
+		App->entities->stage_timer->Stop();
+		for (int i = 0; i < num_players; i++)
+		{
+			Player* player = App->entities->GetPlayerByNumber(i);
+			if (player->active == true)
+			{
+				player->health = 0;
+				player->current_state->OnExit();
+				player->current_state = player->falling;
+				player->DisableCollider();
+				if (player->inverted_texture = false)
+					player->falling->InitFall(Creature::XDirection::LEFT);
+				else
+					player->falling->InitFall(Creature::XDirection::RIGHT);
+			}
+		}
+	}
 	if (App->entities->GetNumberActivePlayers() == 0)
 	{
 		App->entities->continue_timer->Start();
@@ -41,7 +62,6 @@ update_status ModuleStages::Update()
 			App->fonts->BlitScreenCentered(6, "game over");
 		no_active = true;
 	}
-	int num_players = App->entities->GetNumberPlayers();
 	if (game_over == false)
 	{
 		for (int i = 0; i < num_players; i++)

@@ -66,7 +66,7 @@ public:
 
 	float GetTimeInSeconds() const { return ((float) GetTimeInMs()/1000.0f); }
 
-	Uint32 GetCounterInMs() const { return max_time - GetTimeInMs(); }
+	Uint32 GetCounterInMs() const { return (max_time - GetTimeInMs() >= 0 ? max_time - GetTimeInMs() : 0); }
 
 	int GetCounterInS() const { return (GetCounterInMs() / 1000); }
 

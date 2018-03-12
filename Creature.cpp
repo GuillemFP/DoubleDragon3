@@ -66,7 +66,14 @@ void Creature::SetPosition(int x, int z)
 { 
 	position.x = x; 
 	position.z = z; 
-	position.y = z - dimensions.y; 
+	position.y = z - dimensions.y;
+	if (stage->InPlataform({position.x, position.z}))
+	{
+		position.y += stage->plataform_height;
+		in_plataform = true;
+	}
+	else
+		in_plataform = false;
 	collider->position = position; 
 }
 
